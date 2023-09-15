@@ -1,0 +1,1 @@
+print("Python te amo, sos el mejor lenguaje, sos mi mundo *chiste informatico xd*")
