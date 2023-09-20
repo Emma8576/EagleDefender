@@ -15,9 +15,14 @@ images = []
 images_left = []
 images_right = []
 
+
+
+#Programar sprites ventana central
 for i in range(1, 14):
     name = "welcomeInterfaceFramesSprites/mainWelcome/frame-"+str(i)+".gif"
     images.append(image.load(name))
+
+#Programar sprites lateral izquieda
 for i in range(1,19):
     name_left = "welcomeInterfaceFramesSprites/secondWelcome/frame-" + str(i) + ".gif"
     images_left.append(image.load(name_left))
