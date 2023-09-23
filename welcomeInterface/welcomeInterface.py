@@ -1,28 +1,23 @@
 import tkinter as tk
-from PIL import Image, ImageTk
+from PIL import Image
 
-# Crear la ventana principal
-root = tk.Tk()
-root.title("Reproducción de GIF en bucle")
+window = tk.Tk()
 
-# Cargar el GIF
-gif_path = "welcomeInterfaceFramesSprites/mainWelcome2/mainWelcome1 (1).gif"
-gif = Image.open(gif_path)
-frame_count = gif.n_frames
-frames = [ImageTk.PhotoImage(gif.copy().seek(i)) for i in range(frame_count)]
+file1 = 'C:/Users/User/Documents/EagleDefender/welcomeInterface/welcomeInterfaceFramesSprites/SavedItems/mainWelcome2.gif'
 
-# Mostrar el GIF en un Label
-label = tk.Label(root)
-label.pack()
+info = Image.open(file1)
+frames = info.n_frames
+imageObject = [PhotoImage(file = file1, format = f"gif - index {1}") for i in range(frames)]
+count = 0
+showAnimation = None
+def animiation(count):
+    global showAnimation
+    newImage = imageObject[count]
 
-# Función para actualizar el GIF
-def update_frame(idx):
-    frame = frames[idx]
-    label.configure(image=frame)
-    root.after(100, update_frame, (idx + 1) % frame_count)
+gif_Label = Label(root, image="")
+gif_label.place(x=0, y= 0, width= 1245, height= 700)
 
-# Iniciar la actualización del GIF
-update_frame(0)
+animation(count)
 
-# Iniciar la aplicación
-root.mainloop()
+
+window.mainloop()
