@@ -1,23 +1,38 @@
-import tkinter as tk
-from PIL import Image
+import pygame
+from pygame import *
+import sys
+import time
 
-window = tk.Tk()
+#hols
+init()
+screen_info = display.Info()
+screen_width = screen_info.current_w
+screen_height = screen_info.current_h
 
-file1 = 'C:/Users/User/Documents/EagleDefender/welcomeInterface/welcomeInterfaceFramesSprites/SavedItems/mainWelcome2.gif'
+screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
 
-info = Image.open(file1)
-frames = info.n_frames
-imageObject = [PhotoImage(file = file1, format = f"gif - index {1}") for i in range(frames)]
-count = 0
-showAnimation = None
-def animiation(count):
-    global showAnimation
-    newImage = imageObject[count]
+images = []
 
-gif_Label = Label(root, image="")
-gif_label.place(x=0, y= 0, width= 1245, height= 700)
+#Programar sprites ventana central
+for i in range(1, 7):
+    name = "welcomeInterfaceFramesSprites/mainItems/frame-"+str(i)+" (Custom).gif"
+    images.append(image.load(name))
 
-animation(count)
+def titleImage():
+    picture = pygame.image.load("welcomeInterfaceFramesSprites/mainWelcomeImages/mainTitle.png")
+    picture = pygame.transform.scale(picture, [700,700])
+    screen.blit(picture, [300,0])
+
+while True:
+    for e in event.get():
+        if e.type == QUIT: sys.exit()
 
 
-window.mainloop()
+    frame = int(time.time()*10)
+    frame %= len(images)
+    screen.fill((255, 255, 255))
+    screen.blit(images[frame], (800,400))
+
+    titleImage()
+
+    display.flip()
