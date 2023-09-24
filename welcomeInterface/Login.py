@@ -20,6 +20,7 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
     etiqueta_fondo.image = imagen  # Mantener una referencia a la imagen
     etiqueta_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Cubrir toda la ventana
 
+#Función ventana Login
 def menu_login():
     global ventana1
     # Crear una instancia de la ventana principal
@@ -63,7 +64,7 @@ def menu_login():
     espacio_entre_botones = 30 
 
     # Botón de Registrarse
-    botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10)
+    botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
     botonRegistrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
 
     # Botón de Salir
@@ -101,6 +102,11 @@ def inicio_sesion():
     etiqueta_retro = Label(ventana2, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
     etiqueta_retro.pack()
+    
+    # Etiqueta para llamar a la ventana de recuperación de contraseña
+    etiqueta_enlace = tk.Label(ventana2, text="¿Olvidaste tu contraseña?", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace.place(relx=0.6, rely=0.6)
+    etiqueta_enlace.bind("<Button-1>", lambda event: recuperar_contrasena())
     
     #Etiqueta de acceder al juego
     ancho_pantalla = ventana2.winfo_screenwidth()
@@ -160,6 +166,174 @@ def inicio_sesion():
     ventana2.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
     
     ventana2.mainloop()
+
+#Función ventana de Registro
+def registro():
+    global ventana3
+    if ventana1:
+        ventana1.withdraw()
+    
+    # Crear una instancia de la ventana secundaria
+    ventana3 = Toplevel(ventana1)
+    ventana3.attributes("-fullscreen", True)
+    ventana3.title("Registro")
+    
+    # Cargar imagen de fondo en la ventana principal
+    cargar_imagen_de_fondo(ventana3, "images/fondo1.jpg") 
+    
+     # Se añade la fuente retro en diversos tamaños
+    fuente_retro = ("8-Bit Operator+ 8", 100)
+    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
+    fuente_retro_2 = ("8-Bit Operator+ 8", 25)
+    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
+    
+    #Etiqueta con el nombre del juego
+    etiqueta_retro = Label(ventana3, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro.pack()
+    
+    #Etiqueta de registro del juego
+    ancho_pantalla = ventana3.winfo_screenwidth()
+    etiqueta = Label(ventana3, text="Registrarse", bg="#101654", fg="white", font=fuente_retro_1)
+
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
+    etiqueta.place(x=x, y=120)
+    
+    #variables para almacenar los datos ingresados por el usuario
+    nombreUsuario_verif = StringVar() 
+    contrasenaUsuario_verif = StringVar()
+    correoUsuario_verif = StringVar()
+
+    #Se agrega la etiqueta de usuario
+    etiquetaUsuario = Label(ventana3, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    
+    #Se agrega la etiqueta de contraseña
+    etiquetaContrasena = Label(ventana3, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    
+    #Se agrega la etiqueta del correo
+    etiquetaCorreo = Label(ventana3, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    
+    # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
+    etiquetaUsuario.place(x=x, y=200) 
+    
+    # Calcula la posición x para que la etiqueta  contraseña esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaContrasena.winfo_reqwidth()) // 2
+    etiquetaContrasena.place(x=x, y=310) 
+    
+    # Calcula la posición x para que la etiqueta correo esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaCorreo.winfo_reqwidth()) // 2
+    etiquetaCorreo.place(x=x, y=420) 
+    
+    # Obtener el ancho de la pantalla
+    ancho_pantalla = ventana3.winfo_screenwidth()
+
+    # Calcular la posición x para centrar horizontalmente los campos de entrada
+    x_entry = (ancho_pantalla) // 3.1
+    
+    
+    # Espacio para llenar usuario
+    nombreUsuario_verif = tk.StringVar()
+    nombre_usuario_entry = tk.Entry(ventana3, textvariable=nombreUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_entry.place(x=x_entry, y=250)
+
+    # Espacio para llenar contraseña
+    contrasenaUsuario_verif = tk.StringVar()
+    contrasena_usuario_entry = tk.Entry(ventana3, textvariable=contrasenaUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_entry.place(x=x_entry, y=360)
+    
+    #Espacio para llenar contraseña
+    correoUsuario_verif = tk.StringVar()
+    correo_usuario_entry = tk.Entry(ventana3, textvariable=correoUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    correo_usuario_entry.place(x=x_entry, y=470)
+    
+    # Espacio entre botones
+    espacio_entre_botones = 30 
+
+    # Botón de registrarse de la ventana de registro
+    botonRegistro = Button(ventana3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command="")
+    botonRegistro.place(relx=0.5, rely=0.8, anchor='center')
+    
+    # Botón de Atrás de la ventana inicio de sesión
+    botonAtras = Button(ventana3, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
+
+
+    ventana3.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
+    
+    ventana3.mainloop()
+
+#función interfaz para recuperar contraseña
+def recuperar_contrasena():
+    global ventana4
+    if ventana1:
+        ventana1.withdraw()
+    
+    # Crear una instancia de la ventana secundaria
+    ventana4 = Toplevel(ventana1)
+    ventana4.attributes("-fullscreen", True)
+    ventana4.title("Recuperar contraseña")
+    
+    # Cargar imagen de fondo en la ventana principal
+    cargar_imagen_de_fondo(ventana4, "images/fondo1.jpg") 
+    
+     # Se añade la fuente retro en diversos tamaños
+    fuente_retro = ("8-Bit Operator+ 8", 100)
+    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
+    fuente_retro_2 = ("8-Bit Operator+ 8", 25)
+    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
+    
+    #Etiqueta con el nombre del juego
+    etiqueta_retro = Label(ventana4, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro.pack()
+    
+    #Etiqueta de registro del juego
+    ancho_pantalla = ventana4.winfo_screenwidth()
+    etiqueta = Label(ventana4, text="Recuperar acceso", bg="#101654", fg="white", font=fuente_retro_1)
+
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
+    etiqueta.place(x=x, y=120)
+    
+    #variables para almacenar los datos ingresados por el usuario
+    nombreUsuarioOCorreo_verif = StringVar() 
+
+    #Se agrega la etiqueta de usuario
+    etiquetaUsuarioOCorreo = Label(ventana4, text="Ingresa tu Correo o Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+     
+    # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaUsuarioOCorreo.winfo_reqwidth()) // 2
+    etiquetaUsuarioOCorreo.place(x=x, y=220) 
+    
+    # Obtener el ancho de la pantalla
+    ancho_pantalla = ventana4.winfo_screenwidth()
+
+    # Calcular la posición x para centrar horizontalmente los campos de entrada
+    x_entry = (ancho_pantalla) // 3.4
+    
+    
+    # Espacio para llenar usuario
+    nombreUsuarioOCorreo_verif = tk.StringVar()
+    nombre_usuarioOC_entry = tk.Entry(ventana4, textvariable=nombreUsuarioOCorreo_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    nombre_usuarioOC_entry.place(x=x_entry, y=280)
+    
+    # Espacio entre botones
+    espacio_entre_botones = 30 
+
+    # Botón de registrarse de la ventana de registro
+    botonRegistro = Button(ventana4, text="Enviar correo", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command="")
+    botonRegistro.place(relx=0.5, rely=0.5, anchor='center')
+    
+    # Botón de Atrás de la ventana inicio de sesión
+    botonAtras = Button(ventana4, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras.place(relx=0.5, rely=0.3 + 1 * espacio_entre_botones/90, anchor='center')
+
+
+    ventana4.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
+    
+    ventana4.mainloop()
 
 # Función para volver atrás
 def volver_atras():
