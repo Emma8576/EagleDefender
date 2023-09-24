@@ -9,38 +9,67 @@ import pymysql
 ventana1 = None
 ventana2 = None
 
+#Se agrega imagen de fondo
+def cargar_imagen_de_fondo(ventana, ruta_imagen):
+    # Cargar la imagen de fondo
+    imagen = Image.open(ruta_imagen)
+    imagen = ImageTk.PhotoImage(imagen)
+
+    # Crear una etiqueta para mostrar la imagen de fondo
+    etiqueta_fondo = Label(ventana, image=imagen)
+    etiqueta_fondo.image = imagen  # Mantener una referencia a la imagen
+    etiqueta_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Cubrir toda la ventana
+
 def menu_login():
     global ventana1
     # Crear una instancia de la ventana principal
     ventana1 = tk.Tk()
     ventana1.attributes("-fullscreen", True)
     
+    # Cargar imagen de fondo en la ventana principal
+    cargar_imagen_de_fondo(ventana1, "images/fondo1.jpg")
+    
     # Establecer el título de la ventana
     ventana1.title("Bienvenidos")
 
     # Cargar icono de la ventana
     ventana1.iconbitmap("images/icon.ico")
-
-    image = PhotoImage(file="images/logoLogin.png")
-    image = image.subsample(1, 1)
-    label = Label(image=image)
-    label.pack()
     
-    # Agregar una etiqueta de texto en el inicio de sesión
-    etiqueta = Label(ventana1, text="Acceder al juego", bg="peru", fg="white", width="800", height="2", font=("calibri", 40))
-    etiqueta.pack()
+    # Se añade la fuente retro en diversos tamaños
+    fuente_retro = ("8-Bit Operator+ 8", 100)
+    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
+    fuente_retro_2 = ("8-Bit Operator+ 8", 20)
+    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
+    
+    #Etiqueta con el nombre del juego
+    etiqueta_retro = Label(ventana1, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro.pack()
+    
+    #Etiqueta de acceder al juego
+    ancho_pantalla = ventana1.winfo_screenwidth()
+    etiqueta = Label(ventana1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_1)
 
-    # Botón de iniciar sesión
-    botonInicio = tk.Button(text="Iniciar Sesión", command=inicio_sesion, height="3", width="30")
-    botonInicio.place(x=575, y=400)
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
+    etiqueta.place(x=x, y=200) 
+
+
+    # Botón de Iniciar Sesión
+    botonInicio = tk.Button(ventana1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+    botonInicio.place(relx=0.5, rely=0.5, anchor='center')
+
+    # Espacio entre botones
+    espacio_entre_botones = 30 
 
     # Botón de Registrarse
-    botonInicio = tk.Button(text="Registrarse", height="3", width="30")
-    botonInicio.place(x=575, y=475)
-    
-    # Botón de salir del juego
-    botonInicio = tk.Button(text="Salir", height="3", width="30", command=cerrarJuego)
-    botonInicio.place(x=575, y=550)
+    botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10)
+    botonRegistrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
+
+    # Botón de Salir
+    botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
+    botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
+
     # Mostrar la ventana principal
     ventana1.mainloop()
 
@@ -58,27 +87,66 @@ def inicio_sesion():
     ventana2 = Toplevel(ventana1)
     ventana2.attributes("-fullscreen", True)
     ventana2.title("Iniciar sesión")
+    
+    # Cargar imagen de fondo en la ventana principal
+    cargar_imagen_de_fondo(ventana2, "images/fondo1.jpg") 
+    
+     # Se añade la fuente retro en diversos tamaños
+    fuente_retro = ("8-Bit Operator+ 8", 100)
+    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
+    fuente_retro_2 = ("8-Bit Operator+ 8", 25)
+    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
+    
+    #Etiqueta con el nombre del juego
+    etiqueta_retro = Label(ventana2, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro.pack()
+    
+    #Etiqueta de acceder al juego
+    ancho_pantalla = ventana2.winfo_screenwidth()
+    etiqueta = Label(ventana2, text="Inicio de Sesión", bg="#101654", fg="white", font=fuente_retro_1)
 
-    # Agregar la pantalla de inicio de sesión en la misma ventana
-    etiqueta = Label(ventana2, text="Por favor ingrese su Usuario y Contraseña", bg="peru", fg="white", width="800", height="2", font=("calibri", 30))
-    etiqueta.pack()
-
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
+    etiqueta.place(x=x, y=150)
+    
+    
     nombreUsuario_verif = StringVar() 
     contrasenaUsuario_verif = StringVar()
 
-    Label(ventana2, text="Usuario").pack()
-    nombre_usuario_entry = Entry(ventana2, textvariable=nombreUsuario_verif)
-    nombre_usuario_entry.pack()
-    Label(ventana2).pack()
+    #Se agrega la etiqueta de usuario
+    etiquetaUsuario = Label(ventana2, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    
+    #Se agrega la etiqueta de contraseña
+    etiquetaContrasena = Label(ventana2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
+    etiquetaUsuario.place(x=x, y=250) 
+    
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaContrasena.winfo_reqwidth()) // 2
+    etiquetaContrasena.place(x=x, y=370) 
+    
+    #Se agrega espacio para llenar usuario
+    nombre_usuario_entry = Entry(ventana2, textvariable=nombreUsuario_verif,bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=20)
+    nombre_usuario_entry.place(x=450, y=300) 
 
-    Label(ventana2, text="Contraseña").pack()
-    contrasena_usuario_entry = Entry(ventana2, textvariable=contrasenaUsuario_verif)
-    contrasena_usuario_entry.pack()
-    Label(ventana2).pack()
+    #Se agrega espacio para llenar contraseña
+    contrasena_usuario_entry = Entry(ventana2, textvariable=contrasenaUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=20)
+    contrasena_usuario_entry.place(x=450, y=420) 
+    
+    # Espacio entre botones
+    espacio_entre_botones = 30 
 
-    # Botón de Atrás de la ventana inicio de sesión
-    botonAtras = Button(ventana2, text="Atrás", width=30, height=3, command=volver_atras)
-    botonAtras.place(relx=0.5, rely=0.5)
+    # Botón de Iniciar sesión de la ventana inicio de sesión
+    botonInicioSesion = Button(ventana2, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command="")
+    botonInicioSesion.place(relx=0.5, rely=0.7, anchor='center')
+    
+        # Botón de Atrás de la ventana inicio de sesión
+    botonAtras = Button(ventana2, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/90, anchor='center')
+
 
     ventana2.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
     
