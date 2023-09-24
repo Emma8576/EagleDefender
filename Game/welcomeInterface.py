@@ -11,37 +11,14 @@ screen_width = screen_info.current_w
 screen_height = screen_info.current_h
 
 screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
-window.configure(cursor="star")                                      #no sirve
+window.configure(cursor="star")                                     
+
 
 volumen = 0.5
-def cambiar_volumen():
-    global volumen
-    if 'Up' in window.teclas_pulsadas:
-        if volumen < 1.0:
-            volumen += 0.01
-            pygame.mixer.music.set_volume(volumen)
-    elif 'Down' in window.teclas_pulsadas:
-        if volumen > 0.0:
-            volumen -= 0.01
-            pygame.mixer.music.set_volume(volumen)
-    window.after(10, cambiar_volumen)
-
-def tecla_pulsada(evento):
-    window.teclas_pulsadas.add(evento.keysym)
-
-def tecla_soltada(evento):
-    window.teclas_pulsadas.remove(evento.keysym)
-
 def iniciar():
-    pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound.mp3')
+    pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
     pygame.mixer.music.set_volume(volumen)
     pygame.mixer.music.play(-1)
-
-
-    window.teclas_pulsadas = set()
-    window.bind('<KeyPress>', tecla_pulsada)      #Se enlaza "pulsada" con la función
-    window.bind('<KeyRelease>', tecla_soltada)    #Se enlaza "tecla_soltada" con la función
-    window.after(10, cambiar_volumen)   #Se establece a 10ms
 
 # Iniciar automáticamente la configuración de volumen al ejecutar el juego
 iniciar()
