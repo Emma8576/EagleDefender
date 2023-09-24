@@ -11,7 +11,7 @@ screen_width = screen_info.current_w
 screen_height = screen_info.current_h
 
 screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
-window.configure(cursor="star")                                      #...
+window.configure(cursor="star")                                      #no sirve
 
 volumen = 0.5
 def cambiar_volumen():
