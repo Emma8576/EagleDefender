@@ -35,7 +35,7 @@ def tecla_soltada(evento):
 def iniciar():
     pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound.mp3')
     pygame.mixer.music.set_volume(volumen)
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
 
 
     window.teclas_pulsadas = set()
