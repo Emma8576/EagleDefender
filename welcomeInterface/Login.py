@@ -128,13 +128,22 @@ def inicio_sesion():
     x = (ancho_pantalla - etiquetaContrasena.winfo_reqwidth()) // 2
     etiquetaContrasena.place(x=x, y=370) 
     
-    #Se agrega espacio para llenar usuario
-    nombre_usuario_entry = Entry(ventana2, textvariable=nombreUsuario_verif,bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=20)
-    nombre_usuario_entry.place(x=450, y=300) 
+    # Obtener el ancho de la pantalla
+    ancho_pantalla = ventana2.winfo_screenwidth()
 
-    #Se agrega espacio para llenar contraseña
-    contrasena_usuario_entry = Entry(ventana2, textvariable=contrasenaUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=20)
-    contrasena_usuario_entry.place(x=450, y=420) 
+    # Calcular la posición x para centrar horizontalmente los campos de entrada
+    x_entry = (ancho_pantalla) // 3.1
+    
+    
+    # Espacio para llenar usuario
+    nombreUsuario_verif = tk.StringVar()
+    nombre_usuario_entry = tk.Entry(ventana2, textvariable=nombreUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_entry.place(x=x_entry, y=300)
+
+    # Espacio para llenar contraseña
+    contrasenaUsuario_verif = tk.StringVar()
+    contrasena_usuario_entry = tk.Entry(ventana2, textvariable=contrasenaUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_entry.place(x=x_entry, y=420)
     
     # Espacio entre botones
     espacio_entre_botones = 30 
