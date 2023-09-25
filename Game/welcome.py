@@ -5,7 +5,7 @@ import time
 import tkinter as tk
 import os
 import msvcrt
-
+#haa
 init()
 screen_info = display.Info()
 screen_width = screen_info.current_w
