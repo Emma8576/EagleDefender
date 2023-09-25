@@ -5,6 +5,7 @@ import time
 import tkinter as tk
 import os
 import msvcrt
+import subprocess
 
 init()
 screen_info = display.Info()
@@ -36,6 +37,9 @@ for i in range(1, 11):
     name1 = "welcomeInterfaceFramesSprites/mainItems1/frame-"+str(i)+".gif"
     close.append(image.load(name1))
 
+def abrir_login():
+    subprocess.Popen(["python", "Login.py"])
+
 def titleImage1():
     picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
     picture = pygame.transform.scale(picture, [550,200])
@@ -44,16 +48,16 @@ def titleImage1():
 def salir():
     window.destroy()
 
-def check_click(image_rect1,image_rect2):
+def check_click(image_rect1, image_rect2):
     for e in event.get():
         if e.type == MOUSEBUTTONDOWN and e.button == 1:  # Verifica clic izquierdo
             mouse_pos = pygame.mouse.get_pos()
             if image_rect1.collidepoint(mouse_pos):
                 print("Clic izquierdo en el botón!")
-                os.system('Login.py')
+                abrir_login()  # Abre Login.py
             if image_rect2.collidepoint(mouse_pos):
                 print("Clic")
-                salir()#kk
+                salir()
 
 background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  # Cargar la imagen de fondo
 background = pygame.transform.scale(background, (screen_width, screen_height))  
