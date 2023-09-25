@@ -28,7 +28,7 @@ def menu_login():
     ventana1.attributes("-fullscreen", True)
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana1, "loginImages/fondo1 (2).png")
+    cargar_imagen_de_fondo(ventana1, "loginImages/fondo1 (2).jpg")
     
     # Establecer el título de la ventana
     ventana1.title("Bienvenidos")
