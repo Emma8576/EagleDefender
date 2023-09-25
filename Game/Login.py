@@ -28,7 +28,11 @@ def menu_login():
     ventana1.attributes("-fullscreen", True)
     
     # Cargar imagen de fondo en la ventana principal
+<<<<<<< HEAD
+    cargar_imagen_de_fondo(ventana1, "loginImages/fondo1.png")
+=======
     cargar_imagen_de_fondo(ventana1, "loginImages/fondo1 (2).jpg")
+>>>>>>> 93c18388a0f12156bd8d9d0de8a3d60e2355d692
     
     # Establecer el título de la ventana
     ventana1.title("Bienvenidos")
@@ -90,7 +94,7 @@ def inicio_sesion():
     ventana2.title("Iniciar sesión")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana2, "loginImages/fondo1 (2).png") 
+    cargar_imagen_de_fondo(ventana2, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -179,7 +183,7 @@ def registro():
     ventana3.title("Registro")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana3, "loginImages/fondo1 (2).png") 
+    cargar_imagen_de_fondo(ventana3, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -276,7 +280,7 @@ def recuperar_contrasena():
     ventana4.title("Recuperar contraseña")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana4, "loginImages/fondo1 (2).png") 
+    cargar_imagen_de_fondo(ventana4, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
