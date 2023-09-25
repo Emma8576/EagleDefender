@@ -329,32 +329,55 @@ def recuperar_contrasena():
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
-    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
+    fuente_retro_1 = ("8-Bit Operator+ 8", 40)
     fuente_retro_2 = ("8-Bit Operator+ 8", 25)
     fuente_retro_3 = ("8-Bit Operator+ 8", 15)
     
     #Etiqueta con el nombre del juego
     etiqueta_retro = Label(ventana4, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
-    etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro.place(relx=0.5, rely=0.5 + 0.05, anchor='center') 
     etiqueta_retro.pack()
     
     #Etiqueta de registro del juego
     ancho_pantalla = ventana4.winfo_screenwidth()
-    etiqueta = Label(ventana4, text="Recuperar acceso", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta = Label(ventana4, text="Cambia tu contraseña", bg="#101654", fg="white", font=fuente_retro_1)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
-    etiqueta.place(x=x, y=120)
+    etiqueta.place(x=x, y=105)
     
     #variables para almacenar los datos ingresados por el usuario
     nombreUsuarioOCorreo_verif = StringVar() 
 
     #Se agrega la etiqueta de usuario
-    etiquetaUsuarioOCorreo = Label(ventana4, text="Ingresa tu Correo o Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    etiquetaUsuario = Label(ventana4, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
      
+    #Se agrega la etiqueta del correo
+    etiquetaCorreo = Label(ventana4, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    
+     
+    #Se agrega la etiqueta de contraseña
+    etiquetaContrasena = Label(ventana4, text="Nueva Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    
+    #Se agrega la etiqueta de confirmar contraseña
+    etiquetaContrasenaRe = Label(ventana4, text="Confirmar Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+
+    
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
-    x = (ancho_pantalla - etiquetaUsuarioOCorreo.winfo_reqwidth()) // 2
-    etiquetaUsuarioOCorreo.place(x=x, y=220) 
+    x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
+    etiquetaUsuario.place(x=x, y=190) 
+    
+        # Calcula la posición x para que la etiqueta correo esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaCorreo.winfo_reqwidth()) // 2
+    etiquetaCorreo.place(x=x, y=290) 
+    
+        # Calcula la posición x para que la etiqueta contraseña esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaContrasena.winfo_reqwidth()) // 2
+    etiquetaContrasena.place(x=x, y=390) 
+    
+        # Calcula la posición x para que la etiqueta repetir contraseña esté en el centro horizontal
+    x = (ancho_pantalla - etiquetaContrasenaRe.winfo_reqwidth()) // 2
+    etiquetaContrasenaRe.place(x=x, y=490) 
     
     # Obtener el ancho de la pantalla
     ancho_pantalla = ventana4.winfo_screenwidth()
@@ -364,20 +387,35 @@ def recuperar_contrasena():
     
     
     # Espacio para llenar usuario
-    nombreUsuarioOCorreo_verif = tk.StringVar()
-    nombre_usuarioOC_entry = tk.Entry(ventana4, textvariable=nombreUsuarioOCorreo_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
-    nombre_usuarioOC_entry.place(x=x_entry, y=280)
+    nombreUsuario_verif2 = tk.StringVar()
+    nombre_usuario2_entry = tk.Entry(ventana4, textvariable=nombreUsuario_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    nombre_usuario2_entry.place(x=x_entry, y=235)
+    
+    # Espacio para llenar correo
+    correo_verif2 = tk.StringVar()
+    correo_entry = tk.Entry(ventana4, textvariable=correo_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    correo_entry.place(x=x_entry, y=335)
+    
+    # Espacio para llenar contraseña
+    contrasena_verif2 = tk.StringVar()
+    contrasena_entry = tk.Entry(ventana4, textvariable=contrasena_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    contrasena_entry.place(x=x_entry, y=435)
+    
+    # Espacio para llenar contraseña repetida
+    contrasenaRe_verif2 = tk.StringVar()
+    contrasena_Re_entry = tk.Entry(ventana4, textvariable=contrasenaRe_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    contrasena_Re_entry.place(x=x_entry, y=535)
     
     # Espacio entre botones
     espacio_entre_botones = 30 
 
     # Botón de registrarse de la ventana de registro
-    botonRegistro = Button(ventana4, text="Enviar correo", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command="")
-    botonRegistro.place(relx=0.5, rely=0.5, anchor='center')
+    botonRegistro = Button(ventana4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command="")
+    botonRegistro.place(relx=0.5, rely=0.8 + 0.03, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
-    botonAtras = Button(ventana4, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
-    botonAtras.place(relx=0.5, rely=0.3 + 1 * espacio_entre_botones/90, anchor='center')
+    botonAtras = Button(ventana4, text="Atrás", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
 
 
     ventana4.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
