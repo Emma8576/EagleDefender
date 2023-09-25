@@ -28,7 +28,7 @@ def menu_login():
     ventana1.attributes("-fullscreen", True)
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana1, "loginImages/fondo1.jpg")
+    cargar_imagen_de_fondo(ventana1, "loginImages/fondo1 (2).jpg")
     
     # Establecer el título de la ventana
     ventana1.title("Bienvenidos")
@@ -43,13 +43,13 @@ def menu_login():
     fuente_retro_3 = ("8-Bit Operator+ 8", 15)
     
     #Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana1, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana1, text="Battle City", bg="#000030", font= ("System 80 bold"), fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
     etiqueta_retro.pack()
     
     #Etiqueta de acceder al juego
     ancho_pantalla = ventana1.winfo_screenwidth()
-    etiqueta = Label(ventana1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta = Label(ventana1, text="Acceder al juego", bg="#101654", fg="white", font= ("System 40 bold"))
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
@@ -57,18 +57,18 @@ def menu_login():
 
 
     # Botón de Iniciar Sesión
-    botonInicio = tk.Button(ventana1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+    botonInicio = tk.Button(ventana1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font= ("System 15 bold"), relief="raised", borderwidth=10, command=inicio_sesion)
     botonInicio.place(relx=0.5, rely=0.5, anchor='center')
 
     # Espacio entre botones
     espacio_entre_botones = 30 
 
     # Botón de Registrarse
-    botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
+    botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font= ("System 15 bold"), relief="raised", borderwidth=10, command=registro)
     botonRegistrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
 
     # Botón de Salir
-    botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
+    botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font= ("System 15 bold"), relief="raised", borderwidth=10, command=ventana1.destroy)
     botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
     # Mostrar la ventana principal
@@ -90,7 +90,7 @@ def inicio_sesion():
     ventana2.title("Iniciar sesión")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana2, "loginImages/fondo1.jpg") 
+    cargar_imagen_de_fondo(ventana2, "loginImages/fondo1 (2).jpg") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -179,7 +179,7 @@ def registro():
     ventana3.title("Registro")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana3, "loginImages/fondo1.jpg") 
+    cargar_imagen_de_fondo(ventana3, "loginImages/fondo1 (2).jpg") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -276,7 +276,7 @@ def recuperar_contrasena():
     ventana4.title("Recuperar contraseña")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana4, "loginImages/fondo1.jpg") 
+    cargar_imagen_de_fondo(ventana4, "loginImages/fondo1 (2).jpg") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
