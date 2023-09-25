@@ -38,8 +38,17 @@ for i in range(1, 11):
 
 def titleImage1():
     picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
-    picture = pygame.transform.scale(picture, [550,200])
-    screen.blit(picture, [370,520])
+    picture = pygame.transform.scale(picture, [500,500])
+    screen.blit(picture, [385,0])
+def titleImage2():
+    picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/mainDecoration.png")
+    picture = pygame.transform.scale(picture, [470,470])
+    screen.blit(picture, [395,240])
+
+def titleImage3():
+    picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/bottom.png")
+    picture = pygame.transform.scale(picture, [300,60])
+    screen.blit(picture, [0,660])
 
 def salir():
     window.destroy()
@@ -50,17 +59,13 @@ def check_click(image_rect1,image_rect2):
             mouse_pos = pygame.mouse.get_pos()
             if image_rect1.collidepoint(mouse_pos):
                 print("Clic izquierdo en el botón!")
-                os.system('Login.py')
+                os.system('login.py')
             if image_rect2.collidepoint(mouse_pos):
                 print("Clic")
-                salir()#kk
+                salir()
 
-background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  # Cargar la imagen de fondo
-background = pygame.transform.scale(background, (screen_width, screen_height))  
-
-# Agregar un label con el texto "battle city"
-label = tk.Label(window, text="battle city", font=("Arial", 36), fg="white", bg="black")
-label.place(relx=0.5, rely=0.5, anchor="center")
+background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png')
+background = pygame.transform.scale(background, (screen_width, screen_height))
 
 while True:
     for e in event.get():
@@ -71,15 +76,16 @@ while True:
     frame = int(time.time()*4)
     frame %= len(images)
     frame %= len(close)
-    screen.blit(background, (0, 0))
-    screen.blit(images[frame], (980,10))
-    screen.blit(close[frame],(20,10))
-
+    screen.blit(background, (0,0))
+    screen.blit(images[frame], (920,300))
+    screen.blit(close[frame],(60,320))
 
     titleImage1()
+    titleImage2()
+    titleImage3()
 
-    button1_rect = images[frame].get_rect(topleft=(980,10))
-    button2_rect = close[frame].get_rect(topleft=(20,10))
+    button1_rect = images[frame].get_rect(topleft=(920, 300))
+    button2_rect = close[frame].get_rect(topleft=(60,320))
 
     display.flip()
 
