@@ -5,6 +5,7 @@ import time
 import tkinter as tk
 import os
 import msvcrt
+import subprocess
 
 init()
 screen_info = display.Info()
@@ -15,10 +16,13 @@ screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
 window = tk.Tk()
 
 volumen = 1.0
+
+
 def iniciar():
     pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
     pygame.mixer.music.set_volume(volumen)
     pygame.mixer.music.play(-1)
+
 
 # Iniciar automáticamente la configuración de volumen al ejecutar el juego
 iniciar()
@@ -36,7 +40,8 @@ for i in range(1, 11):
     close.append(image.load(name1))
 
 def abrir_login():
-    os.system('Login.py')
+    subprocess.Popen(["python", "Login.py"])
+
 
 def titleImage1():
     picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
@@ -48,11 +53,11 @@ def salir():
 
 def check_click(image_rect1, image_rect2):
     for e in event.get():
-        if e.type == MOUSEBUTTONDOWN and e.button == 1:  
+        if e.type == MOUSEBUTTONDOWN and e.button == 1:  # Verifica clic izquierdo
             mouse_pos = pygame.mouse.get_pos()
             if image_rect1.collidepoint(mouse_pos):
                 print("Clic izquierdo en el botón!")
-                abrir_login() 
+                abrir_login()  # Abre Login.py
             if image_rect2.collidepoint(mouse_pos):
                 print("Clic")
                 salir()
