@@ -78,8 +78,8 @@ while True:
 
     titleImage1()
 
-    button1_rect = images[frame].get_rect(topleft=(920, 300))
-    button2_rect = close[frame].get_rect(topleft=(60,320))
+    button1_rect = images[frame].get_rect(topleft=(980,10))
+    button2_rect = close[frame].get_rect(topleft=(20,10))
 
     display.flip()
 
