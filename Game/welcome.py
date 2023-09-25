@@ -14,9 +14,8 @@ screen_height = screen_info.current_h
 
 screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
 window = tk.Tk()
-window.configure(cursor="star")                                     
 
-volumen = 0.5
+volumen = 1.0
 def iniciar():
     pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
     pygame.mixer.music.set_volume(volumen)
@@ -34,7 +33,7 @@ for i in range(1, 7):
     images.append(image.load(name))
 
 for i in range(1, 11):
-    name1 = "welcomeInterfaceFramesSprites/mainItems1/frame-"+str(i)+".gif"
+    name1 = "welcomeInterfaceFramesSprites/mainItems1/frame-"+str(i)+".png"
     close.append(image.load(name1))
 
 def abrir_login():
@@ -42,7 +41,7 @@ def abrir_login():
 
 def titleImage1():
     picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
-    picture = pygame.transform.scale(picture, [550,200])
+    picture = pygame.transform.scale(picture, [555,170])
     screen.blit(picture, [370,520])
 
 def salir():
@@ -50,7 +49,7 @@ def salir():
 
 def check_click(image_rect1, image_rect2):
     for e in event.get():
-        if e.type == MOUSEBUTTONDOWN and e.button == 1:  # Verifica clic izquierdo
+        if e.type == MOUSEBUTTONDOWN and e.button == 1:  
             mouse_pos = pygame.mouse.get_pos()
             if image_rect1.collidepoint(mouse_pos):
                 print("Clic izquierdo en el botón!")
@@ -59,7 +58,7 @@ def check_click(image_rect1, image_rect2):
                 print("Clic")
                 salir()
 
-background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  # Cargar la imagen de fondo
+background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  
 background = pygame.transform.scale(background, (screen_width, screen_height))  
 
 # Agregar un label con el texto "battle city"
