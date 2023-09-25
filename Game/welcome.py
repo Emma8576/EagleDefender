@@ -5,7 +5,6 @@ import time
 import tkinter as tk
 import os
 import msvcrt
-import subprocess
 
 init()
 screen_info = display.Info()
@@ -37,12 +36,12 @@ for i in range(1, 11):
     close.append(image.load(name1))
 
 def abrir_login():
-    subprocess.Popen(["python", "Login.py"])
+    os.system('Login.py')
 
 def titleImage1():
     picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
-    picture = pygame.transform.scale(picture, [555,170])
-    screen.blit(picture, [370,520])
+    picture = pygame.transform.scale(picture, [550,170])
+    screen.blit(picture, [386,520])
 
 def salir():
     window.destroy()
@@ -53,7 +52,7 @@ def check_click(image_rect1, image_rect2):
             mouse_pos = pygame.mouse.get_pos()
             if image_rect1.collidepoint(mouse_pos):
                 print("Clic izquierdo en el botón!")
-                abrir_login()  # Abre Login.py
+                abrir_login() 
             if image_rect2.collidepoint(mouse_pos):
                 print("Clic")
                 salir()
