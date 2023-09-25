@@ -4,10 +4,15 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 import pymysql
+import json
 
 # Variables globales para las ventanas
 ventana1 = None
 ventana2 = None
+ventana3 = None
+ventana_de_figuración = None
+
+
 
 #Se agrega imagen de fondo
 def cargar_imagen_de_fondo(ventana, ruta_imagen):
@@ -71,8 +76,36 @@ def menu_login():
     botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
     botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
+    botonConfiguración = tk.Button(ventana1, text="Configuración", background = "#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", command=abrir_configuracion)
+    botonConfiguración.pack()
+    botonConfiguración.place(x=0, y=0, height=40, width=200)
     # Mostrar la ventana principal
     ventana1.mainloop()
+
+def abrir_configuracion():
+    global ventana_de_figuración
+    if ventana1:
+        ventana1.withdraw()
+
+    ventana_de_figuración = tk.Toplevel(ventana1)
+    ventana_de_figuración.wm_attributes('-fullscreen', '1') 
+
+    cargar_imagen_de_fondo(ventana_de_figuración, "loginImages/fondo1.png")
+
+    botonVolver = tk.Button(ventana_de_figuración, text="Volver", height="4", width="30", background="#0a0c3f", fg="white", relief="raised", command=volver_a_inicio)
+    botonVolver.place(relx=0.5, rely=0.9, anchor='center')
+
+    ventana_de_figuración.protocol("WM_DELETE_WINDOW", volver_a_inicio)
+    ventana_de_figuración.mainloop()
+
+def volver_a_inicio():
+    global ventana_de_figuración
+    if ventana_de_figuración:
+        ventana_de_figuración.withdraw()
+    if ventana1:
+        ventana1.deiconify()
+
+
 
 #Funcion para cerrar el juego
 def cerrarJuego():
