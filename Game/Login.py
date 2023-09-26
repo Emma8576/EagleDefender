@@ -10,7 +10,6 @@ import json
 ventana1 = None
 ventana2 = None
 ventana3 = None
-ventana_configuración = None
 
 
 
@@ -26,52 +25,6 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
     etiqueta_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Cubrir toda la ventana
 
     
-def abrir_configuracion():
-    ventana1.withdraw()
-
-    ventana_configuracion = tk.Toplevel(ventana1)
-    ventana_configuracion.wm_attributes('-fullscreen', '1') 
-
-    def cambiar_idioma():
-        idioma_seleccionado = var_idioma.get()
-        etiqueta_retro.config(text=traducciones['etiqueta_retro'][idioma_seleccionado])
-        guardar_configuracion(idioma_seleccionado)
-        ventana_configuracion.destroy()
-
-
-    var_idioma = tk.StringVar(ventana_configuración)
-    opciones_idioma =["español", "inglés"]
-
-    menu_idioma = tk.OptionMenu(ventana_configuración, var_idioma, *opciones_idioma)
-    menu_idioma.pack()
-
-    boton_cambiar_idioma = tk.Button(ventana_configuración, text="Cambiar idioma", command= ventana_configuración)
-    boton_cambiar_idioma.pack()
-
-
-
-    cargar_imagen_de_fondo(ventana_configuración, "loginImages/fondo1.png")
-
-    botonVolver = tk.Button(ventana_configuración, text="Volver", height="4", width="30", background="#0a0c3f", font=("System 18 bold"), fg="white",  relief="raised", command=volver_a_inicio)
-    botonVolver.pack()
-    botonVolver.place(x=0, y=0, height=40, width=200)
-
-    ventana_configuración.protocol("WM_DELETE_WINDOW", volver_a_inicio)
-    ventana_configuración.mainloop()
-
-def guardar_configuracion(idioma):
-    with open('configuration.json', 'w') as archivo:
-        json.dump({'idioma':idioma}, archivo)
-
-
-def cargar_configuracion():
-    try:
-        with open('configuration.json', 'r') as archivo:
-            configuracion = json.load(archivo)
-            return configuracion['idioma']
-    except FileNotFoundError:
-        return None
-#Función ventana Login
 def menu_login():
     global ventana1
     # Crear una instancia de la ventana principal
@@ -87,10 +40,6 @@ def menu_login():
     # Cargar icono de la ventana
     ventana1.iconbitmap("loginImages/icon.ico")
 
-    idioma_guardado = cargar_configuracion()
-    var_idioma.set(idioma_guardado if idioma_guardado in opciones_idioma else opciones_idioma[0])
-    etiqueta_retro.config(text=traducciones['etiqueta_retro'][var_idioma.get()])
-    ventana1.mainloop()
     
     # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -127,37 +76,12 @@ def menu_login():
     botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
     botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
-    botonConfiguración = tk.Button(ventana1, text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
-    botonConfiguración.pack()
-    botonConfiguración.place(x=0, y=0, height=40, width=200)
+
     # Mostrar la ventana principal
     ventana1.mainloop()
 
-def abrir_configuracion():
-    global ventana_configuración
-    if ventana1:
-        ventana1.withdraw()
 
 
-    ventana_configuración = tk.Toplevel(ventana1)
-    ventana_configuración.wm_attributes('-fullscreen', '1') 
-
-
-    cargar_imagen_de_fondo(ventana_configuración, "loginImages/fondo1.png")
-
-    botonVolver = tk.Button(ventana_configuración, text="Volver", height="4", width="30", background="#0a0c3f", font=("System 18 bold"), fg="white",  relief="raised", command=volver_a_inicio)
-    botonVolver.pack()
-    botonVolver.place(x=0, y=0, height=40, width=200)
-
-    ventana_configuración.protocol("WM_DELETE_WINDOW", volver_a_inicio)
-    ventana_configuración.mainloop()
-
-def volver_a_inicio():
-    global ventana_configuración
-    if ventana_configuración:
-        ventana_configuración.withdraw()
-    if ventana1:
-        ventana1.deiconify()
 
 
 
