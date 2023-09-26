@@ -10,7 +10,7 @@ import json
 ventana1 = None
 ventana2 = None
 ventana3 = None
-ventana_de_figuración = None
+
 
 
 #Se agrega imagen de fondo
@@ -42,6 +42,7 @@ def menu_login():
 
     
     # Se añade la fuente retro en diversos tamaños
+    global fuente_retro_3
     fuente_retro = ("8-Bit Operator+ 8", 100)
     fuente_retro_1 = ("8-Bit Operator+ 8", 50)
     fuente_retro_2 = ("8-Bit Operator+ 8", 20)
@@ -76,38 +77,9 @@ def menu_login():
     botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
     botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
-    botonConfiguración = tk.Button(ventana1, text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
-    botonConfiguración.pack()
-    botonConfiguración.place(x=0, y=0, height=40, width=200)
-
 
     # Mostrar la ventana principal
     ventana1.mainloop()
-
-
-
-def abrir_configuracion():
-    global ventana_de_figuración
-    if ventana1:
-        ventana1.withdraw()
-
-    ventana_de_figuración = tk.Toplevel(ventana1)
-    ventana_de_figuración.wm_attributes('-fullscreen', '1') 
-
-    cargar_imagen_de_fondo(ventana_de_figuración, "loginImages/fondo1.png")
-
-    botonVolver = tk.Button(ventana_de_figuración, text="Volver", height="4", width="30", background="#0a0c3f", font=("System 18 bold"),fg="white", relief="raised", command=volver_a_inicio)
-    botonVolver.place(x=0, y=0, height=40, width=200)
-
-    ventana_de_figuración.protocol("WM_DELETE_WINDOW", volver_a_inicio)
-    ventana_de_figuración.mainloop()
-
-def volver_a_inicio():
-    global ventana_de_figuración
-    if ventana_de_figuración:
-        ventana_de_figuración.withdraw()
-    if ventana1:
-        ventana1.deiconify()
 
 
 
@@ -392,6 +364,10 @@ def recuperar_contrasena():
     # Calcular la posición x para centrar horizontalmente los campos de entrada
     x_entry = (ancho_pantalla) // 3.4
     
+    global nombre_usuario2_entry
+    global correo_entry
+    global contrasena_entry
+    global contrasena_Re_entry
     
     # Espacio para llenar usuario
     nombreUsuario_verif2 = tk.StringVar()
@@ -417,7 +393,7 @@ def recuperar_contrasena():
     espacio_entre_botones = 30 
 
     # Botón de registrarse de la ventana de registro
-    botonRegistro = Button(ventana4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command="")
+    botonRegistro = Button(ventana4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=actualiza_contraseña)
     botonRegistro.place(relx=0.5, rely=0.8 + 0.03, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
@@ -437,6 +413,8 @@ def volver_atras():
     if ventana1:
         ventana1.deiconify()
 
+"*******************************************************/Conexiones y modificaciones con base de datos************************************************************"
+
 def insertar_datos():
     #Conexión con la base de datos local
     bd = pymysql.connect(
@@ -449,6 +427,7 @@ def insertar_datos():
     # Definición de la consulta SQL para INSERT
     sql = "INSERT INTO login (Correo, Usuario, Contrasena) VALUES ('{0}', '{1}', '{2}')".format(correo_usuario_entry.get(), nombre_usuario_entry.get(), contrasena_usuario_entry.get())
     
+    #Confirma o Niega el éxito del registro
     try:
         fcursor.execute(sql)
         bd.commit()
@@ -478,4 +457,61 @@ def validar_datos():
         messagebox.showinfo(title="Inicio de sesión incorrecto",message="Usuario y Contraseña incorrecta")
     bd.close()
 
+# Esta función actualiza los cambios hechos en la contraseña en la base de datos
+def actualiza_contraseña():
+    # Verifica que todos los campos estén llenos
+    if nombre_usuario2_entry.get() == '' or correo_entry.get() == '' or contrasena_entry.get() == '' or contrasena_Re_entry.get() == '':
+        messagebox.showerror(title="Aviso", message="Todos los campos deben estar llenos")
+        return
+
+    # Verifica que las contraseñas ingresadas sean iguales
+    elif contrasena_entry.get() != contrasena_Re_entry.get():
+        messagebox.showerror(title="Alerta", message="Las contraseñas ingresadas no coinciden")
+        return
+    else:
+        # Conexión con la base de datos local
+        bd = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            db="bd1"
+        )
+
+        # Crear un cursor para ejecutar consultas SQL
+        fcursor = bd.cursor()
+
+        # Consulta para verificar si el correo está registrado
+        consulta = 'SELECT * FROM login WHERE Correo=%s'
+        fcursor.execute(consulta, (correo_entry.get()))
+
+        # Recuperar la primera fila de resultados
+        row = fcursor.fetchone()
+        
+        # Verificar si el correo no está registrado
+        if row is None:
+            messagebox.showerror(title="Alerta", message="El correo ingresado no está registrado, utilice el correo con el que realizó el registro")
+            return
+        else:
+            # Consulta para actualizar la contraseña en la base de datos
+            consulta = 'UPDATE login SET Contrasena=%s WHERE Correo=%s'
+            fcursor.execute(consulta, (contrasena_Re_entry.get(), correo_entry.get()))
+            
+            # Confirmar los cambios en la base de datos
+            bd.commit()
+            
+            # Cerrar la conexión a la base de datos
+            bd.close()
+            
+            # Mostrar un mensaje informativo de éxito
+            messagebox.showinfo(title="Aviso", message="Su contraseña ha sido cambiada con éxito, vuelva al inicio de sesión para continuar")
+
+            #Eliminar el contenido de los campos una vez se haya completado el cambio de contraseña
+            nombre_usuario2_entry.delete(0,END)
+            correo_entry.delete(0,END)
+            contrasena_entry.delete(0,END)
+            contrasena_Re_entry.delete(0,END)
+
+            # Botón de registrarse de la ventana de registro
+            botonInicioSesion = Button(ventana4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+            botonInicioSesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
 menu_login()
