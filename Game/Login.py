@@ -10,7 +10,9 @@ import json
 ventana1 = None
 ventana2 = None
 ventana3 = None
-ventana_de_figuración = None
+ventana_configuración = None
+seleccion = None
+
 
 
 #Se agrega imagen de fondo
@@ -25,8 +27,15 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
     etiqueta_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Cubrir toda la ventana
 
     
+
+
+
+
+
+
+#Función ventana Login
 def menu_login():
-    global ventana1
+    global ventana1, seleccion
     # Crear una instancia de la ventana principal
     ventana1 = tk.Tk()
     ventana1.attributes("-fullscreen", True)
@@ -40,6 +49,7 @@ def menu_login():
     # Cargar icono de la ventana
     ventana1.iconbitmap("loginImages/icon.ico")
 
+ 
     
     # Se añade la fuente retro en diversos tamaños
     global fuente_retro_3
@@ -55,6 +65,7 @@ def menu_login():
     
     #Etiqueta de acceder al juego
     ancho_pantalla = ventana1.winfo_screenwidth()
+    global etiqueta
     etiqueta = Label(ventana1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_1)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
@@ -63,6 +74,7 @@ def menu_login():
 
 
     # Botón de Iniciar Sesión
+    global botonInicio
     botonInicio = tk.Button(ventana1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
     botonInicio.place(relx=0.5, rely=0.5, anchor='center')
 
@@ -70,44 +82,89 @@ def menu_login():
     espacio_entre_botones = 30 
 
     # Botón de Registrarse
+    global botonRegistrarse
     botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
     botonRegistrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
 
     # Botón de Salir
+    global botonSalir
     botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
     botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
-    #botón configuración
+
+    global botonConfiguración 
     botonConfiguración = tk.Button(ventana1, text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
     botonConfiguración.pack()
     botonConfiguración.place(x=0, y=0, height=40, width=200)
 
+    seleccion = tk.StringVar()  
+
+    if config["idioma"] == "inglés":
+        etiqueta.config(text="Access the game")
+        botonInicio.config(text="Log in")
+        botonRegistrarse.config(text="Sign in")
+        botonSalir.config(text="Leave")
+        botonConfiguración.config(text="Configuration")
+
     # Mostrar la ventana principal
     ventana1.mainloop()
 
-#Función para abrir ventana configuración
+def cargar_idioma():
+    idioma = seleccion.get()
+    if idioma == "español":
+        etiqueta.config(text="Acceder al juego")
+        botonInicio.config(text="Iniciar Sesión")
+        botonRegistrarse.config(text="Registrarse")
+        botonSalir.config(text="Salir")
+        botonConfiguración.config(text="Configuración")
+        config["idioma"] = "español"
+    elif idioma == "inglés":
+        etiqueta.config(text="Access the game")
+        botonInicio.config(text="Log in")
+        botonRegistrarse.config(text="Sign in")
+        botonSalir.config(text="Leave")
+        botonConfiguración.config(text="Configuration")
+        config["idioma"] = "inglés"
+    with open("config.json", "w") as f:
+        json.dump(config, f)
+
+# Función para abrir configuración
+     
 def abrir_configuracion():
-    global ventana_de_figuración
-    if ventana1:
-        ventana1.withdraw()
+    global ventana_configuracion, seleccion
+    ventana_configuracion = tk.Toplevel(ventana1)
+    ventana_configuracion.configure(bg="black")
 
-    ventana_de_figuración = tk.Toplevel(ventana1)
-    ventana_de_figuración.wm_attributes('-fullscreen', '1') 
+    label_configuracion = tk.Label(ventana_configuracion, text="Seleccione el idioma:", bg="black", fg="white")
+    label_configuracion.pack()
 
-    cargar_imagen_de_fondo(ventana_de_figuración, "loginImages/fondo1.png")
 
-    botonVolver = tk.Button(ventana_de_figuración, text="Volver", height="4", width="30", background="#0a0c3f", font=("System 18 bold"),fg="white", relief="raised", command=volver_a_inicio)
-    botonVolver.place(x=0, y=0, height=40, width=200)
+    seleccion.set(config["idioma"])
 
-    ventana_de_figuración.protocol("WM_DELETE_WINDOW", volver_a_inicio)
-    ventana_de_figuración.mainloop()
+    opcion_español = tk.Radiobutton(ventana_configuracion, text="Español", variable=seleccion, value="español", bg="black", fg="white")
+    opcion_español.pack(anchor="w")
+
+    opcion_ingles = tk.Radiobutton(ventana_configuracion, text="Inglés", variable=seleccion, value="inglés", bg="black", fg="white")
+    opcion_ingles.pack(anchor="w")
+
+    boton_aceptar = tk.Button(ventana_configuracion, text="Aceptar", command=cargar_idioma, bg="black", fg="white")
+    boton_aceptar.pack()
+
+try:
+    with open("config.json", "r") as f:
+        config = json.load(f)
+except FileNotFoundError:
+    config = {"idioma": "español"}
+
+
 
 def volver_a_inicio():
-    global ventana_de_figuración
-    if ventana_de_figuración:
-        ventana_de_figuración.withdraw()
+    global ventana_configuración
+    if ventana_configuración:
+        ventana_configuración.withdraw()
     if ventana1:
         ventana1.deiconify()
+
 
 
 #Funcion para cerrar el juego
@@ -392,7 +449,7 @@ def recuperar_contrasena():
     global correo_entry
     global contrasena_entry
     global contrasena_Re_entry
-    
+
     # Espacio para llenar usuario
     nombreUsuario_verif2 = tk.StringVar()
     nombre_usuario2_entry = tk.Entry(ventana4, textvariable=nombreUsuario_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
@@ -451,7 +508,6 @@ def insertar_datos():
     # Definición de la consulta SQL para INSERT
     sql = "INSERT INTO login (Correo, Usuario, Contrasena) VALUES ('{0}', '{1}', '{2}')".format(correo_usuario_entry.get(), nombre_usuario_entry.get(), contrasena_usuario_entry.get())
     
-    #Confirma o Niega el éxito del registro
     try:
         fcursor.execute(sql)
         bd.commit()
@@ -481,7 +537,6 @@ def validar_datos():
         messagebox.showinfo(title="Inicio de sesión incorrecto",message="Usuario y Contraseña incorrecta")
     bd.close()
 
-# Esta función actualiza los cambios hechos en la contraseña en la base de datos
 def actualiza_contraseña():
     # Verifica que todos los campos estén llenos
     if nombre_usuario2_entry.get() == '' or correo_entry.get() == '' or contrasena_entry.get() == '' or contrasena_Re_entry.get() == '':
@@ -538,4 +593,5 @@ def actualiza_contraseña():
             # Botón de registrarse de la ventana de registro
             botonInicioSesion = Button(ventana4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
             botonInicioSesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+
 menu_login()
