@@ -13,7 +13,7 @@ def abrir_ventana_configuracion():
 
     var_idioma = tk.StringVar(ventana_configuracion)
 
-    menu_idioma = tk.OptionMenu(ventana_configuracion, var_idioma, *opciones_idioma)
+    menu_idioma = tk.OptionMenu(ventana_configuracion, var_idioma, * opciones_idioma)
     menu_idioma.pack()
 
     boton_cambiar_idioma = tk.Button(ventana_configuracion, text="Cambiar Idioma", command=cambiar_idioma_configuracion)
