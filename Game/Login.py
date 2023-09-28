@@ -127,20 +127,84 @@ def cargar_idioma():
 def abrir_configuracion():
     global ventana_configuracion, seleccion
     ventana_configuracion = tk.Toplevel(ventana1)
-    ventana_configuracion.configure(bg="black")
+    ventana_configuracion.attributes("-fullscreen", True)
+    cargar_imagen_de_fondo(ventana_configuracion, "loginImages/fondo1.png")
+    
+    global etiqueta4
+    ancho_pantalla = ventana_configuracion.winfo_screenwidth()
+    etiqueta4 = Label(ventana_configuracion, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
 
-    label_configuracion = tk.Label(ventana_configuracion, text="Seleccione el idioma:", bg="black", fg="white")
-    label_configuracion.pack()
+    etiqueta_retro2 = Label(ventana_configuracion, text="Battle City", bg="#000030", font=("System 30 bold"), fg="white")
+    etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro2.pack()
+
+
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta4.winfo_reqwidth()) // 2
+    etiqueta4.place(x=x, y=120)
+
+    global label_configuracion
+    label_configuracion = tk.Label(ventana_configuracion, text="Selecciona el idioma:", bg="black", fg="white", font=("System 20 bold"))
+    label_configuracion.place(x=10, y=10)
+    label_configuracion.config(highlightthickness=-1)
 
     seleccion.set(config["idioma"])
 
     opciones_idioma = [("Español", "español"), ("Inglés", "inglés")]
-    for opcion, valor in opciones_idioma:
-        opcion_idioma = tk.Radiobutton(ventana_configuracion, text=opcion, variable=seleccion, value=valor, bg="black", fg="white")
-        opcion_idioma.pack(anchor="w")
 
+    global opcion_español
+    opcion_español = tk.Radiobutton(ventana_configuracion, text="Español", variable=seleccion, value="español", bg="black", fg="white",font=("System 20 bold"))
+    opcion_español.pack(anchor="w")
+
+    global opcion_ingles
+    opcion_ingles = tk.Radiobutton(ventana_configuracion, text="Inglés", variable=seleccion, value="inglés", bg="black", fg="white",font=("System 20 bold"))
+    opcion_ingles.pack(anchor="w")
+
+    global boton_aceptar
     boton_aceptar = tk.Button(ventana_configuracion, text="Aceptar", command=cargar_idioma, bg="black", fg="white")
     boton_aceptar.pack()
+    boton_aceptar.place(x=50, y=150)
+    
+    actualizar_idioma_configuracion()
+
+    def salir():
+        ventana_configuracion.destroy()
+
+    boton1 = tk.Button(ventana_configuracion, text="Volver", # Se configura el botón "Volver" de "Acerca de"
+                 command=salir,
+                 fg="snow",
+                 bg="SkyBlue3",
+                 relief="sunken",
+                 font=("System 30 bold"),
+                 cursor="exchange")
+    boton1.pack()       #Se posiciona el botón "Volver"
+    boton1.place(x=550, y=500, height=50, width=150)
+
+    seleccion.set(config["idioma"])
+
+    if config["idioma"] == "inglés":
+        etiqueta4.config(text="Configuration")
+        label_configuracion.config(text="Select a language")
+        opcion_español.config(text="Spanish")
+        opcion_ingles.config(text="English")
+        boton_aceptar.config(text="Accept")
+
+    ventana_configuracion.mainloop()
+
+def actualizar_idioma_configuracion():
+    if seleccion.get() == "español":
+        etiqueta4.config(text="Configuración")
+        label_configuracion.config(text="Seleccione el idioma:")
+        opcion_español.config(text="Español")
+        opcion_ingles.config(text="Inglés")
+        boton_aceptar.config(text="Aceptar")
+    elif seleccion.get() == "inglés":
+        etiqueta4.config(text="Configuration")
+        label_configuracion.config(text="Select a language")
+        opcion_español.config(text="Spanish")
+        opcion_ingles.config(text="English")
+        boton_aceptar.config(text="Accept")
+
 
 
 try:

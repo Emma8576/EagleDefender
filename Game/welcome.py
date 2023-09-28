@@ -56,10 +56,10 @@ def check_click(image_rect1, image_rect2):
         if e.type == MOUSEBUTTONDOWN and e.button == 1:  # Verifica clic izquierdo
             mouse_pos = pygame.mouse.get_pos()
             if image_rect1.collidepoint(mouse_pos):
-                print("Clic izquierdo en el botón!")
+                print("Vas a jugar!")
                 abrir_login()  # Abre Login.py
             if image_rect2.collidepoint(mouse_pos):
-                print("Clic")
+                print("Saliste")
                 salir()
 
 background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  
