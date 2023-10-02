@@ -6,7 +6,7 @@ import os
 import pymysql
 import json
 
-# Variables globales para las ventanas
+# Variables globales para las ventanas 
 ventana1 = None
 ventana2 = None
 ventana3 = None
@@ -102,7 +102,7 @@ def menu_login():
 
     # Mostrar la ventana principal
     ventana1.mainloop()
-
+    
 def cargar_idioma():
     idioma = seleccion.get()
     if idioma == "español":
@@ -453,7 +453,7 @@ def registro():
 
     # Botón de registrarse de la ventana de registro
     global botonRegistro
-    botonRegistro = Button(ventana3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=insertar_datos)
+    botonRegistro = Button(ventana3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command= verificar_contraseña)
     botonRegistro.place(relx=0.5, rely=0.8, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
@@ -472,9 +472,25 @@ def registro():
         etiquetaCorreo.config(text="Email")
         botonRegistro.config(text="Register")
         botonAtras.config(text="Back")
-    
-    
+  
     ventana3.mainloop()
+
+#Función para establecer logitud de 8 caracteres a la contraseña
+def verificar_contraseña():
+    contrasena = contrasena_usuario_entry.get()
+    if len(contrasena) >= 8:
+        insertar_datos()
+        
+        #Eliminar el contenido de los campos una vez se haya completado el registro
+        nombre_usuario_entry.delete(0,END)
+        correo_usuario_entry.delete(0,END)
+        contrasena_usuario_entry.delete(0,END)
+        
+        # Botón de registrarse de la ventana de registro
+        botonInicioSesion = Button(ventana3, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+        botonInicioSesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+    else:
+        messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
 
 #función interfaz para recuperar contraseña
 def recuperar_contrasena():
@@ -631,10 +647,10 @@ def insertar_datos():
     try:
         fcursor.execute(sql)
         bd.commit()
-        messagebox.showinfo(message="Has sido registrado corretamente", title="Aviso")
+        messagebox.showinfo(message="Has sido registrado corretamente, inicie sesión para comenzar con el juego", title="Aviso")
     except:
         bd.rollback()
-        messagebox.showinfo(message="Tu registro no se pudo completar", title="Aviso")
+        messagebox.showerror(message="Tu registro no se pudo completar", title="Aviso")
     
     bd.close()
 
@@ -654,7 +670,7 @@ def validar_datos():
         messagebox.showinfo(title="Inicio de sesión exitoso",message="Usuario y Contraseña correcta")
     
     else:
-        messagebox.showinfo(title="Inicio de sesión incorrecto",message="Usuario y Contraseña incorrecta")
+        messagebox.showerror(title="Inicio de sesión incorrecto",message="Usuario o Contraseña incorrecta")
     bd.close()
 
 def actualiza_contraseña():
