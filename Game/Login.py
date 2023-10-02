@@ -7,9 +7,9 @@ import pymysql
 import json
 
 # Variables globales para las ventanas 
-ventana1 = None
-ventana2 = None
-ventana3 = None
+ventana_1 = None
+ventana_2 = None
+ventana_3 = None
 ventana_configuración = None
 seleccion = None
 
@@ -29,18 +29,18 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
 
 #Función ventana Login
 def menu_login():
-    global ventana1, seleccion
+    global ventana_1, seleccion
     # Crear una instancia de la ventana principal
-    ventana1 = tk.Tk()
+    ventana_1 = tk.Tk()
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana1, "loginImages/fondo1.png")
-    ventana1.attributes("-fullscreen", True)
+    cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
+    ventana_1.attributes("-fullscreen", True)
     # Establecer el título de la ventana
-    ventana1.title("Bienvenidos")
+    ventana_1.title("Bienvenidos")
 
     # Cargar icono de la ventana
-    ventana1.iconbitmap("loginImages/icon.ico")
+    ventana_1.iconbitmap("loginImages/icon.ico")
 
  
     
@@ -52,14 +52,14 @@ def menu_login():
     fuente_retro_3 = ("8-Bit Operator+ 8", 15)
     
     #Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana1, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_1, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
     etiqueta_retro.pack()
     
     #Etiqueta de acceder al juego
-    ancho_pantalla = ventana1.winfo_screenwidth()
+    ancho_pantalla = ventana_1.winfo_screenwidth()
     global etiqueta
-    etiqueta = Label(ventana1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta = Label(ventana_1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_1)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
@@ -67,57 +67,57 @@ def menu_login():
 
 
     # Botón de Iniciar Sesión
-    global botonInicio
-    botonInicio = tk.Button(ventana1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
-    botonInicio.place(relx=0.5, rely=0.5, anchor='center')
+    global boton_inicio
+    boton_inicio = tk.Button(ventana_1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+    boton_inicio.place(relx=0.5, rely=0.5, anchor='center')
 
     # Espacio entre botones
     espacio_entre_botones = 30 
 
     # Botón de Registrarse
-    global botonRegistrarse
-    botonRegistrarse = tk.Button(ventana1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
-    botonRegistrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
+    global boton_registrarse
+    boton_registrarse = tk.Button(ventana_1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
+    boton_registrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
 
     # Botón de Salir
-    global botonSalir
-    botonSalir = tk.Button(ventana1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana1.destroy)
-    botonSalir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
+    global boton_salir
+    boton_salir = tk.Button(ventana_1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana_1.destroy)
+    boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
 
-    global botonConfiguración 
-    botonConfiguración = tk.Button(ventana1, text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
-    botonConfiguración.pack()
-    botonConfiguración.place(x=0, y=0, height=40, width=200)
+    global boton_configuración 
+    boton_configuración = tk.Button(ventana_1, text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
+    boton_configuración.pack()
+    boton_configuración.place(x=0, y=0, height=40, width=200)
 
     seleccion = tk.StringVar()  
 
     if config["idioma"] == "inglés":
         etiqueta.config(text="Access the game")
-        botonInicio.config(text="Log in")
-        botonRegistrarse.config(text="Sign in")
-        botonSalir.config(text="Leave")
-        botonConfiguración.config(text="Configuration")
+        boton_inicio.config(text="Log in")
+        boton_registrarse.config(text="Sign in")
+        boton_salir.config(text="Leave")
+        boton_configuración.config(text="Configuration")
 
 
     # Mostrar la ventana principal
-    ventana1.mainloop()
+    ventana_1.mainloop()
     
 def cargar_idioma():
     idioma = seleccion.get()
     if idioma == "español":
         etiqueta.config(text="Acceder al juego")
-        botonInicio.config(text="Iniciar Sesión")
-        botonRegistrarse.config(text="Registrarse")
-        botonSalir.config(text="Salir")
-        botonConfiguración.config(text="Configuración")
+        boton_inicio.config(text="Iniciar Sesión")
+        boton_registrarse.config(text="Registrarse")
+        boton_salir.config(text="Salir")
+        boton_configuración.config(text="Configuración")
         config["idioma"] = "español"
     elif idioma == "inglés":
         etiqueta.config(text="Access the game")
-        botonInicio.config(text="Log in")
-        botonRegistrarse.config(text="Sign in")
-        botonSalir.config(text="Leave")
-        botonConfiguración.config(text="Configuration")
+        boton_inicio.config(text="Log in")
+        boton_registrarse.config(text="Sign in")
+        boton_salir.config(text="Leave")
+        boton_configuración.config(text="Configuration")
         config["idioma"] = "inglés"
     with open("config.json", "w") as f:
         json.dump(config, f)
@@ -126,13 +126,13 @@ def cargar_idioma():
      
 def abrir_configuracion():
     global ventana_configuracion, seleccion
-    ventana_configuracion = tk.Toplevel(ventana1)
+    ventana_configuracion = tk.Toplevel(ventana_1)
     ventana_configuracion.attributes("-fullscreen", True)
     cargar_imagen_de_fondo(ventana_configuracion, "loginImages/fondo1.png")
     
-    global etiqueta4
+    global etiqueta_4
     ancho_pantalla = ventana_configuracion.winfo_screenwidth()
-    etiqueta4 = Label(ventana_configuracion, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
+    etiqueta_4 = Label(ventana_configuracion, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
 
     etiqueta_retro2 = Label(ventana_configuracion, text="Battle City", bg="#000030", font=("System 30 bold"), fg="white")
     etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center') 
@@ -140,8 +140,8 @@ def abrir_configuracion():
 
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
-    x = (ancho_pantalla - etiqueta4.winfo_reqwidth()) // 2
-    etiqueta4.place(x=x, y=120)
+    x = (ancho_pantalla - etiqueta_4.winfo_reqwidth()) // 2
+    etiqueta_4.place(x=x, y=120)
 
     global label_configuracion
     label_configuracion = tk.Label(ventana_configuracion, text="Selecciona el idioma:", bg="black", fg="white", font=("System 20 bold"))
@@ -183,7 +183,7 @@ def abrir_configuracion():
     seleccion.set(config["idioma"])
 
     if config["idioma"] == "inglés":
-        etiqueta4.config(text="Configuration")
+        etiqueta_4.config(text="Configuration")
         label_configuracion.config(text="Select a language")
         opcion_español.config(text="Spanish")
         opcion_ingles.config(text="English")
@@ -193,13 +193,13 @@ def abrir_configuracion():
 
 def actualizar_idioma_configuracion():
     if seleccion.get() == "español":
-        etiqueta4.config(text="Configuración")
+        etiqueta_4.config(text="Configuración")
         label_configuracion.config(text="Seleccione el idioma:")
         opcion_español.config(text="Español")
         opcion_ingles.config(text="Inglés")
         boton_aceptar.config(text="Aceptar")
     elif seleccion.get() == "inglés":
-        etiqueta4.config(text="Configuration")
+        etiqueta_4.config(text="Configuration")
         label_configuracion.config(text="Select a language")
         opcion_español.config(text="Spanish")
         opcion_ingles.config(text="English")
@@ -219,32 +219,32 @@ def volver_a_inicio():
     global ventana_configuración
     if ventana_configuración:
         ventana_configuración.withdraw()
-    if ventana1:
-        ventana1.deiconify()
+    if ventana_1:
+        ventana_1.deiconify()
 
 
 
 #Funcion para cerrar el juego
-def cerrarJuego():
-    ventana1.destroy()
+def cerrar_juego():
+    ventana_1.destroy()
     
 # Función para mostrar la ventana de inicio de sesión
 def inicio_sesion():
-    global ventana2, seleccion
-    if ventana1:
-        ventana1.withdraw()
+    global ventana_2, seleccion
+    if ventana_1:
+        ventana_1.withdraw()
     
     # Crear una instancia de la ventana secundaria
-    ventana2 = Toplevel(ventana1)
-    ventana2.attributes("-fullscreen", True)
+    ventana_2 = Toplevel(ventana_1)
+    ventana_2.attributes("-fullscreen", True)
 
-    global etiqueta2
-    etiqueta2 = Label(ventana2, text="Inicio de sesión", bg="#101654", fg="white")    
+    global etiqueta_2
+    etiqueta_2 = Label(ventana_2, text="Inicio de sesión", bg="#101654", fg="white")    
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana2, "loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_2, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamañosglobal ventana_configuracion, seleccion
-    ventana_configuracion = tk.Toplevel(ventana1)
+    ventana_configuracion = tk.Toplevel(ventana_1)
     ventana_configuracion.configure(bg="black")
 
     label_configuracion = tk.Label(ventana_configuracion, text="Seleccione el idioma:", bg="black", fg="white")
@@ -260,45 +260,45 @@ def inicio_sesion():
     fuente_retro_3 = ("8-Bit Operator+ 8", 15)
     
     #Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana2, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_2, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
     etiqueta_retro.pack()
     
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace
-    etiqueta_enlace = tk.Label(ventana2, text="¿Olvidaste tu contraseña?", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace = tk.Label(ventana_2, text="¿Olvidaste tu contraseña?", cursor="hand2", bg="#000232", fg="white")
     etiqueta_enlace.place(relx=0.6, rely=0.6)
     etiqueta_enlace.bind("<Button-1>", lambda event: recuperar_contrasena())
     
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace2
-    etiqueta_enlace2 = tk.Label(ventana2, text="Crea tu cuenta", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace2 = tk.Label(ventana_2, text="Crea tu cuenta", cursor="hand2", bg="#000232", fg="white")
     etiqueta_enlace2.place(relx=0.3 + 0.23, rely=0.6)
     etiqueta_enlace2.bind("<Button-1>", lambda event: registro())
 
     #Etiqueta de acceder al juego
-    global etiqueta1
-    ancho_pantalla = ventana2.winfo_screenwidth()
-    etiqueta1 = Label(ventana2, text="Inicio de Sesión", bg="#101654", fg="white", font=fuente_retro_1)
+    global etiqueta_1
+    ancho_pantalla = ventana_2.winfo_screenwidth()
+    etiqueta_1 = Label(ventana_2, text="Inicio de Sesión", bg="#101654", fg="white", font=fuente_retro_1)
 
-# Calcula la posición x para que la etiqueta esté en el centro horizontal
-    x = (ancho_pantalla - etiqueta1.winfo_reqwidth()) // 2
-    etiqueta1.place(x=x, y=150)
+    #Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta_1.winfo_reqwidth()) // 2
+    etiqueta_1.place(x=x, y=150)
 
-    global nombreUsuario_verif
-    global contrasenaUsuario_verif
+    global nombre_usuario_verif
+    global contrasena_usuario_verif
     
     
-    nombreUsuario_verif = StringVar() 
-    contrasenaUsuario_verif = StringVar()
+    nombre_usuario_verif = StringVar() 
+    contrasena_usuario_verif = StringVar()
 
     #Se agrega la etiqueta de usuario
     global etiquetaUsuario
-    etiquetaUsuario = Label(ventana2, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    etiquetaUsuario = Label(ventana_2, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
     
     #Se agrega la etiqueta de contraseña
     global etiquetaContrasena
-    etiquetaContrasena = Label(ventana2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiquetaContrasena = Label(ventana_2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
     
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
@@ -309,62 +309,62 @@ def inicio_sesion():
     etiquetaContrasena.place(x=x, y=370) 
     
     # Obtener el ancho de la pantalla
-    ancho_pantalla = ventana2.winfo_screenwidth()
+    ancho_pantalla = ventana_2.winfo_screenwidth()
 
     # Calcular la posición x para centrar horizontalmente los campos de entrada
     x_entry = (ancho_pantalla) // 3.1
     
     
     # Espacio para llenar usuario
-    nombreUsuario_verif = tk.StringVar()
-    nombre_usuario_entry1 = tk.Entry(ventana2, textvariable=nombreUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_verif = tk.StringVar()
+    nombre_usuario_entry1 = tk.Entry(ventana_2, textvariable=nombre_usuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
     nombre_usuario_entry1.place(x=x_entry, y=300)
 
     # Espacio para llenar contraseña
-    contrasenaUsuario_verif = tk.StringVar()
-    contrasena_usuario_entry1 = tk.Entry(ventana2, textvariable=contrasenaUsuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_verif = tk.StringVar()
+    contrasena_usuario_entry1 = tk.Entry(ventana_2, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
     contrasena_usuario_entry1.place(x=x_entry, y=420)
     
     # Espacio entre botones
     espacio_entre_botones = 30 
 
     # Botón de Iniciar sesión de la ventana inicio de sesión
-    global botonInicioSesion
-    botonInicioSesion = Button(ventana2, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=validar_datos)
-    botonInicioSesion.place(relx=0.5, rely=0.7, anchor='center')
+    global boton_inicio_sesion
+    boton_inicio_sesion = Button(ventana_2, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=validar_datos)
+    boton_inicio_sesion.place(relx=0.5, rely=0.7, anchor='center')
     
         # Botón de Atrás de la ventana inicio de sesión
     global botonAtras
-    botonAtras = Button(ventana2, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras = Button(ventana_2, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
     botonAtras.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/90, anchor='center')
 
 
-    ventana2.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
+    ventana_2.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
 
     if config["idioma"] == "inglés":
-        etiqueta1.config(text="Log in")
+        etiqueta_1.config(text="Log in")
         etiqueta_enlace.config(text="Forgot password?")
         etiqueta_enlace2.config(text="Create account")
         etiquetaUsuario.config(text="User")
         etiquetaContrasena.config(text="Password")
-        botonInicioSesion.config(text="Log in")
+        boton_inicio_sesion.config(text="Log in")
         botonAtras.config(text="Atrás")
     
-    ventana2.mainloop()
+    ventana_2.mainloop()
 
 #Función ventana de Registro
 def registro():
-    global ventana3, seleccion
-    if ventana1:
-        ventana1.withdraw()
+    global ventana_3, seleccion
+    if ventana_1:
+        ventana_1.withdraw()
     
     # Crear una instancia de la ventana secundaria
-    ventana3 = Toplevel(ventana1)
-    ventana3.attributes("-fullscreen", True)
-    ventana3.title("Registro")
+    ventana_3 = Toplevel(ventana_1)
+    ventana_3.attributes("-fullscreen", True)
+    ventana_3.title("Registro")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana3, "loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_3, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -375,19 +375,19 @@ def registro():
     seleccion.set(config["idioma"])
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace
-    etiqueta_enlace = tk.Label(ventana3, text="¿Iniciar Sesión?", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace = tk.Label(ventana_3, text="¿Iniciar Sesión?", cursor="hand2", bg="#000232", fg="white")
     etiqueta_enlace.place(relx=0.6 + 0.04, rely=0.3 + 0.09)
     etiqueta_enlace.bind("<Button-1>", lambda event: inicio_sesion())
 
     #Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana3, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_3, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.7, anchor='center') 
     etiqueta_retro.pack()
     
     #Etiqueta de registro del juego
     global etiqueta3
-    ancho_pantalla = ventana3.winfo_screenwidth()
-    etiqueta3 = Label(ventana3, text="Registrarse", bg="#101654", fg="white", font=fuente_retro_1)
+    ancho_pantalla = ventana_3.winfo_screenwidth()
+    etiqueta3 = Label(ventana_3, text="Registrarse", bg="#101654", fg="white", font=fuente_retro_1)
 
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
@@ -395,21 +395,21 @@ def registro():
     etiqueta3.place(x=x, y=120)
     
     #variables para almacenar los datos ingresados por el usuario
-    nombreUsuario_verif1 = StringVar() 
-    contrasenaUsuario_verif1 = StringVar()
+    nombre_usuario_verif1 = StringVar() 
+    contrasena_usuario_verif1 = StringVar()
     correoUsuario_verif = StringVar()
 
     #Se agrega la etiqueta de usuario
     global etiquetaUsuario
-    etiquetaUsuario = Label(ventana3, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    etiquetaUsuario = Label(ventana_3, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
     
     #Se agrega la etiqueta de contraseña
     global etiquetaContrasena
-    etiquetaContrasena = Label(ventana3, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiquetaContrasena = Label(ventana_3, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
     
     #Se agrega la etiqueta del correo
     global etiquetaCorreo
-    etiquetaCorreo = Label(ventana3, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiquetaCorreo = Label(ventana_3, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
     
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
     x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
@@ -424,7 +424,7 @@ def registro():
     etiquetaCorreo.place(x=x, y=420) 
     
     # Obtener el ancho de la pantalla
-    ancho_pantalla = ventana3.winfo_screenwidth()
+    ancho_pantalla = ventana_3.winfo_screenwidth()
 
     # Calcular la posición x para centrar horizontalmente los campos de entrada
     x_entry = (ancho_pantalla) // 3.1
@@ -434,35 +434,35 @@ def registro():
     global correo_usuario_entry
     
     # Espacio para llenar usuario
-    nombreUsuario_verif1 = tk.StringVar()
-    nombre_usuario_entry = tk.Entry(ventana3, textvariable=nombreUsuario_verif1, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_verif1 = tk.StringVar()
+    nombre_usuario_entry = tk.Entry(ventana_3, textvariable=nombre_usuario_verif1, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
     nombre_usuario_entry.place(x=x_entry, y=250)
 
     # Espacio para llenar contraseña
-    contrasenaUsuario_verif = tk.StringVar()
-    contrasena_usuario_entry = tk.Entry(ventana3, textvariable=contrasenaUsuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_verif = tk.StringVar()
+    contrasena_usuario_entry = tk.Entry(ventana_3, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
     contrasena_usuario_entry.place(x=x_entry, y=360)
     
     #Espacio para llenar contraseña
     correoUsuario_verif = tk.StringVar()
-    correo_usuario_entry = tk.Entry(ventana3, textvariable=correoUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    correo_usuario_entry = tk.Entry(ventana_3, textvariable=correoUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
     correo_usuario_entry.place(x=x_entry, y=470)
     
     # Espacio entre botones
     espacio_entre_botones = 30 
 
     # Botón de registrarse de la ventana de registro
-    global botonRegistro
-    botonRegistro = Button(ventana3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command= verificar_contraseña)
-    botonRegistro.place(relx=0.5, rely=0.8, anchor='center')
+    global boton_registro
+    boton_registro = Button(ventana_3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command= verificar_contraseña)
+    boton_registro.place(relx=0.5, rely=0.8, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
     global botonAtras
-    botonAtras = Button(ventana3, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras = Button(ventana_3, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
     botonAtras.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
 
 
-    ventana3.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
+    ventana_3.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
 
     if config["idioma"] == "inglés":
         etiqueta_enlace.config(text="Log in?")
@@ -470,10 +470,10 @@ def registro():
         etiquetaUsuario.config(text="User")
         etiquetaContrasena.config(text="Password")
         etiquetaCorreo.config(text="Email")
-        botonRegistro.config(text="Register")
+        boton_registro.config(text="Register")
         botonAtras.config(text="Back")
   
-    ventana3.mainloop()
+    ventana_3.mainloop()
 
 #Función para establecer logitud de 8 caracteres a la contraseña
 def verificar_contraseña():
@@ -487,24 +487,24 @@ def verificar_contraseña():
         contrasena_usuario_entry.delete(0,END)
         
         # Botón de registrarse de la ventana de registro
-        botonInicioSesion = Button(ventana3, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
-        botonInicioSesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+        boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+        boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
     else:
         messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
 
 #función interfaz para recuperar contraseña
 def recuperar_contrasena():
-    global ventana4, seleccion
-    if ventana1:
-        ventana1.withdraw()
+    global ventana_4, seleccion
+    if ventana_1:
+        ventana_1.withdraw()
     
     # Crear una instancia de la ventana secundaria
-    ventana4 = Toplevel(ventana1)
-    ventana4.attributes("-fullscreen", True)
-    ventana4.title("Recuperar contraseña")
+    ventana_4 = Toplevel(ventana_1)
+    ventana_4.attributes("-fullscreen", True)
+    ventana_4.title("Recuperar contraseña")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana4, "loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_4, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -514,58 +514,58 @@ def recuperar_contrasena():
     
     seleccion.set(config["idioma"])
     #Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana4, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_4, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5 + 0.05, anchor='center') 
     etiqueta_retro.pack()
     
     #Etiqueta de registro del juego
-    global etiqueta4
-    ancho_pantalla = ventana4.winfo_screenwidth()
-    etiqueta4 = Label(ventana4, text="Cambia tu contraseña", bg="#101654", fg="white", font=fuente_retro_1)
+    global etiqueta_4
+    ancho_pantalla = ventana_4.winfo_screenwidth()
+    etiqueta_4 = Label(ventana_4, text="Cambia tu contraseña", bg="#101654", fg="white", font=fuente_retro_1)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
-    x = (ancho_pantalla - etiqueta4.winfo_reqwidth()) // 2
-    etiqueta4.place(x=x, y=105)
+    x = (ancho_pantalla - etiqueta_4.winfo_reqwidth()) // 2
+    etiqueta_4.place(x=x, y=105)
     
     #variables para almacenar los datos ingresados por el usuario
     nombreUsuarioOCorreo_verif = StringVar() 
 
     #Se agrega la etiqueta de usuario
-    global etiquetaUsuario2
-    etiquetaUsuario2 = Label(ventana4, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    global etiqueta_usuario2
+    etiqueta_usuario2 = Label(ventana_4, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
      
     #Se agrega la etiqueta del correo
-    global etiquetaCorreo2
-    etiquetaCorreo2 = Label(ventana4, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    global etiqueta_correo2
+    etiqueta_correo2 = Label(ventana_4, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
     
      
     #Se agrega la etiqueta de contraseña
-    global etiquetaContrasena2
-    etiquetaContrasena2 = Label(ventana4, text="Nueva Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    global etiqueta_contrasena2
+    etiqueta_contrasena2 = Label(ventana_4, text="Nueva Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
     
     #Se agrega la etiqueta de confirmar contraseña
-    global etiquetaContrasenaRe
-    etiquetaContrasenaRe = Label(ventana4, text="Confirmar Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    global etiqueta_contrasena_re
+    etiqueta_contrasena_re = Label(ventana_4, text="Confirmar Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
 
     
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
-    x = (ancho_pantalla - etiquetaUsuario2.winfo_reqwidth()) // 2
-    etiquetaUsuario2.place(x=x, y=190) 
+    x = (ancho_pantalla - etiqueta_usuario2.winfo_reqwidth()) // 2
+    etiqueta_usuario2.place(x=x, y=190) 
     
         # Calcula la posición x para que la etiqueta correo esté en el centro horizontal
-    x = (ancho_pantalla - etiquetaCorreo2.winfo_reqwidth()) // 2
-    etiquetaCorreo2.place(x=x, y=290) 
+    x = (ancho_pantalla - etiqueta_correo2.winfo_reqwidth()) // 2
+    etiqueta_correo2.place(x=x, y=290) 
     
         # Calcula la posición x para que la etiqueta contraseña esté en el centro horizontal
-    x = (ancho_pantalla - etiquetaContrasena2.winfo_reqwidth()) // 2
-    etiquetaContrasena2.place(x=x, y=390) 
+    x = (ancho_pantalla - etiqueta_contrasena2.winfo_reqwidth()) // 2
+    etiqueta_contrasena2.place(x=x, y=390) 
     
         # Calcula la posición x para que la etiqueta repetir contraseña esté en el centro horizontal
-    x = (ancho_pantalla - etiquetaContrasenaRe.winfo_reqwidth()) // 2
-    etiquetaContrasenaRe.place(x=x, y=490) 
+    x = (ancho_pantalla - etiqueta_contrasena_re.winfo_reqwidth()) // 2
+    etiqueta_contrasena_re.place(x=x, y=490) 
     
     # Obtener el ancho de la pantalla
-    ancho_pantalla = ventana4.winfo_screenwidth()
+    ancho_pantalla = ventana_4.winfo_screenwidth()
 
     # Calcular la posición x para centrar horizontalmente los campos de entrada
     x_entry = (ancho_pantalla) // 3.4
@@ -576,59 +576,59 @@ def recuperar_contrasena():
     global contrasena_Re_entry
 
     # Espacio para llenar usuario
-    nombreUsuario_verif2 = tk.StringVar()
-    nombre_usuario2_entry = tk.Entry(ventana4, textvariable=nombreUsuario_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    nombre_usuario_verif2 = tk.StringVar()
+    nombre_usuario2_entry = tk.Entry(ventana_4, textvariable=nombre_usuario_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
     nombre_usuario2_entry.place(x=x_entry, y=235)
     
     # Espacio para llenar correo
     correo_verif2 = tk.StringVar()
-    correo_entry = tk.Entry(ventana4, textvariable=correo_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    correo_entry = tk.Entry(ventana_4, textvariable=correo_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
     correo_entry.place(x=x_entry, y=335)
     
     # Espacio para llenar contraseña
     contrasena_verif2 = tk.StringVar()
-    contrasena_entry = tk.Entry(ventana4, textvariable=contrasena_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    contrasena_entry = tk.Entry(ventana_4, textvariable=contrasena_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
     contrasena_entry.place(x=x_entry, y=435)
     
     # Espacio para llenar contraseña repetida
-    contrasenaRe_verif2 = tk.StringVar()
-    contrasena_Re_entry = tk.Entry(ventana4, textvariable=contrasenaRe_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    contrasena_Re_verif2 = tk.StringVar()
+    contrasena_Re_entry = tk.Entry(ventana_4, textvariable=contrasena_Re_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
     contrasena_Re_entry.place(x=x_entry, y=535)
     
     # Espacio entre botones
     espacio_entre_botones = 30 
 
     # Botón de registrarse de la ventana de registro
-    global botonRegistro2
-    botonRegistro2 = Button(ventana4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=actualiza_contraseña)
-    botonRegistro2.place(relx=0.5, rely=0.8 + 0.03, anchor='center')
+    global boton_registro2
+    boton_registro2 = Button(ventana_4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=actualiza_contraseña)
+    boton_registro2.place(relx=0.5, rely=0.8 + 0.03, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
-    global botonAtras2
-    botonAtras2 = Button(ventana4, text="Atrás", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
-    botonAtras2.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
+    global boton_atras2
+    boton_atras2 = Button(ventana_4, text="Atrás", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    boton_atras2.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
 
 
-    ventana4.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
+    ventana_4.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
     
     if config["idioma"] == "inglés":
-        etiqueta4.config(text="Change your password")
-        etiquetaUsuario2.config(text="User")
-        etiquetaCorreo2.config(text="Email")
-        etiquetaContrasena2.config(text="New Password")
-        etiquetaContrasenaRe.config(text="Confirm password")
-        botonRegistro2.config(text="Save changes")
-        botonAtras2.config(text="Back")
+        etiqueta_4.config(text="Change your password")
+        etiqueta_usuario2.config(text="User")
+        etiqueta_correo2.config(text="Email")
+        etiqueta_contrasena2.config(text="New Password")
+        etiqueta_contrasena_re.config(text="Confirm password")
+        boton_registro2.config(text="Save changes")
+        boton_atras2.config(text="Back")
 
-    ventana4.mainloop()
+    ventana_4.mainloop()
 
 # Función para volver atrás
 def volver_atras():
-    global ventana2
-    if ventana2:
-        ventana2.withdraw()
-    if ventana1:
-        ventana1.deiconify()
+    global ventana_2
+    if ventana_2:
+        ventana_2.withdraw()
+    if ventana_1:
+        ventana_1.deiconify()
 
 "*******************************************************/Conexiones y modificaciones con base de datos************************************************************"
 
@@ -640,12 +640,12 @@ def insertar_datos():
         password="",
         db="bd1"
     )
-    fcursor=bd.cursor()
+    f_cursor=bd.cursor()
     # Definición de la consulta SQL para INSERT
     sql = "INSERT INTO login (Correo, Usuario, Contrasena) VALUES ('{0}', '{1}', '{2}')".format(correo_usuario_entry.get(), nombre_usuario_entry.get(), contrasena_usuario_entry.get())
     
     try:
-        fcursor.execute(sql)
+        f_cursor.execute(sql)
         bd.commit()
         messagebox.showinfo(message="Has sido registrado corretamente, inicie sesión para comenzar con el juego", title="Aviso")
     except:
@@ -663,10 +663,10 @@ def validar_datos():
         password="",
         db="bd1"
     )
-    fcursor = bd.cursor()
+    f_cursor = bd.cursor()
     #Verifica el inicio de sesión correcto o incorrecto.
-    fcursor.execute("SELECT Contrasena FROM login WHERE usuario='"+nombreUsuario_verif.get()+"' and contrasena= '"+contrasenaUsuario_verif.get()+"'")
-    if fcursor.fetchall():
+    f_cursor.execute("SELECT Contrasena FROM login WHERE usuario='"+nombre_usuario_verif.get()+"' and contrasena= '"+contrasena_usuario_verif.get()+"'")
+    if f_cursor.fetchall():
         messagebox.showinfo(title="Inicio de sesión exitoso",message="Usuario y Contraseña correcta")
     
     else:
@@ -693,14 +693,14 @@ def actualiza_contraseña():
         )
 
         # Crear un cursor para ejecutar consultas SQL
-        fcursor = bd.cursor()
+        f_cursor = bd.cursor()
 
         # Consulta para verificar si el correo está registrado
         consulta = 'SELECT * FROM login WHERE Correo=%s'
-        fcursor.execute(consulta, (correo_entry.get()))
+        f_cursor.execute(consulta, (correo_entry.get()))
 
         # Recuperar la primera fila de resultados
-        row = fcursor.fetchone()
+        row = f_cursor.fetchone()
         
         # Verificar si el correo no está registrado
         if row is None:
@@ -709,7 +709,7 @@ def actualiza_contraseña():
         else:
             # Consulta para actualizar la contraseña en la base de datos
             consulta = 'UPDATE login SET Contrasena=%s WHERE Correo=%s'
-            fcursor.execute(consulta, (contrasena_Re_entry.get(), correo_entry.get()))
+            f_cursor.execute(consulta, (contrasena_Re_entry.get(), correo_entry.get()))
             
             # Confirmar los cambios en la base de datos
             bd.commit()
@@ -727,8 +727,8 @@ def actualiza_contraseña():
             contrasena_Re_entry.delete(0,END)
 
             # Botón de registrarse de la ventana de registro
-            botonInicioSesion = Button(ventana4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
-            botonInicioSesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+            boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+            boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
 
 menu_login()
 #LOS MILTONEANOS
