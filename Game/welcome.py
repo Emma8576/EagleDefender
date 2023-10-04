@@ -1,95 +1,84 @@
-import pygame
-from pygame import *
-import sys
-import time
 import tkinter as tk
-import os
-import msvcrt
+from tkinter import *
+import pygame
+from PIL import ImageTk, Image
 import subprocess
 
-init()
-screen_info = display.Info()
-screen_width = screen_info.current_w
-screen_height = screen_info.current_h
+window = tk.Tk()  
+window.attributes("-fullscreen", True)  
 
-screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
-window = tk.Tk()
+def esc(event): 
+    window.destroy()
+window.bind('<Escape>', esc)
+window.configure(cursor="star") 
 
-volumen = 1.0
+fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png") 
+w, h = fondo.width(), fondo.height() 
+window.geometry("%dx%d+0+0" % (w, h))
+background_label = tk.Label(window, image=fondo) 
+background_label.place(x=0, y=0, relwidth=1, relheight=1) 
 
+pygame.init() 
+volumen = 0.5 
+
+def cambiar_volumen():
+    global volumen 
+    if 'Up' in window.teclas_pulsadas:
+        if volumen < 1.0:
+            volumen += 0.01
+            pygame.mixer.music.set_volume(volumen)
+    elif 'Down' in window.teclas_pulsadas:
+        if volumen > 0.0:
+            volumen -= 0.01
+            pygame.mixer.music.set_volume(volumen)
+    window.after(10, cambiar_volumen) 
+
+def tecla_pulsada(evento):
+    window.teclas_pulsadas.add(evento.keysym)
+
+def tecla_soltada(evento):
+    window.teclas_pulsadas.remove(evento.keysym)
 
 def iniciar():
     pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
-    pygame.mixer.music.set_volume(volumen)
-    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(volumen) 
+    pygame.mixer.music.play() 
 
+    window.teclas_pulsadas = set()
+    window.bind('<KeyPress>', tecla_pulsada)
+    window.bind('<KeyRelease>', tecla_soltada)
+    window.after(10, cambiar_volumen)
 
-# Iniciar automáticamente la configuración de volumen al ejecutar el juego
-iniciar()
+iniciar() 
 
-images = []
-close = []
-
-# Programar sprites ventana central
-for i in range(1, 7):
-    name = "welcomeInterfaceFramesSprites/mainItems/frame-"+str(i)+" (Custom).gif"
-    images.append(image.load(name))
-
-for i in range(1, 11):
-    name1 = "welcomeInterfaceFramesSprites/mainItems1/frame-"+str(i)+".png"
-    close.append(image.load(name1))
-
-def abrir_login():
-    os.system('Login.py')
-
-
-def titleImage1():
-    picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
-    picture = pygame.transform.scale(picture, [550,170])
-    screen.blit(picture, [386,520])
-
-def salir():
+def salir(): 
     window.destroy()
 
-def check_click(image_rect1, image_rect2):
-    for e in event.get():
-        if e.type == MOUSEBUTTONDOWN and e.button == 1:  # Verifica clic izquierdo
-            mouse_pos = pygame.mouse.get_pos()
-            if image_rect1.collidepoint(mouse_pos):
-                print("Vas a jugar!")
-                abrir_login()  # Abre Login.py
-            if image_rect2.collidepoint(mouse_pos):
-                print("Saliste")
-                salir()
-
-background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  
-background = pygame.transform.scale(background, (screen_width, screen_height))  
-
-# Agregar un label con el texto "battle city"
-label = tk.Label(window, text="battle city", font=("Arial", 36), fg="white", bg="black")
-label.place(relx=0.5, rely=0.5, anchor="center")
-
-while True:
-    for e in event.get():
-        if e.type == QUIT: 
-            pygame.quit()
-            sys.exit()
-
-    frame = int(time.time()*4)
-    frame %= len(images)
-    frame %= len(close)
-    screen.blit(background, (0, 0))
-    screen.blit(images[frame], (980,10))
-    screen.blit(close[frame],(20,10))
+def abrir():
+    subprocess.call(["python", "Login.py"])
 
 
-    titleImage1()
+boton_cerrar=tk.Button(window, text="Abandonar la pista", 
+                 command=salir, 
+                 fg="gray1",
+                 bg="DodgerBlue4",
+                 relief="sunken",
+             font=("System 18 bold"),
+                 cursor="exchange")
+boton_cerrar.pack()     
+boton_cerrar.place(x=10,y=10, height=40, width=289) 
 
-    button1_rect = images[frame].get_rect(topleft=(980,10))
-    button2_rect = close[frame].get_rect(topleft=(20,10))
 
-    display.flip()
+boton_abrir=tk.Button(window, text="Iniciar",
+                    command=abrir,
+                    fg="gray1",
+                    bg="DodgerBlue4",
+                    relief="sunken",
+                    font=("System 18 bold"),
+                    cursor="exchange")
+boton_abrir.pack()     
+boton_abrir.place(x=100,y=100, height=40, width=289) 
 
-    check_click(button1_rect, button2_rect)
+
 
 window.mainloop()

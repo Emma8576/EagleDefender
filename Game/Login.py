@@ -37,6 +37,7 @@ def menu_login():
     global ventana_1, seleccion
     # Crear una instancia de la ventana principal
     ventana_1 = tk.Tk()
+    ventana_1.configure(cursor="star")
     
     # Cargar imagen de fondo en la ventana principal
     cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
@@ -73,7 +74,7 @@ def menu_login():
 
     # Botón de Iniciar Sesión
     global boton_inicio
-    boton_inicio = tk.Button(ventana_1, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+    boton_inicio = tk.Button(ventana_1,cursor="exchange", text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
     boton_inicio.place(relx=0.5, rely=0.5, anchor='center')
 
     # Espacio entre botones
@@ -81,17 +82,17 @@ def menu_login():
 
     # Botón de Registrarse
     global boton_registrarse
-    boton_registrarse = tk.Button(ventana_1, text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
+    boton_registrarse = tk.Button(ventana_1,cursor="exchange", text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
     boton_registrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
 
     # Botón de Salir
     global boton_salir
-    boton_salir = tk.Button(ventana_1, text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana_1.destroy)
+    boton_salir = tk.Button(ventana_1,cursor="exchange", text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana_1.destroy)
     boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
 
     global boton_configuración 
-    boton_configuración = tk.Button(ventana_1, text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
+    boton_configuración = tk.Button(ventana_1,cursor="exchange", text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
     boton_configuración.pack()
     boton_configuración.place(x=0, y=0, height=40, width=200)
 
@@ -134,6 +135,8 @@ def abrir_configuracion():
     ventana_configuracion = tk.Toplevel(ventana_1)
     ventana_configuracion.attributes("-fullscreen", True)
     cargar_imagen_de_fondo(ventana_configuracion, "loginImages/fondo1.png")
+    ventana_configuracion.configure(cursor="star")
+
     
     global etiqueta_4
     ancho_pantalla = ventana_configuracion.winfo_screenwidth()
@@ -166,7 +169,7 @@ def abrir_configuracion():
     opcion_ingles.pack(anchor="w")
 
     global boton_aceptar
-    boton_aceptar = tk.Button(ventana_configuracion, text="Aceptar", command=cargar_idioma, bg="black", fg="white")
+    boton_aceptar = tk.Button(ventana_configuracion,cursor="exchange", text="Aceptar", command=cargar_idioma, bg="black", fg="white")
     boton_aceptar.pack()
     boton_aceptar.place(x=50, y=150)
     
@@ -200,7 +203,7 @@ def abrir_configuracion():
     boton1.pack()       #Se posiciona el botón "Volver"
     boton1.place(x=550, y=500, height=50, width=150)
 
-    boton2 = tk.Button(ventana_configuracion, text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
+    boton2 = tk.Button(ventana_configuracion,text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
                        command=subir_volumen,
                        fg="snow",
                        bg="SkyBlue3",
@@ -280,6 +283,7 @@ def inicio_sesion():
     # Crear una instancia de la ventana secundaria
     ventana_2 = Toplevel(ventana_1)
     ventana_2.attributes("-fullscreen", True)
+    ventana_2.configure(cursor="star")
 
     global etiqueta_2
     etiqueta_2 = Label(ventana_2, text="Inicio de sesión", bg="#101654", fg="white")    
@@ -405,6 +409,7 @@ def registro():
     ventana_3 = Toplevel(ventana_1)
     ventana_3.attributes("-fullscreen", True)
     ventana_3.title("Registro")
+    ventana_3.configure(cursor="star")
     
     # Cargar imagen de fondo en la ventana principal
     cargar_imagen_de_fondo(ventana_3, "loginImages/fondo1.png") 
