@@ -7,7 +7,6 @@ import pymysql
 import json
 import pygame
 
-
 # Variables globales para las ventanas 
 ventana_1 = None
 ventana_2 = None
@@ -24,6 +23,9 @@ def leer_volumen():
 volumen = leer_volumen()
 
 
+pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
+pygame.mixer.music.set_volume(volumen)
+pygame.mixer.music.play()
 
 #Se agrega imagen de fondo
 def cargar_imagen_de_fondo(ventana, ruta_imagen):
