@@ -19,7 +19,7 @@ volumen = 1.0
 
 
 def iniciar():
-    pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
+    pygame.mixer.music.load('Game/welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
     pygame.mixer.music.set_volume(volumen)
     pygame.mixer.music.play(-1)
 
@@ -32,11 +32,11 @@ close = []
 
 # Programar sprites ventana central
 for i in range(1, 7):
-    name = "welcomeInterfaceFramesSprites/mainItems/frame-"+str(i)+" (Custom).gif"
+    name = "Game/welcomeInterfaceFramesSprites/mainItems/frame-"+str(i)+" (Custom).gif"
     images.append(image.load(name))
 
 for i in range(1, 11):
-    name1 = "welcomeInterfaceFramesSprites/mainItems1/frame-"+str(i)+".png"
+    name1 = "Game/welcomeInterfaceFramesSprites/mainItems1/frame-"+str(i)+".png"
     close.append(image.load(name1))
 
 def abrir_login():
@@ -44,7 +44,7 @@ def abrir_login():
 
 
 def titleImage1():
-    picture = pygame.image.load("welcomeInterfaceFramesSprites/savedItems/title.png")
+    picture = pygame.image.load("Game/welcomeInterfaceFramesSprites/savedItems/title.png")
     picture = pygame.transform.scale(picture, [550,170])
     screen.blit(picture, [386,520])
 
@@ -62,7 +62,7 @@ def check_click(image_rect1, image_rect2):
                 print("Saliste")
                 salir()
 
-background = pygame.image.load('welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  
+background = pygame.image.load('Game/welcomeInterfaceFramesSprites/SavedItems/bg.png').convert()  
 background = pygame.transform.scale(background, (screen_width, screen_height))  
 
 # Agregar un label con el texto "battle city"
