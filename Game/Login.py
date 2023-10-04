@@ -202,7 +202,7 @@ def abrir_configuracion():
                  font=("System 35 bold"),
                  cursor="exchange")
     boton1.pack()       #Se posiciona el botón "Volver"
-    boton1.place(x=550, y=550, height=50, width=170)
+    boton1.place(x=550, y=550, height=50, width=210)
 
     boton2 = tk.Button(ventana_configuracion,text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
                        command=subir_volumen,
@@ -233,6 +233,7 @@ def abrir_configuracion():
         boton_aceptar.config(text="Accept")
         boton2.config(text="Volume up")
         boton3.config(text="Volumen down")
+        boton1.config(text="Go back")
 
 
 
@@ -396,7 +397,7 @@ def inicio_sesion():
         etiquetaUsuario.config(text="User")
         etiquetaContrasena.config(text="Password")
         boton_inicio_sesion.config(text="Log in")
-        botonAtras.config(text="Atrás")
+        botonAtras.config(text="Go back")
     
     ventana_2.mainloop()
 
@@ -536,10 +537,16 @@ def verificar_contraseña():
         contrasena_usuario_entry.delete(0,END)
         
         # Botón de registrarse de la ventana de registro
+        global boton_inicio_sesion
         boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
         boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
     else:
-        messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
+        global messagebox
+        if config["idioma"] == "inglés":
+            messagebox.showerror(title="Aviso", message="Password must have at least 8 characters")
+        else:
+            messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
+
 
 #función interfaz para recuperar contraseña
 def recuperar_contrasena():
@@ -682,6 +689,7 @@ def volver_atras():
 "*******************************************************/Conexiones y modificaciones con base de datos************************************************************"
 
 def insertar_datos():
+    global config
     #Conexión con la base de datos local
     bd = pymysql.connect(
         host="localhost",
@@ -696,15 +704,22 @@ def insertar_datos():
     try:
         f_cursor.execute(sql)
         bd.commit()
-        messagebox.showinfo(message="Has sido registrado corretamente, inicie sesión para comenzar con el juego", title="Aviso")
+        if config["idioma"] == "inglés":
+            messagebox.showinfo(message="You have been registered successfully. Please log in to start the game", title="Aviso")
+        else:
+            messagebox.showinfo(message="Has sido registrado correctamente. Inicia sesión para empezar el juego", title="Aviso")
     except:
         bd.rollback()
-        messagebox.showerror(message="Tu registro no se pudo completar", title="Aviso")
+        if config["idioma"] == "inglés":
+            messagebox.showerror(message="Your registration could not be completed", title="Aviso")
+        else:
+            messagebox.showerror(message="Tu registro no se pudo completar", title="Aviso")
     
     bd.close()
 
 #Validar datos de ingreso
 def validar_datos():
+    global config
         #Conexión con la base de datos local
     bd = pymysql.connect(
         host="localhost",
@@ -716,21 +731,31 @@ def validar_datos():
     #Verifica el inicio de sesión correcto o incorrecto.
     f_cursor.execute("SELECT Contrasena FROM login WHERE usuario='"+nombre_usuario_verif.get()+"' and contrasena= '"+contrasena_usuario_verif.get()+"'")
     if f_cursor.fetchall():
-        messagebox.showinfo(title="Inicio de sesión exitoso",message="Usuario y Contraseña correcta")
-    
+        if config["idioma"] == "inglés":
+            messagebox.showinfo(title="Successful login",message="Usuario y Contraseña correcta")
+        else:
+            messagebox.showinfo(title="Inicio de sesión exitoso",message="Usuario y Contraseña correcta")
     else:
         messagebox.showerror(title="Inicio de sesión incorrecto",message="Usuario o Contraseña incorrecta")
     bd.close()
 
+
 def actualiza_contraseña():
+    global config
     # Verifica que todos los campos estén llenos
     if nombre_usuario2_entry.get() == '' or correo_entry.get() == '' or contrasena_entry.get() == '' or contrasena_Re_entry.get() == '':
-        messagebox.showerror(title="Aviso", message="Todos los campos deben estar llenos")
+        if config["idioma"] == "inglés":
+            messagebox.showerror(title="Aviso", message="All fields must be filled in")
+        else:
+            messagebox.showerror(title="Aviso", message="Todos los campos deben estar llenos")
         return
 
     # Verifica que las contraseñas ingresadas sean iguales
     elif contrasena_entry.get() != contrasena_Re_entry.get():
-        messagebox.showerror(title="Alerta", message="Las contraseñas ingresadas no coinciden")
+        if config["idioma"] == "inglés":
+            messagebox.showerror(title="Alerta", message="The entered passwords do not match")
+        else:
+            messagebox.showerror(title="Alerta", message="Las contraseñas ingresadas no coinciden")
         return
     else:
         # Conexión con la base de datos local
@@ -753,8 +778,12 @@ def actualiza_contraseña():
         
         # Verificar si el correo no está registrado
         if row is None:
-            messagebox.showerror(title="Alerta", message="El correo ingresado no está registrado, utilice el correo con el que realizó el registro")
+            if config["idioma"] == "inglés":
+                messagebox.showerror(title="Alert", message="The entered email is not registered, please use the email used for registration")
+            else:
+                messagebox.showerror(title="Alerta", message="El correo ingresado no está registrado, utilice el correo con el que realizó el registro")
             return
+
         else:
             # Consulta para actualizar la contraseña en la base de datos
             consulta = 'UPDATE login SET Contrasena=%s WHERE Correo=%s'
@@ -767,8 +796,10 @@ def actualiza_contraseña():
             bd.close()
             
             # Mostrar un mensaje informativo de éxito
-            messagebox.showinfo(title="Aviso", message="Su contraseña ha sido cambiada con éxito, vuelva al inicio de sesión para continuar")
-
+            if config["idioma"] == "inglés":
+                messagebox.showinfo(title="Notice", message="Your password has been successfully changed. Please return to the login screen to continue.")
+            else:
+                messagebox.showinfo(title="Aviso", message="Su contraseña ha sido cambiada con éxito, vuelva al inicio de sesión para continuar")
             #Eliminar el contenido de los campos una vez se haya completado el cambio de contraseña
             nombre_usuario2_entry.delete(0,END)
             correo_entry.delete(0,END)
