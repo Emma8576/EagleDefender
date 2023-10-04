@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 import os
 import pymysql
 import json
+import pygame
+
 
 # Variables globales para las ventanas 
 ventana_1 = None
@@ -12,6 +14,10 @@ ventana_2 = None
 ventana_3 = None
 ventana_configuración = None
 seleccion = None
+
+#Variable global para control de nivel de volumen
+pygame.init()
+volumen = 0.5
 
 #Variables globales fuentes
 global fuente_retro
@@ -171,9 +177,24 @@ def abrir_configuracion():
     
     actualizar_idioma_configuracion()
 
+    #Se define las funciones para controlar el volumen del juego.
+    def subir_volumen():
+        global volumen
+        if volumen < 1.0:
+            volumen = min(1.0, volumen + 0.1)
+            print("Nivel de volumen es " + str(volumen))
+            pygame.mixer.music.set_volume(volumen)
+
+    def bajar_volumen():
+        global volumen
+        if volumen > 0.0:
+            volumen = max(0.0, volumen - 0.1)
+            print("Nivel de volumen es "+str(volumen))
+            pygame.mixer.music.set_volume(volumen)
     def salir():
         ventana_configuracion.destroy()
 
+    #Definicion de Botones para la ventana de configuración
     boton1 = tk.Button(ventana_configuracion, text="Volver", # Se configura el botón "Volver" de "Acerca de"
                  command=salir,
                  fg="snow",
@@ -184,6 +205,25 @@ def abrir_configuracion():
     boton1.pack()       #Se posiciona el botón "Volver"
     boton1.place(x=550, y=500, height=50, width=150)
 
+    boton2 = tk.Button(ventana_configuracion, text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
+                       command=subir_volumen,
+                       fg="snow",
+                       bg="SkyBlue3",
+                       relief="sunken",
+                       font=("System 30 bold"),
+                       cursor="exchange")
+    boton2.pack()  # Se posiciona el botón "Subir Volumen"
+    boton2.place(x=480, y=300, height=50, width=300)
+
+    boton3 = tk.Button(ventana_configuracion, text="Bajar Volumen",  # Se configura el botón "Volver" de "Acerca de"
+                       command=bajar_volumen,
+                       fg="snow",
+                       bg="SkyBlue3",
+                       relief="sunken",
+                       font=("System 30 bold"),
+                       cursor="exchange")
+    boton3.pack()  # Se posiciona el botón "Baja Volumen"
+    boton3.place(x=480, y=360, height=50, width=300)
     seleccion.set(config["idioma"])
 
     if config["idioma"] == "inglés":
@@ -192,6 +232,10 @@ def abrir_configuracion():
         opcion_español.config(text="Spanish")
         opcion_ingles.config(text="English")
         boton_aceptar.config(text="Accept")
+        boton2.config(text="Volume up")
+        boton3.config(text="Volumen down")
+
+
 
     ventana_configuracion.mainloop()
 
