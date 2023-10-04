@@ -17,7 +17,11 @@ seleccion = None
 
 #Variable global para control de nivel de volumen
 pygame.init()
-volumen = 0.5
+#Esta función leerá el valor del volumen guardado
+def leer_volumen():
+    with open('volumen.txt', 'r') as archivo:
+        return float(archivo.read())
+volumen = leer_volumen()
 
 
 
@@ -177,12 +181,17 @@ def abrir_configuracion():
     actualizar_idioma_configuracion()
 
     #Se define las funciones para controlar el volumen del juego.
+
+    def guardar_volumen(volumen):
+        with open('volumen.txt', 'w') as archivo:
+            archivo.write(str(volumen))
     def subir_volumen():
         global volumen
         if volumen < 1.0:
             volumen = min(1.0, volumen + 0.1)
             print("Nivel de volumen es " + str(volumen))
             pygame.mixer.music.set_volume(volumen)
+            guardar_volumen(volumen)
 
     def bajar_volumen():
         global volumen
