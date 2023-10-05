@@ -48,7 +48,8 @@ def inicio_partida():
     cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
     inicio.attributes("-fullscreen", True)
 
-    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png") 
+    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
+
 
     global boton_cerrar
     boton_cerrar=tk.Button(inicio, text="Salir", 
@@ -59,7 +60,8 @@ def inicio_partida():
              font=("System 35 bold"),
                  cursor="exchange")
     boton_cerrar.pack()     
-    boton_cerrar.place(relx=0.5, rely=0.9, anchor="center") 
+    boton_cerrar.place(relx=0.5, rely=0.9, anchor="center")
+
 
     global boton_abrir
     boton_abrir=tk.Button(inicio, text="Iniciar",
@@ -70,7 +72,9 @@ def inicio_partida():
                         font=("System 35 bold"),
                         cursor="exchange")
     boton_abrir.pack()     
-    boton_abrir.place(relx=0.5, rely=0.5, anchor="center") 
+    boton_abrir.place(relx=0.5, rely=0.5, anchor="center")
+
+
 
     etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
     etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
@@ -95,7 +99,51 @@ def menu_login():
     # Cargar icono de la ventana
     ventana_1.iconbitmap("loginImages/icon.ico")
 
- 
+    def como_Jugar():
+        # Función para cerrar la ventana
+        def cerrar_ventana():
+            ventana_como_Jugar.destroy()
+
+        # Texto de las instrucciones
+        instrucciones = """
+        Instrucciones del juego "Eagle Defender":
+
+        1. Jugador 1:
+           - Selecciona y coloca bloques de madera, concreto o acero alrededor del águila.
+           - Una vez colocados los bloques, haz click en "Comenzar Juego".
+
+        2. Jugador 2:
+           Usa el tanque con las siguientes municiones:
+             - Bombas: Destruyen bloques de madera y dañan bloques de concreto y acero.
+             - Bolas de fuego: Queman bloques de madera y causan daño a bloques de concreto y acero.
+             - Bolas de agua: un disparo destruye bloques de madera, dos bloques de concreto y
+               con tres bloques de acero.
+             - El juego durará el tiempo de una canción seleccionada por el jugador.
+             - Gana jugador 1 si su aguila no es alcanzada, si la aguila recibe daño gana jugador 2.
+             
+
+        3. Objetivo:
+           - Jugador 1: Protege el águila del ataque del Jugador 2.
+           - Jugador 2: Intenta destruir los bloques y alcanzar el águila.
+
+        4. ¡Diviértete y que gane el mejor!
+
+        """
+
+        # Crear la ventana
+        ventana_como_Jugar = tk.Tk()
+        ventana_como_Jugar.title("Instrucciones - Eagle Defender")
+
+        # Etiqueta para mostrar las instrucciones
+        label = tk.Label(ventana_como_Jugar, text=instrucciones, justify="left", font=("Arial", 12))
+        label.pack(padx=20, pady=20)
+
+        # Botón para cerrar la ventana
+        boton_cerrar = tk.Button(ventana_como_Jugar, text="Cerrar", command=cerrar_ventana)
+        boton_cerrar.pack(pady=10)
+
+        # Iniciar el bucle principal de la ventana
+        ventana_como_Jugar.mainloop()
     
     # Se añade la fuente retro en diversos tamaños
     global fuente_retro_3
@@ -148,8 +196,13 @@ def menu_login():
     boton_configuración.pack()
     boton_configuración.place(x=0, y=728, height=40, width=200)
 
+    boton_comoJugar = tk.Button(ventana_1, cursor="exchange", text="Como Jugar", background="#0a0c3f",
+                                    fg="white", font=("System 18 bold"), relief="raised", command=como_Jugar)
+    boton_comoJugar.pack()
+    boton_comoJugar.pack()
+    boton_comoJugar.place(x=0, y=60, height=40, width=200)
 
-    seleccion = tk.StringVar()  
+    seleccion = tk.StringVar()
 
     if config["idioma"] == "inglés":
         etiqueta.config(text="Access the game")
@@ -161,6 +214,8 @@ def menu_login():
 
     # Mostrar la ventana principal
     ventana_1.mainloop()
+
+
     
 def cargar_idioma():
     idioma = seleccion.get()
@@ -350,6 +405,7 @@ def abrir_configuracion():
 
     ventana_configuracion.mainloop()
 
+
 def actualizar_idioma_configuracion():
     if seleccion.get() == "español":
         etiqueta_4.config(text="Configuración")
@@ -459,7 +515,8 @@ def inicio_sesion():
     #Se agrega la etiqueta de contraseña
     global etiquetaContrasena
     etiquetaContrasena = Label(ventana_2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
-    
+
+
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
     etiquetaUsuario.place(x=x, y=250) 
