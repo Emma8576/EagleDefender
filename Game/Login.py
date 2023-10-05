@@ -87,13 +87,13 @@ def menu_login():
     ventana_1=Toplevel(inicio)
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_1, "Game/loginImages/fondo1.png")
+    cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
     ventana_1.attributes("-fullscreen", True)
     # Establecer el título de la ventana
     ventana_1.title("Bienvenidos")
 
     # Cargar icono de la ventana
-    ventana_1.iconbitmap("Game/loginImages/icon.ico")
+    ventana_1.iconbitmap("loginImages/icon.ico")
 
  
     
@@ -180,6 +180,7 @@ def cargar_idioma():
         boton3.config(text="Bajar Volumen")
         boton_abrir.config(text="Iniciar")
         boton_cerrar.config(text="Salir")
+        boton_configuración.config(text="Configuración")
 
         config["idioma"] = "español"
     elif idioma == "inglés":
@@ -198,6 +199,7 @@ def cargar_idioma():
         boton3.config(text="Volume down")
         boton_abrir.config(text="Start Game")
         boton_cerrar.config(text="Leave Game")
+        boton_configuración.config(text="Configuration")
 
         config["idioma"] = "inglés"
     with open("config.json", "w") as f:
@@ -210,7 +212,7 @@ def ventana_playlist():
     global ventana_playlist, seleccion
     ventana_playlist = tk.Toplevel(ventana_1)
     ventana_playlist.attributes("-fullscreen", True)
-    cargar_imagen_de_fondo(ventana_playlist, "Game/loginImages/fondo1.png")
+    cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
     
     global etiqueta_playlist
     ancho_pantalla = ventana_playlist.winfo_screenwidth()
@@ -236,7 +238,7 @@ def abrir_configuracion():
     global ventana_configuracion, seleccion
     ventana_configuracion = tk.Toplevel(ventana_1)
     ventana_configuracion.attributes("-fullscreen", True)
-    cargar_imagen_de_fondo(ventana_configuracion, "Game/loginImages/fondo1.png")
+    cargar_imagen_de_fondo(ventana_configuracion, "loginImages/fondo1.png")
     ventana_configuracion.configure(cursor="star")
 
     
@@ -399,7 +401,7 @@ def inicio_sesion():
     global etiqueta_2
     etiqueta_2 = Label(ventana_2, text="Inicio de sesión", bg="#101654", fg="white")    
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_2, "Game/loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_2, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamañosglobal ventana_configuracion, seleccion
     ventana_configuracion = tk.Toplevel(ventana_1)
@@ -523,7 +525,7 @@ def registro():
     ventana_3.configure(cursor="star")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_3, "Game/loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_3, "loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -670,7 +672,7 @@ def recuperar_contrasena():
     ventana_4.title("Recuperar contraseña")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_4, "Game/loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_4, "loginImages/fondo1.png") 
 
     seleccion.set(config["idioma"])
     
