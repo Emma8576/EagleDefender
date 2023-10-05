@@ -18,8 +18,16 @@ window.geometry("%dx%d+0+0" % (w, h))
 background_label = tk.Label(window, image=fondo) 
 background_label.place(x=0, y=0, relwidth=1, relheight=1) 
 
-pygame.init() 
-volumen = 0.5 
+pygame.init()
+
+def leer_volumen():
+    with open('volumen.txt', 'r') as archivo:
+        return float(archivo.read())
+volumen = leer_volumen()
+
+def guardar_volumen(volumen):
+    with open('volumen.txt', 'w') as archivo:
+        archivo.write(str(volumen))
 
 def cambiar_volumen():
     global volumen 
@@ -31,7 +39,9 @@ def cambiar_volumen():
         if volumen > 0.0:
             volumen -= 0.01
             pygame.mixer.music.set_volume(volumen)
-    window.after(10, cambiar_volumen) 
+    window.after(10, cambiar_volumen)
+    guardar_volumen(volumen)
+
 
 def tecla_pulsada(evento):
     window.teclas_pulsadas.add(evento.keysym)
