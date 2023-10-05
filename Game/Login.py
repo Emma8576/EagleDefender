@@ -38,12 +38,53 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
     etiqueta_fondo.image = imagen  # Mantener una referencia a la imagen
     etiqueta_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Cubrir toda la ventana
 
+def salir(): 
+    inicio.destroy()
+
+def inicio_partida():
+    global inicio
+    inicio=tk.Tk()
+    inicio.configure(cursor="star")
+    cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
+    inicio.attributes("-fullscreen", True)
+
+    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png") 
+
+    global boton_cerrar
+    boton_cerrar=tk.Button(inicio, text="Salir", 
+                 command=salir, 
+                 fg="gray1",
+                 bg="#9e2254",
+                 relief="sunken",
+             font=("System 35 bold"),
+                 cursor="exchange")
+    boton_cerrar.pack()     
+    boton_cerrar.place(relx=0.5, rely=0.9, anchor="center") 
+
+    global boton_abrir
+    boton_abrir=tk.Button(inicio, text="Iniciar",
+                        command=menu_login,
+                        fg="white",
+                        bg="#FF9900",
+                        relief="sunken",
+                        font=("System 35 bold"),
+                        cursor="exchange")
+    boton_abrir.pack()     
+    boton_abrir.place(relx=0.5, rely=0.5, anchor="center") 
+
+    etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
+    etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
+
+    if config["idioma"] == "inglés":
+        boton_cerrar.config(text="Leave Game")
+        boton_abrir.config(text="Start Game")
+
+    inicio.mainloop()
 #Función ventana Login
 def menu_login():
     global ventana_1, seleccion
     # Crear una instancia de la ventana principal
-    ventana_1 = tk.Tk()
-    ventana_1.configure(cursor="star")
+    ventana_1=Toplevel(inicio)
     
     # Cargar imagen de fondo en la ventana principal
     cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
@@ -102,6 +143,12 @@ def menu_login():
     boton_configuración.pack()
     boton_configuración.place(x=0, y=0, height=40, width=200)
 
+    global boton_playlist
+    boton_configuración = tk.Button(ventana_1, text="Playlist", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=ventana_playlist)
+    boton_configuración.pack()
+    boton_configuración.place(x=0, y=728, height=40, width=200)
+
+
     seleccion = tk.StringVar()  
 
     if config["idioma"] == "inglés":
@@ -123,6 +170,18 @@ def cargar_idioma():
         boton_registrarse.config(text="Registrarse")
         boton_salir.config(text="Salir")
         boton_configuración.config(text="Configuración")
+        etiqueta_4.config(text="Configuración")
+        label_configuracion.config(text="Selecciona el idioma:")
+        opcion_español.config(text="Español")
+        opcion_ingles.config(text="Inglés")
+        boton_aceptar.config(text="Aceptar")
+        boton1.config(text="Volver")
+        boton2.config(text="Subir Volumen")
+        boton3.config(text="Bajar Volumen")
+        boton_abrir.config(text="Iniciar")
+        boton_cerrar.config(text="Salir")
+        boton_configuración.config(text="Configuración")
+
         config["idioma"] = "español"
     elif idioma == "inglés":
         etiqueta.config(text="Access the game")
@@ -130,9 +189,48 @@ def cargar_idioma():
         boton_registrarse.config(text="Sign in")
         boton_salir.config(text="Leave")
         boton_configuración.config(text="Configuration")
+        etiqueta_4.config(text="Configuration")
+        label_configuracion.config(text="Select a language")
+        opcion_español.config(text="Spanish")
+        opcion_ingles.config(text="English")
+        boton_aceptar.config(text="Accept")
+        boton1.config(text="Go back")
+        boton2.config(text="Volume up")
+        boton3.config(text="Volume down")
+        boton_abrir.config(text="Start Game")
+        boton_cerrar.config(text="Leave Game")
+        boton_configuración.config(text="Configuration")
+
         config["idioma"] = "inglés"
     with open("config.json", "w") as f:
         json.dump(config, f)
+
+#####################################
+# Funcion para la ventana de la playlist 
+
+def ventana_playlist():
+    global ventana_playlist, seleccion
+    ventana_playlist = tk.Toplevel(ventana_1)
+    ventana_playlist.attributes("-fullscreen", True)
+    cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
+    
+    global etiqueta_playlist
+    ancho_pantalla = ventana_playlist.winfo_screenwidth()
+    etiqueta_playlist = Label(ventana_playlist, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
+
+    etiqueta_retro2 = Label(ventana_playlist, text="Battle City", bg="#000030", font=("System 30 bold"), fg="white")
+    etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro2.pack()
+    
+    def salir():
+        ventana_playlist.destroy() 
+        
+    #boton para devolverse al menu 
+    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir, fg="snow", bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
+    boton_devolver_playlist.pack()      
+    boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
+
+###############################
 
 # Función para abrir configuración
      
@@ -162,7 +260,6 @@ def abrir_configuracion():
     label_configuracion.place(x=600, y=240)
 
     seleccion.set(config["idioma"])
-
     opciones_idioma = [("Español", "español"), ("Inglés", "inglés")]
 
     global opcion_español
@@ -205,6 +302,7 @@ def abrir_configuracion():
         ventana_configuracion.destroy()
 
     #Definicion de Botones para la ventana de configuración
+    global boton1
     boton1 = tk.Button(ventana_configuracion, text="Volver", # Se configura el botón "Volver" de "Acerca de"
                  command=salir,
                  fg="snow",
@@ -215,6 +313,7 @@ def abrir_configuracion():
     boton1.pack()       #Se posiciona el botón "Volver"
     boton1.place(x=550, y=550, height=50, width=210)
 
+    global boton2
     boton2 = tk.Button(ventana_configuracion,text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
                        command=subir_volumen,
                        fg="snow",
@@ -225,6 +324,7 @@ def abrir_configuracion():
     boton2.pack()  # Se posiciona el botón "Subir Volumen"
     boton2.place(x=280, y=300, height=50, width=300)
 
+    global boton3
     boton3 = tk.Button(ventana_configuracion, text="Bajar Volumen",  # Se configura el botón "Volver" de "Acerca de"
                        command=bajar_volumen,
                        fg="snow",
@@ -538,6 +638,7 @@ def registro():
 
 #Función para establecer logitud de 8 caracteres a la contraseña
 def verificar_contraseña():
+    global config
     contrasena = contrasena_usuario_entry.get()
     if len(contrasena) >= 8:
         insertar_datos()
@@ -572,6 +673,8 @@ def recuperar_contrasena():
     
     # Cargar imagen de fondo en la ventana principal
     cargar_imagen_de_fondo(ventana_4, "loginImages/fondo1.png") 
+
+    seleccion.set(config["idioma"])
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -820,6 +923,16 @@ def actualiza_contraseña():
             # Botón de registrarse de la ventana de registro
             boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+            
+    def ventana_ingreso_cancion():
+        #boton para entrar a ingresar las canciones 
+        global boton_configuración 
+        boton_configuración = tk.Button(ventana_1, text="Playlist", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
+        boton_configuración.pack()
+        boton_configuración.place(x=0, y=0, height=40, width=200)
 
-menu_login()
+        
+
+
+inicio_partida()
 #LOS MILTONEANOS
