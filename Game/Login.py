@@ -117,6 +117,15 @@ def cargar_idioma():
         boton_registrarse.config(text="Registrarse")
         boton_salir.config(text="Salir")
         boton_configuración.config(text="Configuración")
+        etiqueta_4.config(text="Configuración")
+        label_configuracion.config(text="Selecciona el idioma:")
+        opcion_español.config(text="Español")
+        opcion_ingles.config(text="Inglés")
+        boton_aceptar.config(text="Aceptar")
+        boton1.config(text="Volver")
+        boton2.config(text="Subir Volumen")
+        boton3.config(text="Bajar Volumen")
+
         config["idioma"] = "español"
     elif idioma == "inglés":
         etiqueta.config(text="Access the game")
@@ -124,6 +133,15 @@ def cargar_idioma():
         boton_registrarse.config(text="Sign in")
         boton_salir.config(text="Leave")
         boton_configuración.config(text="Configuration")
+        etiqueta_4.config(text="Configuration")
+        label_configuracion.config(text="Select a language")
+        opcion_español.config(text="Spanish")
+        opcion_ingles.config(text="English")
+        boton_aceptar.config(text="Accept")
+        boton1.config(text="Go back")
+        boton2.config(text="Volume up")
+        boton3.config(text="Volume down")
+
         config["idioma"] = "inglés"
     with open("config.json", "w") as f:
         json.dump(config, f)
@@ -194,6 +212,7 @@ def abrir_configuracion():
         ventana_configuracion.destroy()
 
     #Definicion de Botones para la ventana de configuración
+    global boton1
     boton1 = tk.Button(ventana_configuracion, text="Volver", # Se configura el botón "Volver" de "Acerca de"
                  command=salir,
                  fg="snow",
@@ -204,6 +223,7 @@ def abrir_configuracion():
     boton1.pack()       #Se posiciona el botón "Volver"
     boton1.place(x=550, y=550, height=50, width=210)
 
+    global boton2
     boton2 = tk.Button(ventana_configuracion,text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
                        command=subir_volumen,
                        fg="snow",
@@ -214,6 +234,7 @@ def abrir_configuracion():
     boton2.pack()  # Se posiciona el botón "Subir Volumen"
     boton2.place(x=280, y=300, height=50, width=300)
 
+    global boton3
     boton3 = tk.Button(ventana_configuracion, text="Bajar Volumen",  # Se configura el botón "Volver" de "Acerca de"
                        command=bajar_volumen,
                        fg="snow",
@@ -527,6 +548,7 @@ def registro():
 
 #Función para establecer logitud de 8 caracteres a la contraseña
 def verificar_contraseña():
+    global config
     contrasena = contrasena_usuario_entry.get()
     if len(contrasena) >= 8:
         insertar_datos()
