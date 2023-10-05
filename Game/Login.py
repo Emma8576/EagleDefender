@@ -11,6 +11,7 @@ import pygame
 ventana_1 = None
 ventana_2 = None
 ventana_3 = None
+ventana_como_Jugar = None
 ventana_configuración = None
 seleccion = None
 
@@ -40,6 +41,13 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
 
 def salir(): 
     inicio.destroy()
+    try:
+        global ventana_como_Jugar
+        ventana_como_Jugar.destroy()
+    except:
+        print("")
+
+
 
 def inicio_partida():
     global inicio
@@ -104,6 +112,8 @@ def menu_login():
         def cerrar_ventana():
             ventana_como_Jugar.destroy()
 
+
+
         # Texto de las instrucciones
         instrucciones = """
         Instrucciones del juego "Eagle Defender":
@@ -155,8 +165,12 @@ def menu_login():
                     """
 
         # Crear la ventana
+        global ventana_como_Jugar
         ventana_como_Jugar = tk.Tk()
         ventana_como_Jugar.title("Instrucciones - Eagle Defender")
+
+        #cargar_imagen_de_fondo(ventana_como_Jugar, "loginImages/fondo1.png")
+
 
         # Etiqueta para mostrar las instrucciones
         label = tk.Label(ventana_como_Jugar, text=instrucciones, justify="left", font=("Arial", 12))
@@ -305,7 +319,8 @@ def ventana_playlist():
     etiqueta_retro2.pack()
     
     def salir():
-        ventana_playlist.destroy() 
+        ventana_playlist.destroy()
+
         
     #boton para devolverse al menu 
     boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir, fg="snow", bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
@@ -469,6 +484,8 @@ def volver_a_inicio():
 #Funcion para cerrar el juego
 def cerrar_juego():
     ventana_1.destroy()
+
+
     
 # Función para mostrar la ventana de inicio de sesión
 def inicio_sesion():
