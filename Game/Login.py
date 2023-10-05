@@ -38,12 +38,53 @@ def cargar_imagen_de_fondo(ventana, ruta_imagen):
     etiqueta_fondo.image = imagen  # Mantener una referencia a la imagen
     etiqueta_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Cubrir toda la ventana
 
+def salir(): 
+    inicio.destroy()
+
+def inicio_partida():
+    global inicio
+    inicio=tk.Tk()
+    inicio.configure(cursor="star")
+    cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
+    inicio.attributes("-fullscreen", True)
+
+    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png") 
+
+    global boton_cerrar
+    boton_cerrar=tk.Button(inicio, text="Salir", 
+                 command=salir, 
+                 fg="gray1",
+                 bg="#9e2254",
+                 relief="sunken",
+             font=("System 35 bold"),
+                 cursor="exchange")
+    boton_cerrar.pack()     
+    boton_cerrar.place(relx=0.5, rely=0.9, anchor="center") 
+
+    global boton_abrir
+    boton_abrir=tk.Button(inicio, text="Iniciar",
+                        command=menu_login,
+                        fg="white",
+                        bg="#FF9900",
+                        relief="sunken",
+                        font=("System 35 bold"),
+                        cursor="exchange")
+    boton_abrir.pack()     
+    boton_abrir.place(relx=0.5, rely=0.5, anchor="center") 
+
+    etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
+    etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
+
+    if config["idioma"] == "inglés":
+        boton_cerrar.config(text="Leave Game")
+        boton_abrir.config(text="Start Game")
+
+    inicio.mainloop()
 #Función ventana Login
 def menu_login():
     global ventana_1, seleccion
     # Crear una instancia de la ventana principal
-    ventana_1 = tk.Tk()
-    ventana_1.configure(cursor="star")
+    ventana_1=Toplevel(inicio)
     
     # Cargar imagen de fondo en la ventana principal
     cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
@@ -131,6 +172,8 @@ def cargar_idioma():
         boton1.config(text="Volver")
         boton2.config(text="Subir Volumen")
         boton3.config(text="Bajar Volumen")
+        boton_abrir.config(text="Iniciar")
+        boton_cerrar.config(text="Salir")
 
         config["idioma"] = "español"
     elif idioma == "inglés":
@@ -147,6 +190,8 @@ def cargar_idioma():
         boton1.config(text="Go back")
         boton2.config(text="Volume up")
         boton3.config(text="Volume down")
+        boton_abrir.config(text="Start Game")
+        boton_cerrar.config(text="Leave Game")
 
         config["idioma"] = "inglés"
     with open("config.json", "w") as f:
@@ -843,5 +888,5 @@ def actualiza_contraseña():
             boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
 
-menu_login()
+inicio_partida()
 #LOS MILTONEANOS
