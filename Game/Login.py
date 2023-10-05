@@ -87,13 +87,13 @@ def menu_login():
     ventana_1=Toplevel(inicio)
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
+    cargar_imagen_de_fondo(ventana_1, "Game/loginImages/fondo1.png")
     ventana_1.attributes("-fullscreen", True)
     # Establecer el título de la ventana
     ventana_1.title("Bienvenidos")
 
     # Cargar icono de la ventana
-    ventana_1.iconbitmap("loginImages/icon.ico")
+    ventana_1.iconbitmap("Game/loginImages/icon.ico")
 
  
     
@@ -142,6 +142,12 @@ def menu_login():
     boton_configuración = tk.Button(ventana_1,cursor="exchange", text="Configuración", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
     boton_configuración.pack()
     boton_configuración.place(x=0, y=0, height=40, width=200)
+
+    global boton_playlist
+    boton_configuración = tk.Button(ventana_1, text="Playlist", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=ventana_playlist)
+    boton_configuración.pack()
+    boton_configuración.place(x=0, y=728, height=40, width=200)
+
 
     seleccion = tk.StringVar()  
 
@@ -197,13 +203,40 @@ def cargar_idioma():
     with open("config.json", "w") as f:
         json.dump(config, f)
 
+#####################################
+# Funcion para la ventana de la playlist 
+
+def ventana_playlist():
+    global ventana_playlist, seleccion
+    ventana_playlist = tk.Toplevel(ventana_1)
+    ventana_playlist.attributes("-fullscreen", True)
+    cargar_imagen_de_fondo(ventana_playlist, "Game/loginImages/fondo1.png")
+    
+    global etiqueta_playlist
+    ancho_pantalla = ventana_playlist.winfo_screenwidth()
+    etiqueta_playlist = Label(ventana_playlist, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
+
+    etiqueta_retro2 = Label(ventana_playlist, text="Battle City", bg="#000030", font=("System 30 bold"), fg="white")
+    etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center') 
+    etiqueta_retro2.pack()
+    
+    def salir():
+        ventana_playlist.destroy() 
+        
+    #boton para devolverse al menu 
+    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir, fg="snow", bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
+    boton_devolver_playlist.pack()      
+    boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
+
+###############################
+
 # Función para abrir configuración
      
 def abrir_configuracion():
     global ventana_configuracion, seleccion
     ventana_configuracion = tk.Toplevel(ventana_1)
     ventana_configuracion.attributes("-fullscreen", True)
-    cargar_imagen_de_fondo(ventana_configuracion, "loginImages/fondo1.png")
+    cargar_imagen_de_fondo(ventana_configuracion, "Game/loginImages/fondo1.png")
     ventana_configuracion.configure(cursor="star")
 
     
@@ -225,7 +258,6 @@ def abrir_configuracion():
     label_configuracion.place(x=600, y=240)
 
     seleccion.set(config["idioma"])
-
     opciones_idioma = [("Español", "español"), ("Inglés", "inglés")]
 
     global opcion_español
@@ -367,7 +399,7 @@ def inicio_sesion():
     global etiqueta_2
     etiqueta_2 = Label(ventana_2, text="Inicio de sesión", bg="#101654", fg="white")    
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_2, "loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_2, "Game/loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamañosglobal ventana_configuracion, seleccion
     ventana_configuracion = tk.Toplevel(ventana_1)
@@ -491,7 +523,7 @@ def registro():
     ventana_3.configure(cursor="star")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_3, "loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_3, "Game/loginImages/fondo1.png") 
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -638,7 +670,9 @@ def recuperar_contrasena():
     ventana_4.title("Recuperar contraseña")
     
     # Cargar imagen de fondo en la ventana principal
-    cargar_imagen_de_fondo(ventana_4, "loginImages/fondo1.png") 
+    cargar_imagen_de_fondo(ventana_4, "Game/loginImages/fondo1.png") 
+
+    seleccion.set(config["idioma"])
     
      # Se añade la fuente retro en diversos tamaños
     fuente_retro = ("8-Bit Operator+ 8", 100)
@@ -887,6 +921,16 @@ def actualiza_contraseña():
             # Botón de registrarse de la ventana de registro
             boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+            
+    def ventana_ingreso_cancion():
+        #boton para entrar a ingresar las canciones 
+        global boton_configuración 
+        boton_configuración = tk.Button(ventana_1, text="Playlist", background = "#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=abrir_configuracion)
+        boton_configuración.pack()
+        boton_configuración.place(x=0, y=0, height=40, width=200)
+
+        
+
 
 inicio_partida()
 #LOS MILTONEANOS
