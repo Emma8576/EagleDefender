@@ -129,6 +129,30 @@ def menu_login():
         4. ¡Diviértete y que gane el mejor!
 
         """
+        if config["idioma"] == "inglés":
+            instrucciones = """
+                    "Eagle Defender" Game Instructions:
+
+                    1. Player 1:
+                       - Select and place blocks of wood, concrete, or steel around the eagle.
+                       - Once the blocks are placed, click on "Start Game".
+
+                    2. Player 2:
+                       Use the tank with the following ammunition:
+                         - Bombs: Destroy wood blocks and damage concrete and steel blocks.
+                         - Fireballs: Burn wood blocks and cause damage to concrete and steel blocks.
+                         - Water Balls: One shot destroys wood blocks, two concrete blocks, and
+                           three steel blocks.
+                         - The game will last the duration of a song selected by the player.
+                         - Player 1 wins if their eagle is not hit; if the eagle is damaged, Player 2 wins.
+
+                    3. Objective:
+                       - Player 1: Protect the eagle from Player 2's attack.
+                       - Player 2: Try to destroy the blocks and hit the eagle.
+
+                    4. Have fun and may the best player win!
+
+                    """
 
         # Crear la ventana
         ventana_como_Jugar = tk.Tk()
@@ -210,6 +234,9 @@ def menu_login():
         boton_registrarse.config(text="Sign in")
         boton_salir.config(text="Leave")
         boton_configuración.config(text="Configuration")
+        boton_comoJugar.config(text="How to play")
+
+
 
 
     # Mostrar la ventana principal
