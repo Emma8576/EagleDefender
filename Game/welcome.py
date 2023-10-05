@@ -65,8 +65,8 @@ def salir():
     window.destroy()
 
 def abrir():
+    pygame.quit()  # Cierra la ventana de Pygame
     subprocess.call(["python", "Login.py"])
-
 
 boton_cerrar=tk.Button(window, text="Abandonar la pista", 
                  command=salir, 
