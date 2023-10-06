@@ -235,7 +235,7 @@ def menu_login():
     boton_configuración.place(x=0, y=728, height=40, width=200)
 
     global boton_comoJugar
-    boton_comoJugar = tk.Button(ventana_1, cursor="exchange", text="Como Jugar", background="#0a0c3f",
+    boton_comoJugar = tk.Button(ventana_1, cursor="exchange", text="Cómo Jugar", background="#0a0c3f",
                                     fg="white", font=("System 18 bold"), relief="raised", command=como_Jugar)
     boton_comoJugar.pack()
     boton_comoJugar.place(x=0, y=60, height=40, width=200)
@@ -277,6 +277,8 @@ def cargar_idioma():
         boton_abrir.config(text="Iniciar")
         boton_cerrar.config(text="Salir")
         boton_configuración.config(text="Configuración")
+        boton_comoJugar.config(text="Cómo jugar")
+        boton_configuración.config(text="Configuración")
 
         config["idioma"] = "español"
     elif idioma == "inglés":
@@ -295,6 +297,8 @@ def cargar_idioma():
         boton3.config(text="Volume down")
         boton_abrir.config(text="Start Game")
         boton_cerrar.config(text="Leave Game")
+        boton_configuración.config(text="Configuration")
+        boton_comoJugar.config(text="How to play")
         boton_configuración.config(text="Configuration")
 
         config["idioma"] = "inglés"
