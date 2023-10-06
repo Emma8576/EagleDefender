@@ -43,7 +43,7 @@ def salir():
     inicio.destroy()
     try:
         global ventana_como_Jugar
-        ventana_como_Jugar.destroy()
+        inicio_partida.destroy()
     except:
         print("")
 
@@ -327,7 +327,7 @@ def ventana_playlist():
 
         
     #boton para devolverse al menu 
-    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir, fg="snow", bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
+    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir_playlist, fg="snow", bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
     boton_devolver_playlist.pack()      
     boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
 
@@ -1016,8 +1016,7 @@ def guardar_canciones(bd, cuadro_usuario, cuadro_canciones):
     bd.close()
 
 
-def salir():
-    ventana_playlist.destroy() 
+
             
 ######################################## TERMINA LO DE LA PLAYLIST ######################
 
