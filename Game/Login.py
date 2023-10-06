@@ -952,13 +952,79 @@ def validar_datos():
     if f_cursor.fetchall():
         if config["idioma"] == "inglés":
             messagebox.showinfo(title="Successful login",message="Usuario y Contraseña correcta")
+                    # boton de playlist
+            global boton_playlist
+            boton_playlist = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=ventana_playlist)
+            boton_playlist.pack()
+            boton_playlist.place(x=0, y=729, height=40, width=200)
         else:
             messagebox.showinfo(title="Inicio de sesión exitoso",message="Usuario y Contraseña correcta")
     else:
         messagebox.showerror(title="Inicio de sesión incorrecto",message="Usuario o Contraseña incorrecta")
     bd.close()
 
+##################### LA PLAYLIST ############################
 
+def ventana_playlist():
+    global ventana_playlist
+    ventana_playlist = tk.Toplevel(ventana_1)
+    ventana_playlist.attributes("-fullscreen", True)
+    cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
+    
+    #Conexión con la base de datos local
+    bd = pymysql.connect(
+        host="localhost",
+        user="root",
+        password="",
+        db="bd1")
+    
+    texto2 =tk.Label(ventana_playlist, text="Por favor ingrese cinco canciones:") #Botón para ir al menú
+    texto2.place(x = 370, y = 50) #Posición 
+    texto2.config(width="27", height="1")#letra
+    texto2.config(font=("System 30 bold"))#
+    texto2.config(bg="#F4BFAD")#Color de fondo
+    texto2.config(fg="#000A24")
+    texto2.config(relief="raised", borderwidth=10)
+    
+    #boton para devolverse al menu 
+    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir, fg="snow", bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
+    boton_devolver_playlist.pack()      
+    boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
+    
+    # Cuadro de texto para ingresar el nombre de usuario
+    cuadro_usuario = tk.Entry(ventana_playlist)
+    cuadro_usuario.place(x=370, y=350)
+
+    # Cuadro de texto para ingresar las canciones
+    cuadro_canciones = tk.Text(ventana_playlist, height=5, width=30)
+    cuadro_canciones.place(x=370, y=400)
+
+    # Botón para guardar las canciones y el nombre de usuario en la base de datos
+    boton_guardar = tk.Button(ventana_playlist, text="Guardar", command=lambda: guardar_canciones(bd, cuadro_usuario, cuadro_canciones))
+    boton_guardar.place(x=370, y=500)
+
+def guardar_canciones(bd, cuadro_usuario, cuadro_canciones):
+    nombre_usuario = cuadro_usuario.get()  # Obtén el nombre de usuario del cuadro de texto
+    canciones = cuadro_canciones.get("1.0", "end-1c")  # Obtiene el texto del cuadro de texto de canciones
+
+    # Crea una instancia de cursor y ejecuta la inserción en la base de datos
+    cursor = bd.cursor()
+    cursor.execute("INSERT INTO canciones (usuario, canciones) VALUES (%s, %s)", (nombre_usuario, canciones))
+    bd.commit()
+
+    # Cierra la conexión a la base de datos
+    bd.close()
+
+
+def salir():
+    ventana_playlist.destroy() 
+            
+######################################## TERMINA LO DE LA PLAYLIST ######################
+
+
+
+
+######################################## CALIFICAR ###################################
 def actualiza_contraseña():
     global config
     # Verifica que todos los campos estén llenos
