@@ -234,9 +234,9 @@ def menu_login():
     boton_configuración.pack()
     boton_configuración.place(x=0, y=728, height=40, width=200)
 
+    global boton_comoJugar
     boton_comoJugar = tk.Button(ventana_1, cursor="exchange", text="Como Jugar", background="#0a0c3f",
                                     fg="white", font=("System 18 bold"), relief="raised", command=como_Jugar)
-    boton_comoJugar.pack()
     boton_comoJugar.pack()
     boton_comoJugar.place(x=0, y=60, height=40, width=200)
 
