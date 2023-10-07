@@ -80,7 +80,7 @@ boton_cerrar.pack()
 boton_cerrar.place(x=10,y=10, height=40, width=289) 
 
 
-boton_abrir=tk.Button(window, text="Iniciar",
+boton_abrir=tk.Button(window, text=".",
                     command=abrir,
                     fg="gray1",
                     bg="DodgerBlue4",
@@ -88,7 +88,7 @@ boton_abrir=tk.Button(window, text="Iniciar",
                     font=("System 18 bold"),
                     cursor="exchange")
 boton_abrir.pack()     
-boton_abrir.place(x=100,y=100, height=40, width=289) 
+boton_abrir.place(x=1250,y=100) 
 
 
 
