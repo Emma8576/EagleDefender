@@ -1,7 +1,7 @@
 import pygame
 import sys
 import time
-from pygame.locals import *
+from pygame import *
 
 pygame.init()
 
@@ -33,18 +33,18 @@ class Personaje:
         self.rect.topleft = start_pos
         self.direction = "up"
 
-    def move(self, dx, dy):
+    def mover(self, dx, dy):
         new_rect = self.rect.move(dx, dy)
         if screen.get_rect().contains(new_rect):
             self.rect = new_rect
 
-    def draw(self):
+    def dibujar(self):
         screen.blit(self.images[self.direction][self.current_frame], self.rect)
 
-    def change_direction(self, new_direction):
+    def cambiar_direccion(self, new_direction):
         self.direction = new_direction
 
-    def update_frame(self):
+    def actualizar_frame(self):
         self.current_frame = (self.current_frame + 1) % len(self.images[self.direction])
 
 # Clase Atacante
@@ -96,70 +96,70 @@ while True:
 
     if keys[K_a]:
         dx = -5
-        atacante.change_direction("left")
+        atacante.cambiar_direccion("left")
     if keys[K_d]:
         dx = 5
-        atacante.change_direction("right")
+        atacante.cambiar_direccion("right")
     if keys[K_w]:
         dy = -5
-        atacante.change_direction("up")
+        atacante.cambiar_direccion("up")
     if keys[K_s]:
         dy = 5
-        atacante.change_direction("down")
+        atacante.cambiar_direccion("down")
     if keys[K_w] and keys[K_a]:
         dx, dy = -5, -5
-        atacante.change_direction("ul")
+        atacante.cambiar_direccion("ul")
     if keys[K_w] and keys[K_d]:
         dx, dy = 5, -5
-        atacante.change_direction("ur")
+        atacante.cambiar_direccion("ur")
     if keys[K_s] and keys[K_a]:
         dx, dy = -5, 5
-        atacante.change_direction("dl")
+        atacante.cambiar_direccion("dl")
     if keys[K_s] and keys[K_d]:
         dx, dy = 5, 5
-        atacante.change_direction("dr")
+        atacante.cambiar_direccion("dr")
 
     if dx != 0 or dy != 0:
-        atacante.move(dx, dy)
-        atacante.update_frame()
+        atacante.mover(dx, dy)
+        atacante.actualizar_frame()
 
     dr, dz = 0, 0
 
     if keys[K_j]:
         dr = -5
-        defensor.change_direction("left")
+        defensor.cambiar_direccion("left")
     if keys[K_l]:
         dr = 5
-        defensor.change_direction("right")
+        defensor.cambiar_direccion("right")
     if keys[K_i]:
         dz = -5
-        defensor.change_direction("up")
+        defensor.cambiar_direccion("up")
     if keys[K_k]:
         dz = 5
-        defensor.change_direction("down")
+        defensor.cambiar_direccion("down")
     if keys[K_i] and keys[K_j]:
         dr, dz = -5, -5
-        defensor.change_direction("ul")
+        defensor.cambiar_direccion("ul")
     if keys[K_i] and keys[K_l]:
         dr, dz = 5, -5
-        defensor.change_direction("ur")
+        defensor.cambiar_direccion("ur")
     if keys[K_k] and keys[K_j]:
         dr, dz = -5, 5
-        defensor.change_direction("dl")
+        defensor.cambiar_direccion("dl")
     if keys[K_k] and keys[K_l]:
         dr, dz = 5, 5
-        defensor.change_direction("dr")
+        defensor.cambiar_direccion("dr")
 
     if dr != 0 or dz != 0:
-        defensor.move(dr, dz)
-        defensor.update_frame()
+        defensor.mover(dr, dz)
+        defensor.actualizar_frame()
 
     frame = int(time.time() * 10) % len(bg)
 
     screen.blit(bg[frame], (0, 0))
     
-    atacante.draw()
-    defensor.draw()
+    atacante.dibujar()
+    defensor.dibujar()
 
     pygame.display.flip()
     clock.tick(60)
