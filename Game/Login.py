@@ -7,6 +7,22 @@ import pymysql
 import json
 import pygame
 
+#hacer variables de fuentes globales
+global fuente_retro
+global fuente_retro_1
+global fuente_retro_2
+global fuente_retro_3
+global fuente_retro_4
+global fuente_retro_5
+
+# Se añade la fuente retro en diversos tamaños
+fuente_retro = ("8-Bit Operator+ 8", 100)
+fuente_retro_1 = ("8-Bit Operator+ 8", 40)
+fuente_retro_2 = ("8-Bit Operator+ 8", 50)
+fuente_retro_3 = ("8-Bit Operator+ 8", 25)
+fuente_retro_4 = ("8-Bit Operator+ 8", 20)
+fuente_retro_5 = ("8-Bit Operator+ 8", 15)
+
 # Variables globales para las ventanas 
 ventana_1 = None
 ventana_2 = None
@@ -92,6 +108,7 @@ def inicio_partida():
         boton_abrir.config(text="Start Game")
 
     inicio.mainloop()
+    
 #Función ventana Login
 def menu_login():
     global ventana_1, seleccion
@@ -182,13 +199,7 @@ def menu_login():
 
         # Iniciar el bucle principal de la ventana
         ventana_como_Jugar.mainloop()
-    
-    # Se añade la fuente retro en diversos tamaños
-    global fuente_retro_3
-    fuente_retro = ("8-Bit Operator+ 8", 100)
-    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
-    fuente_retro_2 = ("8-Bit Operator+ 8", 20)
-    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
+
     
     #Etiqueta con el nombre del juego
     etiqueta_retro = Label(ventana_1, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
@@ -198,7 +209,7 @@ def menu_login():
     #Etiqueta de acceder al juego
     ancho_pantalla = ventana_1.winfo_screenwidth()
     global etiqueta
-    etiqueta = Label(ventana_1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta = Label(ventana_1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_4)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
@@ -207,7 +218,7 @@ def menu_login():
 
     # Botón de Iniciar Sesión
     global boton_inicio
-    boton_inicio = tk.Button(ventana_1,cursor="exchange", text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+    boton_inicio = tk.Button(ventana_1,cursor="exchange", text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=inicio_sesion)
     boton_inicio.place(relx=0.5, rely=0.5, anchor='center')
 
     # Espacio entre botones
@@ -215,12 +226,12 @@ def menu_login():
 
     # Botón de Registrarse
     global boton_registrarse
-    boton_registrarse = tk.Button(ventana_1,cursor="exchange", text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_3, relief="raised", borderwidth=10, command=registro)
+    boton_registrarse = tk.Button(ventana_1,cursor="exchange", text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_5, relief="raised", borderwidth=10, command=registro)
     boton_registrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
 
     # Botón de Salir
     global boton_salir
-    boton_salir = tk.Button(ventana_1,cursor="exchange", text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=ventana_1.destroy)
+    boton_salir = tk.Button(ventana_1,cursor="exchange", text="Salir", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=ventana_1.destroy)
     boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/100, anchor='center')
 
 
@@ -516,13 +527,7 @@ def inicio_sesion():
 
 
     seleccion.set(config["idioma"])
-
-    
-    fuente_retro = ("8-Bit Operator+ 8", 100)
-    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
-    fuente_retro_2 = ("8-Bit Operator+ 8", 25)
-    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
-    
+  
     #Etiqueta con el nombre del juego
     etiqueta_retro = Label(ventana_2, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
@@ -543,7 +548,7 @@ def inicio_sesion():
     #Etiqueta de acceder al juego
     global etiqueta_1
     ancho_pantalla = ventana_2.winfo_screenwidth()
-    etiqueta_1 = Label(ventana_2, text="Inicio de Sesión", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta_1 = Label(ventana_2, text="Inicio de Sesión", bg="#101654", fg="white", font=fuente_retro_2)
 
     #Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta_1.winfo_reqwidth()) // 2
@@ -558,11 +563,11 @@ def inicio_sesion():
 
     #Se agrega la etiqueta de usuario
     global etiquetaUsuario
-    etiquetaUsuario = Label(ventana_2, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    etiquetaUsuario = Label(ventana_2, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_4)  
     
     #Se agrega la etiqueta de contraseña
     global etiquetaContrasena
-    etiquetaContrasena = Label(ventana_2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiquetaContrasena = Label(ventana_2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_4)
 
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
@@ -580,14 +585,14 @@ def inicio_sesion():
     x_entry = (ancho_pantalla) // 3.1
     
     
-    # Espacio para llenar usuario
+    # Espacio para llenar usuari3
     nombre_usuario_verif = tk.StringVar()
-    nombre_usuario_entry1 = tk.Entry(ventana_2, textvariable=nombre_usuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_entry1 = tk.Entry(ventana_2, textvariable=nombre_usuario_verif, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
     nombre_usuario_entry1.place(x=x_entry, y=300)
 
     # Espacio para llenar contraseña
     contrasena_usuario_verif = tk.StringVar()
-    contrasena_usuario_entry1 = tk.Entry(ventana_2, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_entry1 = tk.Entry(ventana_2, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
     contrasena_usuario_entry1.place(x=x_entry, y=420)
     
     # Espacio entre botones
@@ -595,12 +600,12 @@ def inicio_sesion():
 
     # Botón de Iniciar sesión de la ventana inicio de sesión
     global boton_inicio_sesion
-    boton_inicio_sesion = Button(ventana_2, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=validar_datos)
+    boton_inicio_sesion = Button(ventana_2, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=validar_datos)
     boton_inicio_sesion.place(relx=0.5, rely=0.7, anchor='center')
     
         # Botón de Atrás de la ventana inicio de sesión
     global botonAtras
-    botonAtras = Button(ventana_2, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras = Button(ventana_2, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_atras)
     botonAtras.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones/90, anchor='center')
 
 
@@ -632,12 +637,6 @@ def registro():
     # Cargar imagen de fondo en la ventana principal
     cargar_imagen_de_fondo(ventana_3, "loginImages/fondo1.png") 
     
-     # Se añade la fuente retro en diversos tamaños
-    fuente_retro = ("8-Bit Operator+ 8", 100)
-    fuente_retro_1 = ("8-Bit Operator+ 8", 50)
-    fuente_retro_2 = ("8-Bit Operator+ 8", 25)
-    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
-    
     seleccion.set(config["idioma"])
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace
@@ -653,7 +652,7 @@ def registro():
     #Etiqueta de registro del juego
     global etiqueta3
     ancho_pantalla = ventana_3.winfo_screenwidth()
-    etiqueta3 = Label(ventana_3, text="Registrarse", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta3 = Label(ventana_3, text="Registrarse", bg="#101654", fg="white", font=fuente_retro_2)
 
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
@@ -667,15 +666,15 @@ def registro():
 
     #Se agrega la etiqueta de usuario
     global etiquetaUsuario
-    etiquetaUsuario = Label(ventana_3, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    etiquetaUsuario = Label(ventana_3, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)  
     
     #Se agrega la etiqueta de contraseña
     global etiquetaContrasena
-    etiquetaContrasena = Label(ventana_3, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiquetaContrasena = Label(ventana_3, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
     
     #Se agrega la etiqueta del correo
     global etiquetaCorreo
-    etiquetaCorreo = Label(ventana_3, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiquetaCorreo = Label(ventana_3, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
     
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
     x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
@@ -701,17 +700,17 @@ def registro():
     
     # Espacio para llenar usuario
     nombre_usuario_verif1 = tk.StringVar()
-    nombre_usuario_entry = tk.Entry(ventana_3, textvariable=nombre_usuario_verif1, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_entry = tk.Entry(ventana_3, textvariable=nombre_usuario_verif1, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
     nombre_usuario_entry.place(x=x_entry, y=250)
 
     # Espacio para llenar contraseña
     contrasena_usuario_verif = tk.StringVar()
-    contrasena_usuario_entry = tk.Entry(ventana_3, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_entry = tk.Entry(ventana_3, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
     contrasena_usuario_entry.place(x=x_entry, y=360)
     
     #Espacio para llenar contraseña
     correoUsuario_verif = tk.StringVar()
-    correo_usuario_entry = tk.Entry(ventana_3, textvariable=correoUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=22)
+    correo_usuario_entry = tk.Entry(ventana_3, textvariable=correoUsuario_verif, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
     correo_usuario_entry.place(x=x_entry, y=470)
     
     # Espacio entre botones
@@ -719,12 +718,12 @@ def registro():
 
     # Botón de registrarse de la ventana de registro
     global boton_registro
-    boton_registro = Button(ventana_3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command= verificar_contraseña)
+    boton_registro = Button(ventana_3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command= verificar_contraseña)
     boton_registro.place(relx=0.5, rely=0.8, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
     global botonAtras
-    botonAtras = Button(ventana_3, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras = Button(ventana_3, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_atras)
     botonAtras.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
 
 
@@ -781,12 +780,6 @@ def recuperar_contrasena():
 
     seleccion.set(config["idioma"])
     
-     # Se añade la fuente retro en diversos tamaños
-    fuente_retro = ("8-Bit Operator+ 8", 100)
-    fuente_retro_1 = ("8-Bit Operator+ 8", 40)
-    fuente_retro_2 = ("8-Bit Operator+ 8", 25)
-    fuente_retro_3 = ("8-Bit Operator+ 8", 15)
-    
     seleccion.set(config["idioma"])
     #Etiqueta con el nombre del juego
     etiqueta_retro = Label(ventana_4, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
@@ -807,20 +800,20 @@ def recuperar_contrasena():
 
     #Se agrega la etiqueta de usuario
     global etiqueta_usuario2
-    etiqueta_usuario2 = Label(ventana_4, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)  
+    etiqueta_usuario2 = Label(ventana_4, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)  
      
     #Se agrega la etiqueta del correo
     global etiqueta_correo2
-    etiqueta_correo2 = Label(ventana_4, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiqueta_correo2 = Label(ventana_4, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
     
      
     #Se agrega la etiqueta de contraseña
     global etiqueta_contrasena2
-    etiqueta_contrasena2 = Label(ventana_4, text="Nueva Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiqueta_contrasena2 = Label(ventana_4, text="Nueva Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
     
     #Se agrega la etiqueta de confirmar contraseña
     global etiqueta_contrasena_re
-    etiqueta_contrasena_re = Label(ventana_4, text="Confirmar Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_2)
+    etiqueta_contrasena_re = Label(ventana_4, text="Confirmar Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
 
     
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
@@ -852,22 +845,22 @@ def recuperar_contrasena():
 
     # Espacio para llenar usuario
     nombre_usuario_verif2 = tk.StringVar()
-    nombre_usuario2_entry = tk.Entry(ventana_4, textvariable=nombre_usuario_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    nombre_usuario2_entry = tk.Entry(ventana_4, textvariable=nombre_usuario_verif2, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
     nombre_usuario2_entry.place(x=x_entry, y=235)
     
     # Espacio para llenar correo
     correo_verif2 = tk.StringVar()
-    correo_entry = tk.Entry(ventana_4, textvariable=correo_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    correo_entry = tk.Entry(ventana_4, textvariable=correo_verif2, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
     correo_entry.place(x=x_entry, y=335)
     
     # Espacio para llenar contraseña
     contrasena_verif2 = tk.StringVar()
-    contrasena_entry = tk.Entry(ventana_4, textvariable=contrasena_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    contrasena_entry = tk.Entry(ventana_4, textvariable=contrasena_verif2, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
     contrasena_entry.place(x=x_entry, y=435)
     
     # Espacio para llenar contraseña repetida
     contrasena_Re_verif2 = tk.StringVar()
-    contrasena_Re_entry = tk.Entry(ventana_4, textvariable=contrasena_Re_verif2, bg="#9e2254", fg="white", font=fuente_retro_2, relief="groove", borderwidth=10, width=23)
+    contrasena_Re_entry = tk.Entry(ventana_4, textvariable=contrasena_Re_verif2, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
     contrasena_Re_entry.place(x=x_entry, y=535)
     
     # Espacio entre botones
@@ -875,12 +868,12 @@ def recuperar_contrasena():
 
     # Botón de registrarse de la ventana de registro
     global boton_registro2
-    boton_registro2 = Button(ventana_4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=actualiza_contraseña)
+    boton_registro2 = Button(ventana_4, text="Guardar cambios", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=actualiza_contraseña)
     boton_registro2.place(relx=0.5, rely=0.8 + 0.03, anchor='center')
     
     # Botón de Atrás de la ventana inicio de sesión
     global boton_atras2
-    boton_atras2 = Button(ventana_4, text="Atrás", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_3, relief="raised", borderwidth=10, command=volver_atras)
+    boton_atras2 = Button(ventana_4, text="Atrás", height="3", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_atras)
     boton_atras2.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones/90, anchor='center')
 
 
@@ -1014,14 +1007,8 @@ def guardar_canciones(bd, cuadro_usuario, cuadro_canciones):
 
     # Cierra la conexión a la base de datos
     bd.close()
-
-
-
-            
+          
 ######################################## TERMINA LO DE LA PLAYLIST ######################
-
-
-
 
 ######################################## CALIFICAR ###################################
 def actualiza_contraseña():
@@ -1091,7 +1078,7 @@ def actualiza_contraseña():
             contrasena_Re_entry.delete(0,END)
 
             # Botón de registrarse de la ventana de registro
-            boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_3, relief="raised", borderwidth=10, command=inicio_sesion)
+            boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181", fg="black", font=fuente_retro_5, relief="raised", borderwidth=10, command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
             
     def ventana_ingreso_cancion():
@@ -1102,7 +1089,6 @@ def actualiza_contraseña():
         boton_configuración.place(x=0, y=0, height=40, width=200)
 
         
-
 
 inicio_partida()
 #LOS MILTONEANOS
