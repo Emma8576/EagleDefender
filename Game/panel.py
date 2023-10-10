@@ -1,276 +1,165 @@
 import pygame
 import sys
-from pygame import *
 import time
+from pygame.locals import *
 
 pygame.init()
-#Obtener información de pantalla y ajustar a pantalla completa
-screen_info = display.Info()
+
+# Obtener información de pantalla y ajustar a pantalla completa
+screen_info = pygame.display.Info()
 screen_width = screen_info.current_w
 screen_height = screen_info.current_h
-screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
+screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 
-#Cargar background
-bg = []
+# Cargar background
+bg = [pygame.image.load(f"panel_elements/bg/frame-{i}.gif") for i in range(1, 24)]
 
-for i in range(1, 24):
-    nombre_bg = f"panel_elements/bg/frame-{i}.gif"
-    bg.append(image.load(nombre_bg))
+# Clase base para los personajes
+class Personaje:
+    def __init__(self, image_paths, start_pos):
+        self.images = {
+            "up": [pygame.image.load(image_path) for image_path in image_paths["up"]],
+            "down": [pygame.image.load(image_path) for image_path in image_paths["down"]],
+            "right": [pygame.image.load(image_path) for image_path in image_paths["right"]],
+            "left": [pygame.image.load(image_path) for image_path in image_paths["left"]],
+            "ul": [pygame.image.load(image_path) for image_path in image_paths["ul"]],
+            "ur": [pygame.image.load(image_path) for image_path in image_paths["ur"]],
+            "dl": [pygame.image.load(image_path) for image_path in image_paths["dl"]],
+            "dr": [pygame.image.load(image_path) for image_path in image_paths["dr"]],
+        }
 
-#Clase que va a definir atributos y comportamiento del usuario Atacante
-class Atacante:
-    def __init__(self): #Iniciación del método constructor
-    	# Inicialización de listas para almacenar frames de diferentes direcciones.
-    	# Cada lista representa una dirección de movimiento
-        self.images_up = []  # Dirección hacia arriba
-        self.images_down = []  # Dirección hacia abajo
-        self.images_right = []  # Dirección hacia la derecha
-        self.images_left = []  # Dirección hacia la izquierda
-        self.images_ul = []  # Dirección arriba-izquierda
-        self.images_ur = []  # Dirección arriba-derecha
-        self.images_dl = []  # Dirección abajo-izquierda
-        self.images_dr = []  # Dirección abajo-derecha
+        self.current_frame = 0
+        self.rect = self.images["up"][0].get_rect()
+        self.rect.topleft = start_pos
+        self.direction = "up"
 
-        #bucle para cargar las imágenes en cada dirección mediante variables, cada directorio contiene 4 sprites
-        for i in range(1, 5): 
-            nombre_img_up = f"panel_elements/atacante_sprites/atacante_up/frame-{i}.gif"
-            nombre_img_down = f"panel_elements/atacante_sprites/atacante_down/frame-{i}.gif"
-            nombre_img_right = f"panel_elements/atacante_sprites/atacante_right/frame-{i}.gif"
-            nombre_img_left = f"panel_elements/atacante_sprites/atacante_left/frame-{i}.gif"
-            nombre_img_ul = f"panel_elements/atacante_sprites/atacante_ul/frame-{i}.png"
-            nombre_img_ur = f"panel_elements/atacante_sprites/atacante_ur/frame-{i}.png"
-            nombre_img_dl = f"panel_elements/atacante_sprites/atacante_dl/frame-{i}.png"
-            nombre_img_dr = f"panel_elements/atacante_sprites/atacante_dr/frame-{i}.png"
-
-
-            # Fragmento que carga cada sprite dentro de las listas correspondientes ya definidas mediante método append()
-            # Se cargan respectivamente a como fueron cargadas en la definición de las listas vacías
-            self.images_up.append(image.load(nombre_img_up))
-            self.images_down.append(image.load(nombre_img_down))
-            self.images_right.append(image.load(nombre_img_right))
-            self.images_left.append(image.load(nombre_img_left))
-            self.images_ul.append(image.load(nombre_img_ul))
-            self.images_ur.append(image.load(nombre_img_ur))
-            self.images_dl.append(image.load(nombre_img_dl))
-            self.images_dr.append(image.load(nombre_img_dr))
-
-        self.current_frame = 0 # variable que inicia el primer elemento de la lista, es decir, la primer imagen
-        self.rect = self.images_up[0].get_rect() # variable que almacena la creación de un rectángulo del tamaño del tanque para detectar movimiento y colisiones
-        self.rect.topleft = (screen_width//2, screen_height//2) # Acomoda de manera predeterminada en tanque sobre la pantalla
-        self.direction = "up" # Establece dirección predeterminada
-
-
-    #Función encargada de mantener el tanque dentro de la pantalla, no puede salir de los bordes
-    #Calcula la nueva posición del rectángulo, luego comprueba si la dirección está dentro de la pantalla y si está dentro actualiza la nueva posición 
-    def mover_atacante(self, dx, dy):
+    def move(self, dx, dy):
         new_rect = self.rect.move(dx, dy)
         if screen.get_rect().contains(new_rect):
             self.rect = new_rect
 
+    def draw(self):
+        screen.blit(self.images[self.direction][self.current_frame], self.rect)
 
-    # Función que dibuja de manera adecuada el tanque basado en la dirección
-    # Si la dirección es ___ entonces carga _<variable con la lista vacía>_
-    def dibujar_atacante(self):
-        if self.direction == "up":
-    	    screen.blit(self.images_up[self.current_frame], self.rect)
-        elif self.direction == "down":
-    	    screen.blit(self.images_down[self.current_frame], self.rect)
-        elif self.direction == "right":
-    	    screen.blit(self.images_right[self.current_frame], self.rect)
-        elif self.direction == "left":
-    	    screen.blit(self.images_left[self.current_frame], self.rect)
-        elif self.direction == "ul": 
-             screen.blit(self.images_ul[self.current_frame], self.rect)
-        elif self.direction == "ur":
-            screen.blit(self.images_ur[self.current_frame], self.rect)
-        elif self.direction == "dl":
-            screen.blit(self.images_dl[self.current_frame], self.rect)
-        elif self.direction == "dr":
-            screen.blit(self.images_dr[self.current_frame], self.rect)
+    def change_direction(self, new_direction):
+        self.direction = new_direction
 
-    #cambia la dirección del tanque según la tecla presionada en cada iteración
-    def cambiar_direccion_atacante(self, nueva_direccion):
-    	self.direction = nueva_direccion    	
+    def update_frame(self):
+        self.current_frame = (self.current_frame + 1) % len(self.images[self.direction])
 
-    # Actualiza el índice de la imagen actual, increementando el índice y ajustando el rango válido mediante el operando % (es decir, divide entre la cantidad de sprites del directorio)
-    def actualizar_frame(self):
-        self.current_frame = (self.current_frame + 1) % len(self.images_up)
+# Clase Atacante
+class Atacante(Personaje):
+    def __init__(self, start_pos):
+        image_paths = {
+            "up": [f"panel_elements/atacante_sprites/atacante_up/frame-{i}.gif" for i in range(1, 5)],
+            "down": [f"panel_elements/atacante_sprites/atacante_down/frame-{i}.gif" for i in range(1, 5)],
+            "right": [f"panel_elements/atacante_sprites/atacante_right/frame-{i}.gif" for i in range(1, 5)],
+            "left": [f"panel_elements/atacante_sprites/atacante_left/frame-{i}.gif" for i in range(1, 5)],
+            "ul": [f"panel_elements/atacante_sprites/atacante_ul/frame-{i}.png" for i in range(1, 5)],
+            "ur": [f"panel_elements/atacante_sprites/atacante_ur/frame-{i}.png" for i in range(1, 5)],
+            "dl": [f"panel_elements/atacante_sprites/atacante_dl/frame-{i}.png" for i in range(1, 5)],
+            "dr": [f"panel_elements/atacante_sprites/atacante_dr/frame-{i}.png" for i in range(1, 5)],
+        }
+        super().__init__(image_paths, start_pos)
 
-#Clase que define los atributos y comportamientos del usuario Defensor
-class Defensor:
-    def __init__(self):
-        # Inicialización de listas para almacenar frames de diferentes direcciones.
-        # Cada lista representa una dirección de movimiento
-        self.images_up = []  # Dirección hacia arriba
-        self.images_down = []  # Dirección hacia abajo
-        self.images_right = []  # Dirección hacia la derecha
-        self.images_left = []  # Dirección hacia la izquierda
-        self.images_ul = []  # Dirección arriba-izquierda
-        self.images_ur = []  # Dirección arriba-derecha
-        self.images_dl = []  # Dirección abajo-izquierda
-        self.images_dr = []  # Dirección abajo-derecha
-
-        # bucle para cargar las imágenes en cada dirección mediante variables, cada directorio contiene 4 sprites
-        for i in range(1, 9): 
-            nombre_img_up = f"panel_elements/defensor_sprites/defensor_up/frame-{i}.gif"
-            nombre_img_down = f"panel_elements/defensor_sprites/defensor_down/frame-{i}.gif"
-            nombre_img_right = f"panel_elements/defensor_sprites/defensor_right/frame-{i}.gif"
-            nombre_img_left = f"panel_elements/defensor_sprites/defensor_left/frame-{i}.gif"
-            nombre_img_ul = f"panel_elements/defensor_sprites/defensor_ul/frame-{i}.png"
-            nombre_img_ur = f"panel_elements/defensor_sprites/defensor_ur/frame-{i}.png"
-            nombre_img_dl = f"panel_elements/defensor_sprites/defensor_dl/frame-{i}.png"
-            nombre_img_dr = f"panel_elements/defensor_sprites/defensor_dr/frame-{i}.png"
-
-            # Fragmento que carga cada sprite dentro de las listas correspondientes ya definidas mediante método append()
-            # Se cargan respectivamente a como fueron cargadas en la definición de las listas vacías
-            self.images_up.append(image.load(nombre_img_up))
-            self.images_down.append(image.load(nombre_img_down))
-            self.images_right.append(image.load(nombre_img_right))
-            self.images_left.append(image.load(nombre_img_left))
-            self.images_ul.append(image.load(nombre_img_ul))
-            self.images_ur.append(image.load(nombre_img_ur))
-            self.images_dl.append(image.load(nombre_img_dl))
-            self.images_dr.append(image.load(nombre_img_dr))
-
-        self.current_frame = 0  # variable que inicia el primer elemento de la lista, es decir, la primer imagen
-        self.rect = self.images_up[0].get_rect()  # variable que almacena la creación de un rectángulo del tamaño del tanque para detectar movimiento y colisiones
-        self.rect.topleft = (screen_width // 3, screen_height // 3)  # Acomoda de manera predeterminada en tanque sobre la pantalla
-        self.direction = "up"  # Establece dirección predeterminada
-
-
-
-    def mover_defensor(self, dx, dy):
-        new_rect = self.rect.move(dx, dy)
-        if screen.get_rect().contains(new_rect):
-            self.rect = new_rect
-
-    # Función que dibuja de manera adecuada el tanque basado en la dirección
-    # Si la dirección es ___ entonces carga _<variable con la lista vacía>_
-    def dibujar_defensor(self):
-        if self.direction == "up":
-    	    screen.blit(self.images_up[self.current_frame], self.rect)
-        elif self.direction == "down":
-    	    screen.blit(self.images_down[self.current_frame], self.rect)
-        elif self.direction == "right":
-    	    screen.blit(self.images_right[self.current_frame], self.rect)
-        elif self.direction == "left":
-    	    screen.blit(self.images_left[self.current_frame], self.rect)
-        elif self.direction == "ul": 
-             screen.blit(self.images_ul[self.current_frame], self.rect)
-        elif self.direction == "ur":
-            screen.blit(self.images_ur[self.current_frame], self.rect)
-        elif self.direction == "dl":
-            screen.blit(self.images_dl[self.current_frame], self.rect)
-        elif self.direction == "dr":
-            screen.blit(self.images_dr[self.current_frame], self.rect)
-
-    #cambia la dirección del tanque según la tecla presionada en cada iteración
-    def cambiar_direccion_defensor(self, nueva_direccion):
-    	self.direction = nueva_direccion    	
-
-    # Actualiza el índice de la imagen actual, increementando el índice y ajustando el rango válido mediante el operando % (es decir, divide entre la cantidad de sprites del directorio)
-    def actualizar_frame_defensor(self):
-        self.current_frame = (self.current_frame + 1) % len(self.images_up)
-
-    #Fin ejecución clase Defensor
-
-
-
-
+# Clase Defensor
+class Defensor(Personaje):
+    def __init__(self, start_pos):
+        image_paths = {
+            "up": [f"panel_elements/defensor_sprites/defensor_up/frame-{i}.gif" for i in range(1, 9)],
+            "down": [f"panel_elements/defensor_sprites/defensor_down/frame-{i}.gif" for i in range(1, 9)],
+            "right": [f"panel_elements/defensor_sprites/defensor_right/frame-{i}.gif" for i in range(1, 9)],
+            "left": [f"panel_elements/defensor_sprites/defensor_left/frame-{i}.gif" for i in range(1, 9)],
+            "ul": [f"panel_elements/defensor_sprites/defensor_ul/frame-{i}.png" for i in range(1, 9)],
+            "ur": [f"panel_elements/defensor_sprites/defensor_ur/frame-{i}.png" for i in range(1, 9)],
+            "dl": [f"panel_elements/defensor_sprites/defensor_dl/frame-{i}.png" for i in range(1, 9)],
+            "dr": [f"panel_elements/defensor_sprites/defensor_dr/frame-{i}.png" for i in range(1, 9)],
+        }
+        super().__init__(image_paths, start_pos)
 
 clock = pygame.time.Clock()
 
-# Crea una instancia de atacante
-atacante = Atacante()
-defensor = Defensor()
+# Crea una instancia de Atacante y Defensor
+atacante = Atacante((screen_width // 2, screen_height // 2))
+defensor = Defensor((screen_width // 3, screen_height // 3))
 
 # Bucle principal del juego
 while True:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == QUIT:
+            pygame.quit()
             sys.exit()
 
-    # Variable que almacena la tecla presionada
     keys = pygame.key.get_pressed()
 
-    dx, dy = 0, 0 # Se inicializa la dirección en posición nula
-    
+    dx, dy = 0, 0
 
-    #Se configura comportamiento de imagen según la tecla presionada
-    # Ej: Si la tecla es A, se mueve 5 pixeles a la izquierda y cambia de dirección con la imagen corresepondiente
     if keys[K_a]:
         dx = -5
-        atacante.cambiar_direccion_atacante("left")
+        atacante.change_direction("left")
     if keys[K_d]:
         dx = 5
-        atacante.cambiar_direccion_atacante("right")
+        atacante.change_direction("right")
     if keys[K_w]:
         dy = -5
-        atacante.cambiar_direccion_atacante("up")
+        atacante.change_direction("up")
     if keys[K_s]:
         dy = 5
-        atacante.cambiar_direccion_atacante("down")
+        atacante.change_direction("down")
     if keys[K_w] and keys[K_a]:
-    	dx, dy = -5,-5
-    	atacante.cambiar_direccion_atacante("ul")
+        dx, dy = -5, -5
+        atacante.change_direction("ul")
     if keys[K_w] and keys[K_d]:
-    	dx, dy = 5, -5
-    	atacante.cambiar_direccion_atacante("ur")
+        dx, dy = 5, -5
+        atacante.change_direction("ur")
     if keys[K_s] and keys[K_a]:
-    	dx, dy = -5,5
-    	atacante.cambiar_direccion_atacante("dl")
+        dx, dy = -5, 5
+        atacante.change_direction("dl")
     if keys[K_s] and keys[K_d]:
-    	dx, dy = 5,5
-    	atacante.cambiar_direccion_atacante("dr")
+        dx, dy = 5, 5
+        atacante.change_direction("dr")
 
-    #si dx o dy es diferente de 0, llama a la función mover_atacante() para mover la imagen según la dirección deseada dentro del rango de los sprites mediante actualizar_frame()
     if dx != 0 or dy != 0:
-        atacante.mover_atacante(dx, dy)
-        atacante.actualizar_frame()
+        atacante.move(dx, dy)
+        atacante.update_frame()
 
     dr, dz = 0, 0
 
     if keys[K_j]:
         dr = -5
-        defensor.cambiar_direccion_defensor("left")
+        defensor.change_direction("left")
     if keys[K_l]:
         dr = 5
-        defensor.cambiar_direccion_defensor("right")
+        defensor.change_direction("right")
     if keys[K_i]:
         dz = -5
-        defensor.cambiar_direccion_defensor("up")
+        defensor.change_direction("up")
     if keys[K_k]:
         dz = 5
-        defensor.cambiar_direccion_defensor("down")
+        defensor.change_direction("down")
     if keys[K_i] and keys[K_j]:
-    	dr, dz = -5,-5
-    	defensor.cambiar_direccion_defensor("ul")
+        dr, dz = -5, -5
+        defensor.change_direction("ul")
     if keys[K_i] and keys[K_l]:
-    	dr, dz = 5, -5
-    	defensor.cambiar_direccion_defensor("ur")
+        dr, dz = 5, -5
+        defensor.change_direction("ur")
     if keys[K_k] and keys[K_j]:
-    	dr, dz = -5,5
-    	defensor.cambiar_direccion_defensor("dl")
+        dr, dz = -5, 5
+        defensor.change_direction("dl")
     if keys[K_k] and keys[K_l]:
-    	dr, dz = 5,5
-    	defensor.cambiar_direccion_defensor("dr")
+        dr, dz = 5, 5
+        defensor.change_direction("dr")
 
     if dr != 0 or dz != 0:
-        defensor.mover_defensor(dr, dz)
-        defensor.actualizar_frame_defensor()
+        defensor.move(dr, dz)
+        defensor.update_frame()
 
-
-    #Ajusta parámetros del background
-    frame = int(time.time()*10) 
-    frame %= len(bg)
+    frame = int(time.time() * 10) % len(bg)
 
     screen.blit(bg[frame], (0, 0))
-    #................................
-
-    atacante.dibujar_atacante() # Llama al método dibujar_atacante para mostrar la imagen del tanque, dependiendo de la dirección  
-    defensor.dibujar_defensor()
+    
+    atacante.draw()
+    defensor.draw()
 
     pygame.display.flip()
-    clock.tick(60)#Se establece bucle principal a 60 frames por segundo
-
-pygame.quit() # Fin de ejecución del programa
+    clock.tick(60)
