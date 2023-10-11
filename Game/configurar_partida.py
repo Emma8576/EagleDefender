@@ -23,6 +23,7 @@ fuente_retro_6 = ("8-Bit Operator+ 8", 70)
 fuente_retro_7 = ("8-Bit Operator+ 8", 60)
 fuente_retro_8 = ("8-Bit Operator+ 8", 35)
 fuente_retro_9 = ("8-Bit Operator+ 8", 12)
+
 #Se agrega imagen de fondo
 def cargar_imagen_de_fondo(ventana_1, ruta_imagen):
     # Cargar la imagen de fondo
@@ -31,11 +32,12 @@ def cargar_imagen_de_fondo(ventana_1, ruta_imagen):
     return imagen
 
 
-#Función ventana Login
-def menu_login():
+#Función ventana configurar partida
+def configurar_partida():
     global ventana_1, seleccion
     ventana_1= tk.Tk()
     ventana_1.attributes("-fullscreen", True)
+    
     # Establecer el título de la ventana
     ventana_1.title("Bienvenidos")
 
@@ -54,18 +56,14 @@ def menu_login():
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
     etiqueta_retro.pack()
     
-    
-    # Función para mostrar el menú en la posición del botón
-    def mostrar_menu():
-        x, y, _, _ = boton_menu.bbox("insert")
-        x += ventana_1.winfo_rootx() + 235  # Alinea el menú con el botón
-        y += ventana_1.winfo_rooty() + 255  # Aparece debajo del botón
-        menu_principal.post(x, y)
-    
-    # Función para mostrar el menú en la posición del botón
+    # Función para mostrar el menú 1 en la posición del botón
     def mostrar_menu(event):
         menu_principal.post(event.x_root, event.y_root)
 
+    # Función para mostrar el menú 1 en la posición del botón
+    def mostrar_menu_2(event):
+        menu_principal_2.post(event.x_root, event.y_root)
+        
     # Crear un botón que actúa como un menú desplegable
     boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="blue", fg="white", activebackground="#101654")
     boton_menu.place(relx=0.5 - 0.38, rely=0.5 - 0.20)
@@ -88,9 +86,9 @@ def menu_login():
 
     menu_principal_2 = Menu(ventana_1, tearoff=0)
     menu_principal_2.add_command(label="Insertar canción 1", font= fuente_retro_9, foreground= "white", background="#101654", command=lambda: print("Cancion 1"))
-    menu_principal_2.add_command(label="Insertar canción 4", background="#101654", command=lambda: print("Canción 4"))
+    menu_principal_2.add_command(label="Insertar canción 2", font= fuente_retro_9, foreground= "white", background="#101654", command=lambda: print("Cancion 2"))
 
-    boton_menu_2.bind("<Button-1>", mostrar_menu)
+    boton_menu_2.bind("<Button-1>", mostrar_menu_2)
 
     #Etiqueta de Configurar partida
     ancho_pantalla = ventana_1.winfo_screenwidth()
@@ -120,7 +118,7 @@ def menu_login():
     x = (ancho_pantalla_2 - etiqueta.winfo_reqwidth()) * 1.1
     etiqueta_jugador_2.place(x=x, y=150) 
 
-    # Botón de Iniciar Sesión
+    # Botón de Iniciar Partida
     global boton_inicio
     boton_inicio = tk.Button(ventana_1,cursor="exchange", text="Iniciar partida", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command="")
     boton_inicio.place(relx=0.5+ 0.25, rely=0.5 + 0.35, anchor='center')
@@ -128,12 +126,6 @@ def menu_login():
     # Espacio entre botones
     espacio_entre_botones = 30 
     
-    """
-    # Botón de Registrarse
-    global boton_registrarse
-    boton_registrarse = tk.Button(ventana_1,cursor="exchange", text="Registrarse", height="4", background="#0a0c3f", fg="white", width="30", font=fuente_retro_5, relief="raised", borderwidth=10, command="")
-    boton_registrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones/200, anchor='center')
-    """
     # Botón de Salir
     global boton_salir
     boton_salir = tk.Button(ventana_1,cursor="exchange", text="Regresar", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=ventana_1.destroy)
@@ -148,7 +140,7 @@ def menu_login():
     # Mostrar la ventana principal
     ventana_1.mainloop()
     
-menu_login()
+configurar_partida()
 
 
 
