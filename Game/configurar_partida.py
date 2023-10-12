@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import pygame 
-
+import subprocess
 #hacer variables de fuentes globales
 global fuente_retro
 global fuente_retro_1
@@ -31,7 +31,13 @@ def cargar_imagen_de_fondo(ventana_1, ruta_imagen):
     imagen = ImageTk.PhotoImage(imagen)
     return imagen
 
-
+def volver_inicio_sesion():
+    Archivo = 'Login.py'
+    try:
+        subprocess.Popen(['python', Archivo])
+    except FileNotFoundError:
+        print(f'El archivo "{Archivo}" no se encontró o no se pudo ejecutar.')
+        
 #Función ventana configurar partida
 def configurar_partida():
     global ventana_1, seleccion

@@ -6,6 +6,7 @@ import os
 import pymysql
 import json
 import pygame
+import subprocess
 
 #hacer variables de fuentes globales
 global fuente_retro
@@ -943,15 +944,20 @@ def validar_datos():
     #Verifica el inicio de sesión correcto o incorrecto.
     f_cursor.execute("SELECT Contrasena FROM login WHERE usuario='"+nombre_usuario_verif.get()+"' and contrasena= '"+contrasena_usuario_verif.get()+"'")
     if f_cursor.fetchall():
-        if config["idioma"] == "inglés":
-            messagebox.showinfo(title="Successful login",message="Usuario y Contraseña correcta")
-                    # boton de playlist
-            global boton_playlist
-            boton_playlist = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=ventana_playlist)
-            boton_playlist.pack()
-            boton_playlist.place(x=0, y=729, height=40, width=200)
-        else:
-            messagebox.showinfo(title="Inicio de sesión exitoso",message="Usuario y Contraseña correcta")
+        ventana_2.destroy()
+        # boton de playlist
+        global boton_playlist
+        boton_playlist = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=ventana_playlist)
+        boton_playlist.pack()
+        boton_playlist.place(x=0, y=729, height=40, width=200)
+            
+        # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
+        archivo_python = 'configurar_partida.py'
+
+        try:
+            subprocess.Popen(['python', archivo_python])
+        except FileNotFoundError:
+            print(f'El archivo "{archivo_python}" no se encontró o no se pudo ejecutar.')
     else:
         messagebox.showerror(title="Inicio de sesión incorrecto",message="Usuario o Contraseña incorrecta")
     bd.close()
