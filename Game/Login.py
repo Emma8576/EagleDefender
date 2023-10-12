@@ -585,12 +585,13 @@ def inicio_sesion():
     # Calcular la posición x para centrar horizontalmente los campos de entrada
     x_entry = (ancho_pantalla) // 3.1
     
-    
+    global nombre_usuario_entry1
     # Espacio para llenar usuari3
     nombre_usuario_verif = tk.StringVar()
     nombre_usuario_entry1 = tk.Entry(ventana_2, textvariable=nombre_usuario_verif, bg="#9e2254", fg="white", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
     nombre_usuario_entry1.place(x=x_entry, y=300)
 
+    global contrasena_usuario_entry1
     # Espacio para llenar contraseña
     contrasena_usuario_verif = tk.StringVar()
     contrasena_usuario_entry1 = tk.Entry(ventana_2, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white", show="*", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
@@ -929,11 +930,14 @@ def insertar_datos():
             messagebox.showerror(message="Tu registro no se pudo completar", title="Aviso")
     
     bd.close()
+    
+ #Variable para contar los usuarios por partida   
+contar_usuarios = 0
 
 #Validar datos de ingreso
 def validar_datos():
     global config
-        #Conexión con la base de datos local
+    global contar_usuarios
     bd = pymysql.connect(
         host="localhost",
         user="root",
@@ -944,20 +948,33 @@ def validar_datos():
     #Verifica el inicio de sesión correcto o incorrecto.
     f_cursor.execute("SELECT Contrasena FROM login WHERE usuario='"+nombre_usuario_verif.get()+"' and contrasena= '"+contrasena_usuario_verif.get()+"'")
     if f_cursor.fetchall():
-        ventana_2.destroy()
+        
         # boton de playlist
         global boton_playlist
         boton_playlist = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white", font=("System 18 bold"), relief="raised", command=ventana_playlist)
         boton_playlist.pack()
         boton_playlist.place(x=0, y=729, height=40, width=200)
+   
+        nombre_usuario = nombre_usuario_entry1.get()
+        if contar_usuarios < 2:
+            contar_usuarios += 1
+            print(nombre_usuario)
+            print(contar_usuarios)
             
-        # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
-        archivo_python = 'configurar_partida.py'
+            if contar_usuarios == 2:
+                # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
+                archivo_python = 'configurar_partida.py'
 
-        try:
-            subprocess.Popen(['python', archivo_python])
-        except FileNotFoundError:
-            print(f'El archivo "{archivo_python}" no se encontró o no se pudo ejecutar.')
+                try:
+                    subprocess.Popen(['python', archivo_python])
+                    
+                except FileNotFoundError:
+                    print(f'El archivo "{archivo_python}" no se encontró o no se pudo ejecutar.')
+        
+        nombre_usuario_entry1.delete(0,END)
+        contrasena_usuario_entry1.delete(0,END)
+        
+        
     else:
         messagebox.showerror(title="Inicio de sesión incorrecto",message="Usuario o Contraseña incorrecta")
     bd.close()
