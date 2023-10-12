@@ -563,8 +563,8 @@ def inicio_sesion():
     contrasena_usuario_verif = StringVar()
 
     #Se agrega la etiqueta de usuario
-    global etiquetaUsuario
-    etiquetaUsuario = Label(ventana_2, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_4)  
+    global etiqueta_usuario
+    etiqueta_usuario = Label(ventana_2, text="Usuario 1", bg="#1b0945", height="1", relief="ridge", fg="white", borderwidth=5, font=fuente_retro_4)  
     
     #Se agrega la etiqueta de contraseña
     global etiquetaContrasena
@@ -572,8 +572,8 @@ def inicio_sesion():
 
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
-    x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
-    etiquetaUsuario.place(x=x, y=250) 
+    x = (ancho_pantalla - etiqueta_usuario.winfo_reqwidth()) // 2
+    etiqueta_usuario.place(x=x, y=250) 
     
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiquetaContrasena.winfo_reqwidth()) // 2
@@ -617,7 +617,7 @@ def inicio_sesion():
         etiqueta_1.config(text="Log in")
         etiqueta_enlace.config(text="Forgot password?")
         etiqueta_enlace2.config(text="Create account")
-        etiquetaUsuario.config(text="User")
+        etiqueta_usuario.config(text="User")
         etiquetaContrasena.config(text="Password")
         boton_inicio_sesion.config(text="Log in")
         botonAtras.config(text="Go back")
@@ -955,16 +955,25 @@ def validar_datos():
         boton_playlist.pack()
         boton_playlist.place(x=0, y=729, height=40, width=200)
    
+        #Se obtiene el nombre de usuario del entry de iniciar sesión y se verifica que se puedan registrar solamente 2 usuarios
         nombre_usuario = nombre_usuario_entry1.get()
         if contar_usuarios < 2:
             contar_usuarios += 1
             print(nombre_usuario)
             print(contar_usuarios)
             
+            global usuario_1
+            global usuario_2
+            
+            if contar_usuarios == 1:
+                etiqueta_usuario.config(text="Usuario 2")
+                usuario_1 = nombre_usuario
             if contar_usuarios == 2:
+                usuario_2 = nombre_usuario
                 # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
                 archivo_python = 'configurar_partida.py'
-
+                print("El usuario #1 es: " + usuario_1 + " y el usuario 2 es: " + usuario_2)
+                
                 try:
                     subprocess.Popen(['python', archivo_python])
                     
