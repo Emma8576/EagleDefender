@@ -78,17 +78,25 @@ if __name__ == "__main__":
 
         fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
 
-
+        #Etiqueta de bienvenida
+        ancho_pantalla = inicio.winfo_screenwidth()
+        global etiqueta_bienvenida
+        etiqueta_bienvenida = Label(inicio, text="Bienvenidos", bg="#101654", fg="white", font=fuente_retro_2)
+                
+        # Calcula la posición x para que la etiqueta esté en el centro horizontal
+        x = (ancho_pantalla - etiqueta_bienvenida.winfo_reqwidth()) // 2
+        etiqueta_bienvenida.place(relx=0.5 - 0.17, rely=0.5 - 0.25) 
+        
         global boton_cerrar
         boton_cerrar=tk.Button(inicio, text="Salir", 
                     command=salir, 
-                    fg="gray1",
+                    fg="white",
                     bg="#9e2254",
                     relief="sunken",
                 font=("System 35 bold"),
                     cursor="exchange")
         boton_cerrar.pack()     
-        boton_cerrar.place(relx=0.5, rely=0.9, anchor="center")
+        boton_cerrar.place(relx=0.5, rely=0.9 - 0.2, anchor="center", width=300)
 
 
         global boton_abrir
@@ -100,7 +108,7 @@ if __name__ == "__main__":
                             font=("System 35 bold"),
                             cursor="exchange")
         boton_abrir.pack()     
-        boton_abrir.place(relx=0.5, rely=0.5, anchor="center")
+        boton_abrir.place(relx=0.5, rely=0.5, anchor="center", width=300)
 
 
 
@@ -110,7 +118,7 @@ if __name__ == "__main__":
         if config["idioma"] == "inglés":
             boton_cerrar.config(text="Leave Game")
             boton_abrir.config(text="Start Game")
-            
+            etiqueta_bienvenida.config(text="Welcome")
         if __name__ == "__main__":
             inicio.mainloop()
     
@@ -214,7 +222,7 @@ def menu_login():
     #Etiqueta de acceder al juego
     ancho_pantalla = ventana_1.winfo_screenwidth()
     global etiqueta
-    etiqueta = Label(ventana_1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_4)
+    etiqueta = Label(ventana_1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_3)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
@@ -295,7 +303,8 @@ def cargar_idioma():
         boton_configuración.config(text="Configuración")
         boton_comoJugar.config(text="Cómo jugar")
         boton_configuración.config(text="Configuración")
-
+        etiqueta_bienvenida.config(text="Bienvenidos")
+        label_configuracion_volume.config(text="Nivel de volumen")
         config["idioma"] = "español"
     elif idioma == "inglés":
         etiqueta.config(text="Access the game")
@@ -316,7 +325,8 @@ def cargar_idioma():
         boton_configuración.config(text="Configuration")
         boton_comoJugar.config(text="How to play")
         boton_configuración.config(text="Configuration")
-
+        etiqueta_bienvenida.config(text="Welcome")
+        label_configuracion_volume.config(text="Volume level")
         config["idioma"] = "inglés"
     with open("config.json", "w") as f:
         json.dump(config, f)
@@ -373,24 +383,28 @@ def abrir_configuracion():
     etiqueta_4.place(x=x, y=120)
 
     global label_configuracion
-    label_configuracion = tk.Label(ventana_configuracion, text="Selecciona el idioma:", bg="SkyBlue2", fg="white", font=("System 30 bold"))
-    label_configuracion.place(x=600, y=240)
+    label_configuracion = tk.Label(ventana_configuracion, text="Selecciona el idioma:", bg="#101654", fg="white", font=("System 30 bold"))
+    label_configuracion.place(x=700, y=240)
+    
+    global label_configuracion_volume
+    label_configuracion_volume = tk.Label(ventana_configuracion, text="Nivel de volumen:", bg="#101654", fg="white", font=("System 30 bold"))
+    label_configuracion_volume.place(x=250, y=240)
 
     seleccion.set(config["idioma"])
     opciones_idioma = [("Español", "español"), ("Inglés", "inglés")]
 
     global opcion_español
-    opcion_español = tk.Radiobutton(ventana_configuracion, text="Español", variable=seleccion, value="español", bg="SkyBlue3", fg="white",font=("System 30 bold"))
+    opcion_español = tk.Radiobutton(ventana_configuracion, text="Español", variable=seleccion, value="español", bg="#101654", fg="white",font=("System 30 bold"))
     opcion_español.pack(anchor="w")
-    opcion_español.place(x=700, y=300)
+    opcion_español.place(x=750, y=300)
 
     global opcion_ingles
-    opcion_ingles = tk.Radiobutton(ventana_configuracion, text="Inglés", variable=seleccion, value="inglés", bg="SkyBlue3", fg="white",font=("System 30 bold"))
+    opcion_ingles = tk.Radiobutton(ventana_configuracion, text="Inglés", variable=seleccion, value="inglés", bg="#101654", fg="white",font=("System 30 bold"))
     opcion_ingles.pack(anchor="w")
-    opcion_ingles.place(x=700, y=370)
+    opcion_ingles.place(x=750, y=370)
 
     global boton_aceptar
-    boton_aceptar = tk.Button(ventana_configuracion,cursor="exchange", text="Aceptar", command=cargar_idioma, bg="SkyBlue3", fg="white",font=("System 20 bold"))
+    boton_aceptar = tk.Button(ventana_configuracion,cursor="exchange", text="Aceptar", command=cargar_idioma, bg="#101654", fg="white",font=("System 20 bold"))
     boton_aceptar.pack()
     boton_aceptar.place(x=750, y=450)
     
@@ -431,26 +445,26 @@ def abrir_configuracion():
     boton1.place(x=550, y=550, height=50, width=210)
 
     global boton2
-    boton2 = tk.Button(ventana_configuracion,text="Subir Volumen",  # Se configura el botón "Volver" de "Acerca de"
+    boton2 = tk.Button(ventana_configuracion,text="Subir Volumen ⬆",  # Se configura el botón "Volver" de "Acerca de"
                        command=subir_volumen,
                        fg="snow",
-                       bg="SkyBlue3",
+                       bg="#101654",
                        relief="sunken",
                        font=("System 30 bold"),
                        cursor="exchange")
     boton2.pack()  # Se posiciona el botón "Subir Volumen"
-    boton2.place(x=280, y=300, height=50, width=300)
+    boton2.place(x=250, y=300, height=50, width=350)
 
     global boton3
-    boton3 = tk.Button(ventana_configuracion, text="Bajar Volumen",  # Se configura el botón "Volver" de "Acerca de"
+    boton3 = tk.Button(ventana_configuracion, text="Bajar Volumen ⬇",  # Se configura el botón "Volver" de "Acerca de"
                        command=bajar_volumen,
                        fg="snow",
-                       bg="SkyBlue3",
+                       bg="#101654",
                        relief="sunken",
                        font=("System 30 bold"),
-                       cursor="exchange")
+                       cursor="exchange",)
     boton3.pack()  # Se posiciona el botón "Baja Volumen"
-    boton3.place(x=280, y=360, height=50, width=300)
+    boton3.place(x=250, y=360, height=50, width=350)
     seleccion.set(config["idioma"])
 
     if config["idioma"] == "inglés":
