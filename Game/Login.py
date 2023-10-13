@@ -8,6 +8,7 @@ import json
 import pygame
 import subprocess
 
+
 #hacer variables de fuentes globales
 global fuente_retro
 global fuente_retro_1
@@ -17,7 +18,7 @@ global fuente_retro_4
 global fuente_retro_5
 
 # Se añade la fuente retro en diversos tamaños
-fuente_retro = ("8-Bit Operator+ 8", 100)
+fuente_retro =   ("8-Bit Operator+ 8", 100)
 fuente_retro_1 = ("8-Bit Operator+ 8", 40)
 fuente_retro_2 = ("8-Bit Operator+ 8", 50)
 fuente_retro_3 = ("8-Bit Operator+ 8", 25)
@@ -31,6 +32,8 @@ ventana_3 = None
 ventana_como_Jugar = None
 ventana_configuración = None
 seleccion = None
+usuario_1 = ""
+usuario_2 = ""
 
 #Variable global para control de nivel de volumen
 pygame.init()
@@ -65,50 +68,51 @@ def salir():
         print("")
 
 
+if __name__ == "__main__":
+    def inicio_partida():
+        global inicio
+        inicio=tk.Tk()
+        inicio.configure(cursor="star")
+        cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
+        inicio.attributes("-fullscreen", True)
 
-def inicio_partida():
-    global inicio
-    inicio=tk.Tk()
-    inicio.configure(cursor="star")
-    cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
-    inicio.attributes("-fullscreen", True)
-
-    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
-
-
-    global boton_cerrar
-    boton_cerrar=tk.Button(inicio, text="Salir", 
-                 command=salir, 
-                 fg="gray1",
-                 bg="#9e2254",
-                 relief="sunken",
-             font=("System 35 bold"),
-                 cursor="exchange")
-    boton_cerrar.pack()     
-    boton_cerrar.place(relx=0.5, rely=0.9, anchor="center")
+        fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
 
 
-    global boton_abrir
-    boton_abrir=tk.Button(inicio, text="Iniciar",
-                        command=menu_login,
-                        fg="white",
-                        bg="#FF9900",
-                        relief="sunken",
-                        font=("System 35 bold"),
-                        cursor="exchange")
-    boton_abrir.pack()     
-    boton_abrir.place(relx=0.5, rely=0.5, anchor="center")
+        global boton_cerrar
+        boton_cerrar=tk.Button(inicio, text="Salir", 
+                    command=salir, 
+                    fg="gray1",
+                    bg="#9e2254",
+                    relief="sunken",
+                font=("System 35 bold"),
+                    cursor="exchange")
+        boton_cerrar.pack()     
+        boton_cerrar.place(relx=0.5, rely=0.9, anchor="center")
+
+
+        global boton_abrir
+        boton_abrir=tk.Button(inicio, text="Iniciar",
+                            command=menu_login,
+                            fg="white",
+                            bg="#FF9900",
+                            relief="sunken",
+                            font=("System 35 bold"),
+                            cursor="exchange")
+        boton_abrir.pack()     
+        boton_abrir.place(relx=0.5, rely=0.5, anchor="center")
 
 
 
-    etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
-    etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
+        etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
+        etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
 
-    if config["idioma"] == "inglés":
-        boton_cerrar.config(text="Leave Game")
-        boton_abrir.config(text="Start Game")
-
-    inicio.mainloop()
+        if config["idioma"] == "inglés":
+            boton_cerrar.config(text="Leave Game")
+            boton_abrir.config(text="Start Game")
+            
+        if __name__ == "__main__":
+            inicio.mainloop()
     
 #Función ventana Login
 def menu_login():

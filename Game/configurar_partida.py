@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import messagebox
 from PIL import Image, ImageTk
-import pygame 
 import subprocess
+
 #hacer variables de fuentes globales
 global fuente_retro
 global fuente_retro_1
@@ -62,17 +61,21 @@ def configurar_partida():
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center') 
     etiqueta_retro.pack()
     
-    # Función para mostrar el menú 1 en la posición del botón
+    # Función para mostrar el menú del defensor en la posición del botón
     def mostrar_menu(event):
         menu_principal.post(event.x_root, event.y_root)
 
-    # Función para mostrar el menú 1 en la posición del botón
+    # Función para mostrar el menú del atacante en la posición del botón
     def mostrar_menu_2(event):
         menu_principal_2.post(event.x_root, event.y_root)
         
-    # Crear un botón que actúa como un menú desplegable
-    boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="blue", fg="white", activebackground="#101654")
-    boton_menu.place(relx=0.5 - 0.38, rely=0.5 - 0.20)
+    # Función para mostrar el menú de los roles en la posición del botón
+    def mostrar_menu_3(event):
+        menu_principal_3.post(event.x_root, event.y_root)
+        
+    # Crear un botón que actúa como un menú desplegable del defensor
+    boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white", activebackground="blue", relief="groove", border=5)
+    boton_menu.place(relx=0.5 - 0.38, rely=0.7 - 0.20)
 
     # Crear un menú desplegable
     menu_principal = Menu(ventana_1, tearoff=0)
@@ -86,9 +89,9 @@ def configurar_partida():
     boton_menu.bind("<Button-1>", mostrar_menu)
     
     
-    # Crear el segundo botón y menú desplegable
-    boton_menu_2 = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="blue", fg="white", activebackground="#101654")
-    boton_menu_2.place(relx=0.5 + 0.15, rely=0.5 - 0.20)
+    # Crear el botón y menú desplegable de el atacante
+    boton_menu_2 = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white", activebackground="blue", relief= "groove", border=5)
+    boton_menu_2.place(relx=0.5 + 0.15, rely=0.7 - 0.20)
 
     menu_principal_2 = Menu(ventana_1, tearoff=0)
     menu_principal_2.add_command(label="Insertar canción 1", font= fuente_retro_9, foreground= "white", background="#101654", command=lambda: print("Cancion 1"))
@@ -96,6 +99,17 @@ def configurar_partida():
 
     boton_menu_2.bind("<Button-1>", mostrar_menu_2)
 
+
+    # Crear el botón y menú desplegable de los roles
+    boton_menu_3 = tk.Button(ventana_1, text="Usuarios ⬇", font=fuente_retro_5, bg="#101654", fg="white", activebackground="blue", width=20, height=3, relief= "groove", border= 5)
+    boton_menu_3.place(relx=0.5 - 0.09, rely=0.3 - 0.05)
+
+    menu_principal_3 = Menu(ventana_1, tearoff=0)
+    menu_principal_3.add_command(label="Insertar usuario", font= fuente_retro_9, foreground= "white", background="#101654",  command=lambda: print("Cancion 1"))
+    menu_principal_3.add_command(label="Insertar usuario", font= fuente_retro_9, foreground= "white", background="#101654", command=lambda: print("Cancion 2"))
+
+    boton_menu_3.bind("<Button-1>", mostrar_menu_3)
+    
     #Etiqueta de Configurar partida
     ancho_pantalla = ventana_1.winfo_screenwidth()
     global etiqueta
@@ -112,7 +126,7 @@ def configurar_partida():
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla_1 - etiqueta.winfo_reqwidth()) // 4
-    etiqueta_jugador_1.place(x=x, y=150) 
+    etiqueta_jugador_1.place(x=x, y=300) 
 
 
     #Etiqueta de jugador 2
@@ -122,8 +136,18 @@ def configurar_partida():
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla_2 - etiqueta.winfo_reqwidth()) * 1.1
-    etiqueta_jugador_2.place(x=x, y=150) 
+    etiqueta_jugador_2.place(x=x, y=300) 
 
+
+    #Etiqueta de jugador rol
+    ancho_pantalla_1 = ventana_1.winfo_screenwidth()
+    global etiqueta_roless
+    etiqueta_roles = Label(ventana_1, text="Elige el usuario defensor", bg="#101654", fg="white", font=fuente_retro_4)
+
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla_1 - etiqueta.winfo_reqwidth()) // 4
+    etiqueta_roles.place(relx=0.5 - 0.15, rely=0.5 - 0.3) 
+    
     # Botón de Iniciar Partida
     global boton_inicio
     boton_inicio = tk.Button(ventana_1,cursor="exchange", text="Iniciar partida", height="4", width="30", background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command="")
