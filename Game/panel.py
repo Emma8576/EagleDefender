@@ -11,6 +11,10 @@ screen_width = screen_info.current_w
 screen_height = screen_info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 
+pygame.mixer.init()
+agua = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
+fuego = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
+bomba = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/bomba.wav")
 # Cargar background
 bg = pygame.image.load("panel_elements/bg/frame-1.gif") 
 
@@ -51,14 +55,14 @@ class Personaje:
 class Atacante(Personaje):
     def __init__(self, start_pos):
         image_paths = {
-            "up": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_up/frame-{i}.gif" for i in range(1, 5)],
-            "down": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_down/frame-{i}.gif" for i in range(1, 5)],
-            "right": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_right/frame-{i}.gif" for i in range(1, 5)],
-            "left": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_left/frame-{i}.gif" for i in range(1, 5)],
-            "ul": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_ul/frame-{i}.png" for i in range(1, 5)],
-            "ur": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_ur/frame-{i}.png" for i in range(1, 5)],
-            "dl": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_dl/frame-{i}.png" for i in range(1, 5)],
-            "dr": [f"panel_elements/atacante_sprites/atacante_direccion/atacante_dr/frame-{i}.png" for i in range(1, 5)],
+            "up": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_up/frame-{i}.gif" for i in range(1, 5)],
+            "down": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_down/frame-{i}.gif" for i in range(1, 5)],
+            "right": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_right/frame-{i}.gif" for i in range(1, 5)],
+            "left": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_left/frame-{i}.gif" for i in range(1, 5)],
+            "ul": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_ul/frame-{i}.png" for i in range(1, 5)],
+            "ur": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_ur/frame-{i}.png" for i in range(1, 5)],
+            "dl": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_dl/frame-{i}.png" for i in range(1, 5)],
+            "dr": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_dr/frame-{i}.png" for i in range(1, 5)],
         }
         super().__init__(image_paths, start_pos)
 #agua, fuego, bomba
@@ -72,6 +76,10 @@ class Atacante(Personaje):
         self.municiones = {"fuego": proyectilFuego, "hielo": proyectilHielo, "bomba": proyectilBomba}
         self.current_municion = "fuego"
 
+        self.agua = agua
+        self.fuego = fuego
+        self.bomba = bomba
+
     def cambiar_tipo_munición(self, tipo):
         self.current_municion = tipo
 
@@ -84,17 +92,24 @@ class Atacante(Personaje):
             bullet = municion(self.rect.topleft, self.direction)
             self.bullets.append(bullet)
 
+            if self.current_municion == "agua":
+                self.agua.play()
+            elif self.current_municion == "fuego":
+                self.fuego.play()
+            elif self.current_municion == "bomba":
+                self.bomba.play()
+
 class proyectilFuego:
     def __init__(self, start_pos, direction):
         self.images = {
-            "up":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "down":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
-            "left":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "right":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
+            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
+            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
         }
         self.direction = direction
         self.current_frame = 0
@@ -127,14 +142,14 @@ class proyectilFuego:
 class proyectilHielo:
     def __init__(self, start_pos, direction):
         self.images = {
-            "up":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "down":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "left":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "right":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
         }
         self.rect = self.images[direction][0].get_rect()
         self.rect.topleft = start_pos
@@ -167,14 +182,14 @@ class proyectilHielo:
 class proyectilBomba:
     def __init__(self, start_pos, direction):
         self.images = {
-            "up":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "down":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "left":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "right":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_sprites/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
         }
         self.rect = self.images[direction][0].get_rect()
         self.rect.topleft = start_pos
