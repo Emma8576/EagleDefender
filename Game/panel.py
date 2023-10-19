@@ -12,16 +12,30 @@ screen_height = screen_info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 
 pygame.mixer.init()
-agua = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
+agua = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/agua.wav")
 fuego = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
 bomba = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/bomba.wav")
 # Cargar background
-bg = pygame.image.load("panel_elements/bg/frame-1.gif") 
+bg = pygame.image.load("panel_elements/bg/bg.jpg") 
+
+
+def escalar_imagenes(imagenes, factor):
+    """
+    Función que escala imagenes según el factor de proporción dado para los frames de los personakes para el ajuste de pantalla según el tamaño
+
+    *pygame.transform.scale(imagen, (int(imagen.get_width()*factor), int(imagen.get_height()*factor))):
+        Escala la imagen tomando como argumentos la imagen que se va a escalar y la tupla que especifica el nuevo tamaño
+    **for imagen in lista
+        Itera sobre cada imagen en la lista correspondiente
+    **for direccion, lista in imagenes.items()
+        Itera sobre el diccionario, donde se toma como parámetro la direccion (ej: "up") y la lista, que corresponde a la direccion
+     """
+    return {direccion: [pygame.transform.scale(imagen, (int(imagen.get_width()*factor), int(imagen.get_height()*factor))) for imagen in lista] for direccion, lista in imagenes.items()}
 
 # Clase base para los personajes
 class Personaje:
     def __init__(self, image_paths, start_pos):
-        self.images = {
+        self.images = escalar_imagenes({
             "up": [pygame.image.load(image_path) for image_path in image_paths["up"]],
             "down": [pygame.image.load(image_path) for image_path in image_paths["down"]],
             "right": [pygame.image.load(image_path) for image_path in image_paths["right"]],
@@ -30,7 +44,7 @@ class Personaje:
             "ur": [pygame.image.load(image_path) for image_path in image_paths["ur"]],
             "dl": [pygame.image.load(image_path) for image_path in image_paths["dl"]],
             "dr": [pygame.image.load(image_path) for image_path in image_paths["dr"]],
-        }
+        },0.9)
 
         self.current_frame = 0
         self.rect = self.images["up"][0].get_rect()
@@ -101,16 +115,18 @@ class Atacante(Personaje):
 
 class proyectilFuego:
     def __init__(self, start_pos, direction):
-        self.images = {
+        self.images = escalar_imagenes ({
             "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
             "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
-            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-        }
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_left/frame-{i}.gif") for i in range(1,16)],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_right/frame-{i}.gif") for i in range(1,16)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
+        }, 0.5)
+
+
         self.direction = direction
         self.current_frame = 0
         self.image = self.images[direction][0]
@@ -141,16 +157,16 @@ class proyectilFuego:
 
 class proyectilHielo:
     def __init__(self, start_pos, direction):
-        self.images = {
-            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/{i}.png") for i in range(1,16)],
-        }
+        self.images = escalar_imagenes({
+            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_up/{i}.png") for i in range(1,16)],
+            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_down/{i}.png") for i in range(1,16)],
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_left/{i}.png") for i in range(1,16)],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_right/{i}.png") for i in range(1,16)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_ud/{i}.png") for i in range(1,16)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_ud/{i}.png") for i in range(1,16)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_ud/{i}.png") for i in range(1,16)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/hielo/atacante_munición_ud/{i}.png") for i in range(1,16)],
+        }, 0.9)
         self.rect = self.images[direction][0].get_rect()
         self.rect.topleft = start_pos
         self.direction = direction
@@ -224,16 +240,19 @@ class proyectilBomba:
 class Defensor(Personaje):
     def __init__(self, start_pos):
         image_paths = {
-            "up": [f"panel_elements/defensor_sprites/defensor_up/frame-{i}.gif" for i in range(1, 9)],
-            "down": [f"panel_elements/defensor_sprites/defensor_down/frame-{i}.gif" for i in range(1, 9)],
-            "right": [f"panel_elements/defensor_sprites/defensor_right/frame-{i}.gif" for i in range(1, 9)],
-            "left": [f"panel_elements/defensor_sprites/defensor_left/frame-{i}.gif" for i in range(1, 9)],
-            "ul": [f"panel_elements/defensor_sprites/defensor_ul/frame-{i}.png" for i in range(1, 9)],
-            "ur": [f"panel_elements/defensor_sprites/defensor_ur/frame-{i}.png" for i in range(1, 9)],
-            "dl": [f"panel_elements/defensor_sprites/defensor_dl/frame-{i}.png" for i in range(1, 9)],
-            "dr": [f"panel_elements/defensor_sprites/defensor_dr/frame-{i}.png" for i in range(1, 9)],
+            "up": [f"panel_elements/defensor_sprites/defensor_up/frame-{i}.gif" for i in range(1, 25)],
+            "down": [f"panel_elements/defensor_sprites/defensor_down/frame-{i}.gif" for i in range(1, 25)],
+            "right": [f"panel_elements/defensor_sprites/defensor_right/frame-{i}.gif" for i in range(1, 25)],
+            "left": [f"panel_elements/defensor_sprites/defensor_left/frame-{i}.gif" for i in range(1, 25)],
+            "ul": [f"panel_elements/defensor_sprites/defensor_ul/{i}.png" for i in range(1, 25)],
+            "ur": [f"panel_elements/defensor_sprites/defensor_ur/{i}.png" for i in range(1, 25)],
+            "dl": [f"panel_elements/defensor_sprites/defensor_dl/{i}.png" for i in range(1, 25)],
+            "dr": [f"panel_elements/defensor_sprites/defensor_dr/{i}.png" for i in range(1, 25)],
         }
         super().__init__(image_paths, start_pos)
+
+        self.images = escalar_imagenes(self.images, 0.8)
+
 
 clock = pygame.time.Clock()
 
@@ -265,28 +284,28 @@ while True:
     dx, dy = 0, 0
 
     if keys[K_a]:
-        dx = -5
+        dx = -3
         atacante.cambiar_direccion("left")
     if keys[K_d]:
-        dx = 5
+        dx = 3
         atacante.cambiar_direccion("right")
     if keys[K_w]:
-        dy = -5
+        dy = -3
         atacante.cambiar_direccion("up")
     if keys[K_s]:
-        dy = 5
+        dy = 3
         atacante.cambiar_direccion("down")
     if keys[K_w] and keys[K_a]:
-        dx, dy = -5, -5
+        dx, dy = -3, -3
         atacante.cambiar_direccion("ul")
     if keys[K_w] and keys[K_d]:
-        dx, dy = 5, -5
+        dx, dy = 3, -3
         atacante.cambiar_direccion("ur")
     if keys[K_s] and keys[K_a]:
-        dx, dy = -5, 5
+        dx, dy = -3, 3
         atacante.cambiar_direccion("dl")
     if keys[K_s] and keys[K_d]:
-        dx, dy = 5, 5
+        dx, dy = 3, 3
         atacante.cambiar_direccion("dr")
 
     if dx != 0 or dy != 0:
@@ -296,28 +315,28 @@ while True:
     dr, dz = 0, 0
 
     if keys[K_j]:
-        dr = -5
+        dr = -3
         defensor.cambiar_direccion("left")
     if keys[K_l]:
-        dr = 5
+        dr = 3
         defensor.cambiar_direccion("right")
     if keys[K_i]:
-        dz = -5
+        dz = -3
         defensor.cambiar_direccion("up")
     if keys[K_k]:
-        dz = 5
+        dz = 3
         defensor.cambiar_direccion("down")
     if keys[K_i] and keys[K_j]:
-        dr, dz = -5, -5
+        dr, dz = -3, -3
         defensor.cambiar_direccion("ul")
     if keys[K_i] and keys[K_l]:
-        dr, dz = 5, -5
+        dr, dz = 3, -3
         defensor.cambiar_direccion("ur")
     if keys[K_k] and keys[K_j]:
-        dr, dz = -5, 5
+        dr, dz = -3, 3
         defensor.cambiar_direccion("dl")
     if keys[K_k] and keys[K_l]:
-        dr, dz = 5, 5
+        dr, dz = 3, 3
         defensor.cambiar_direccion("dr")
 
     if dr != 0 or dz != 0:
