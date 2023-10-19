@@ -120,10 +120,10 @@ class proyectilFuego:
             "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
             "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_left/frame-{i}.gif") for i in range(1,16)],
             "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_right/frame-{i}.gif") for i in range(1,16)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(1,16)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
         }, 0.5)
 
 
@@ -136,21 +136,21 @@ class proyectilFuego:
         
     def mover(self):
         if self.direction == "up":
-            self.rect.move_ip(0,-8)
+            self.rect.move_ip(0,-6)
         elif self.direction == "down":
-            self.rect.move_ip(0,8)
+            self.rect.move_ip(0,6)
         elif self.direction == "left":
-            self.rect.move_ip(-8,0)
+            self.rect.move_ip(-6,0)
         elif self.direction == "right":
-            self.rect.move_ip(8,0)
+            self.rect.move_ip(6,0)
         elif self.direction == "ul":
-            self.rect.move_ip(-8,-8)
+            self.rect.move_ip(-6,-6)
         elif self.direction == "ur":
-            self.rect.move_ip(8,-8)
+            self.rect.move_ip(6,-6)
         elif self.direction == "dl":
-            self.rect.move_ip(-8,8)
+            self.rect.move_ip(-6,6)
         elif self.direction == "dr":
-            self.rect.move_ip(8,8)
+            self.rect.move_ip(6,6)
 
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
@@ -176,37 +176,37 @@ class proyectilHielo:
         
     def mover(self):
         if self.direction == "up":
-            self.rect.move_ip(0,-8)
+            self.rect.move_ip(0,-5)
         elif self.direction == "down":
-            self.rect.move_ip(0,8)
+            self.rect.move_ip(0,5)
         elif self.direction == "left":
-            self.rect.move_ip(-8,0)
+            self.rect.move_ip(-5,0)
         elif self.direction == "right":
-            self.rect.move_ip(8,0)
+            self.rect.move_ip(5,0)
         elif self.direction == "ul":
-            self.rect.move_ip(-8,-8)
+            self.rect.move_ip(-5,-5)
         elif self.direction == "ur":
-            self.rect.move_ip(8,-8)
+            self.rect.move_ip(5,-5)
         elif self.direction == "dl":
-            self.rect.move_ip(-8,8)
+            self.rect.move_ip(-5,5)
         elif self.direction == "dr":
-            self.rect.move_ip(8,8)
+            self.rect.move_ip(5,5)
 
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
 
 class proyectilBomba:
     def __init__(self, start_pos, direction):
-        self.images = {
-            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/bomba/frame-{i}.gif") for i in range(1,9)],
-        }
+        self.images = escalar_imagenes({
+            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_up/frame-{i}.gif") for i in range(1,9)],
+            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_down/frame-{i}.gif") for i in range(1,9)],
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_left/frame-{i}.gif") for i in range(1,9)],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_right/frame-{i}.gif") for i in range(1,9)],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_ul/{i}.png") for i in range(1,9)],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_ur/{i}.png") for i in range(1,9)],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_dl/{i}.png") for i in range(1,9)],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion//bomba/atacante_municion_dr/{i}.png") for i in range(1,9)],
+        },0.3)
         self.rect = self.images[direction][0].get_rect()
         self.rect.topleft = start_pos
         self.direction = direction
@@ -216,21 +216,21 @@ class proyectilBomba:
         
     def mover(self):
         if self.direction == "up":
-            self.rect.move_ip(0,-8)
+            self.rect.move_ip(0,-7)
         elif self.direction == "down":
-            self.rect.move_ip(0,8)
+            self.rect.move_ip(0,7)
         elif self.direction == "left":
-            self.rect.move_ip(-8,0)
+            self.rect.move_ip(-7,0)
         elif self.direction == "right":
-            self.rect.move_ip(8,0)
+            self.rect.move_ip(7,0)
         elif self.direction == "ul":
-            self.rect.move_ip(-8,-8)
+            self.rect.move_ip(-7,-7)
         elif self.direction == "ur":
-            self.rect.move_ip(8,-8)
+            self.rect.move_ip(7,-7)
         elif self.direction == "dl":
-            self.rect.move_ip(-8,8)
+            self.rect.move_ip(-7,7)
         elif self.direction == "dr":
-            self.rect.move_ip(8,8)
+            self.rect.move_ip(7,7)
 
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
