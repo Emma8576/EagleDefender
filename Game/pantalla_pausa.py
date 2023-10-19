@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-from Login import abrir_configuracion
 
 # Crear la ventana principal de tkinter y ocultarla
 root = tk.Tk()

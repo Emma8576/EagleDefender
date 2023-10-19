@@ -4,7 +4,6 @@ import time
 from pygame import *
 
 pygame.init()
-
 # Obtener información de pantalla y ajustar a pantalla completa
 screen_info = pygame.display.Info()
 screen_width = screen_info.current_w
