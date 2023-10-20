@@ -17,7 +17,6 @@ bomba = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_
 # Cargar background
 bg = pygame.image.load("panel_elements/bg/bg.jpg") 
 
-
 def escalar_imagenes(imagenes, factor):
     """
     Función que escala imagenes según el factor de proporción dado para los frames de los personakes para el ajuste de pantalla según el tamaño
@@ -30,6 +29,18 @@ def escalar_imagenes(imagenes, factor):
         Itera sobre el diccionario, donde se toma como parámetro la direccion (ej: "up") y la lista, que corresponde a la direccion
      """
     return {direccion: [pygame.transform.scale(imagen, (int(imagen.get_width()*factor), int(imagen.get_height()*factor))) for imagen in lista] for direccion, lista in imagenes.items()}
+def pause():
+    pausa = True
+    while pausa:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pausa = False
+                running = False
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    pausa = False
 
 # Clase base para los personajes
 class Personaje:
@@ -259,29 +270,49 @@ clock = pygame.time.Clock()
 atacante = Atacante((screen_width // 2, screen_height // 2))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
+# Imagenes botón pausa y play
+imagen_pausa = pygame.image.load("panel_elements/pause_play_buttons/pause_button1.png")
+imagen_play = pygame.image.load("panel_elements/pause_play_buttons/play_button.png")
+
+# posición del botón de pausa
+x,y = 10, 10
+
+# Estado del juego
+juego_pausado = False
+
+running = True
+
 # Bucle principal del juego
-while True:
+while running:
     for event in pygame.event.get():
         if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        
-        if event.type == KEYDOWN:
-            if event.key == K_p:
-                atacante.cambiar_tipo_munición("fuego")
-            elif event.key == K_o:
-                atacante.cambiar_tipo_munición("hielo")
-            elif event.key == K_u:
-                atacante.cambiar_tipo_munición("bomba")
+            running = False
+            #pygame.quit()
+    # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
+    bg = pygame.transform.scale(bg, (screen_width, screen_height))
+    screen.blit(bg, (0, 0))
+    atacante.dibujar()
+    defensor.dibujar()
+    screen.blit(imagen_pausa, (x, y))
 
-
+    # Manejar eventos de teclado
+    # Estado de las teclas
     keys = pygame.key.get_pressed()
+    if keys[K_p]:
+        atacante.cambiar_tipo_munición("fuego")
+    elif keys[K_o]:
+        atacante.cambiar_tipo_munición("hielo")
+    elif keys[K_u]:
+        atacante.cambiar_tipo_munición("bomba")
 
+    if keys[K_m]:
+        pause()
+    pygame.display.update()
 
-    
 
     dx, dy = 0, 0
 
+    # Mover atacante
     if keys[K_a]:
         dx = -3
         atacante.cambiar_direccion("left")
@@ -313,6 +344,7 @@ while True:
 
     dr, dz = 0, 0
 
+    # Mover defensor
     if keys[K_j]:
         dr = -3
         defensor.cambiar_direccion("left")
@@ -342,25 +374,25 @@ while True:
         defensor.mover(dr, dz)
         defensor.actualizar_frame()
 
+    # Disparar
     if keys[K_SPACE]:
         atacante.disparar()
 
-    bg = pygame.transform.scale(bg, (screen_width, screen_height))
-
-
-    screen.blit(bg,(0, 0))
-    
-    atacante.dibujar()
-    defensor.dibujar()
-
+    # Mover y actualizar las balas
     for bullet in atacante.bullets:
         bullet.mover()
         bullet.current_frame = (bullet.current_frame + 1) % len(bullet.images[bullet.direction])
         bullet.image = bullet.images[bullet.direction][bullet.current_frame]
+
+        # Borrar balas que salen de la pantalla
         if not bullet.esta_en_pantalla():
             atacante.bullets.remove(bullet)
         else:
+            # Dibujar balas en la pantalla
             screen.blit(bullet.image, bullet.rect)
 
+    # actualizar pantalla completa
     pygame.display.flip()
+
+    # velocidad de fotogramas a 60 fps
     clock.tick(60)
