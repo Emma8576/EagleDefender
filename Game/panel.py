@@ -1,3 +1,5 @@
+"""Código mantenido por Bryan Monge - 2023026192"""
+
 import pygame
 import sys
 import time
@@ -10,12 +12,14 @@ screen_width = screen_info.current_w
 screen_height = screen_info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 
+#Se cargan los sonidos que se ejecutan según el tipo de munición disparada
+
 pygame.mixer.init()
 agua = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/agua.wav")
 fuego = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
 bomba = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/bomba.wav")
 # Cargar background
-bg = pygame.image.load("panel_elements/bg/bg.jpg") 
+bg = pygame.image.load("panel_elements/bg/bag.jpg") 
 
 def escalar_imagenes(imagenes, factor):
     """
