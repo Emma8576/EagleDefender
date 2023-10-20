@@ -29,21 +29,17 @@ def escalar_imagenes(imagenes, factor):
         Itera sobre el diccionario, donde se toma como parámetro la direccion (ej: "up") y la lista, que corresponde a la direccion
      """
     return {direccion: [pygame.transform.scale(imagen, (int(imagen.get_width()*factor), int(imagen.get_height()*factor))) for imagen in lista] for direccion, lista in imagenes.items()}
-def pause():
-    pausa = True
-    while pausa:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pausa = False
-                running = False
-                pygame.quit()
-                exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_c:
-                    pausa = False
 
 # Clase base para los personajes
 class Personaje:
+    """Author:Bryan Monge
+    
+    Class: Diccionario con imágenes del personaje para diferentes direcciones 
+
+           image_paths: diccionario que contiene las rutas de los archivos de las imágenes en las diferentes direcciones
+           start_pos: indica la posición inicial del personaje
+
+    """
     def __init__(self, image_paths, start_pos):
         self.images = escalar_imagenes({
             "up": [pygame.image.load(image_path) for image_path in image_paths["up"]],
@@ -57,26 +53,27 @@ class Personaje:
         },0.9)
 
         self.current_frame = 0
-        self.rect = self.images["up"][0].get_rect()
+        self.rect = self.images["up"][0].get_rect() #Rectángulo para detectar posicionamiento y colisiones
         self.rect.topleft = start_pos
         self.direction = "up"
-
+    #Mueve al personaje en el eje "x" y "y"
     def mover(self, dx, dy):
         new_rect = self.rect.move(dx, dy)
-        if screen.get_rect().contains(new_rect):
+        if screen.get_rect().contains(new_rect): #Mantiene el personaje dentro de la pantalla
             self.rect = new_rect
-
+    #Dibuja al personaje en la direccion actual
     def dibujar(self):
         screen.blit(self.images[self.direction][self.current_frame], self.rect)
-
+    #Cambiar la direccion del personaje
     def cambiar_direccion(self, new_direction):
         self.direction = new_direction
-
+    #Actualizar el cuadro de animación del personaje
     def actualizar_frame(self):
         self.current_frame = (self.current_frame + 1) % len(self.images[self.direction])
 
-# Clase Atacante
+# Clase que representa al personaje Atacante en el juego. Hereda de la clase Personajes
 class Atacante(Personaje):
+    """Author: Bryan Monge"""
     def __init__(self, start_pos):
         image_paths = {
             "up": [f"panel_elements/atacante_elementos/atacante_direccion/atacante_up/frame-{i}.gif" for i in range(1, 5)],
@@ -94,38 +91,43 @@ class Atacante(Personaje):
          #1 bomba, una bola fuego, 2 bola de agua
          #1 bomba, dos bolas fuego, tres de agua
          #1 de cualquiera
-        self.last_shot_time = 0
+        self.last_shot_time = 0 #tiempo del último disparo
         self.bullets = []
 
-        self.municiones = {"fuego": proyectilFuego, "hielo": proyectilHielo, "bomba": proyectilBomba}
+        self.municiones = {"fuego": proyectilFuego, "hielo": proyectilHielo, "bomba": proyectilBomba} #Diccionario que mapea los tipos de municiones a las clases
         self.current_municion = "fuego"
 
-        self.agua = agua
-        self.fuego = fuego
-        self.bomba = bomba
-
+        self.agua = agua #Efecto de sonido agua
+        self.fuego = fuego #Efecto de sonido fuego
+        self.bomba = bomba #Efecto de sonido bomba
+        #cambia el tipo de saldo
     def cambiar_tipo_munición(self, tipo):
         self.current_municion = tipo
 
-
+    #Dispara un proyectil en la dirección actual
     def disparar(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_shot_time >= 1000:
+        if current_time - self.last_shot_time >= 1000: #Intervalo de un segundo por disparo
             self.last_shot_time = current_time
             municion = self.municiones[self.current_municion]
             bullet = municion(self.rect.topleft, self.direction)
             self.bullets.append(bullet)
-
+            #Reproduce los sonidos por cada tipo de munición
             if self.current_municion == "agua":
                 self.agua.play()
             elif self.current_municion == "fuego":
                 self.fuego.play()
             elif self.current_municion == "bomba":
                 self.bomba.play()
-
+#Clase que representa el tipo de municion Fuego
 class proyectilFuego:
+    """Author: Bryan Monge
+       start_pos: indica la posicíón inicial del proyectl
+       direction: dirección inicial del proyectil
+
+    """
     def __init__(self, start_pos, direction):
-        self.images = escalar_imagenes ({
+        self.images = escalar_imagenes ({ #diccionario que contiene las direcciones del proyectil
             "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
             "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
             "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_left/frame-{i}.gif") for i in range(1,16)],
@@ -137,13 +139,14 @@ class proyectilFuego:
         }, 0.5)
 
 
-        self.direction = direction
+        self.direction = direction #Dirección del proyectil
         self.current_frame = 0
-        self.image = self.images[direction][0]
-        self.rect = self.image.get_rect()
+        self.image = self.images[direction][0] #Imagen actual del proyectil
+        self.rect = self.image.get_rect() #Representa la posición y tamaño del proyectil
         self.rect.topleft = start_pos
         
-        
+    #Mueve el proyectil en la clase especificada
+    #Si la dirección actual es __ entonces se mueve "x" y "y" unidades
     def mover(self):
         if self.direction == "up":
             self.rect.move_ip(0,-6)
@@ -161,7 +164,7 @@ class proyectilFuego:
             self.rect.move_ip(-6,6)
         elif self.direction == "dr":
             self.rect.move_ip(6,6)
-
+    #Verifica si el proyectil está dentro de la pantalla, sino, este es destruido
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
 
@@ -246,7 +249,7 @@ class proyectilBomba:
         return screen.get_rect().colliderect(self.rect)
 
 
-# Clase Defensor
+# Clase que representa al personaje Defensor. Hereda de la clase Personake
 class Defensor(Personaje):
     def __init__(self, start_pos):
         image_paths = {
@@ -263,56 +266,45 @@ class Defensor(Personaje):
 
         self.images = escalar_imagenes(self.images, 0.8)
 
-
+#OKbjeto que limita los FPS, para asegurar una velocidad equilibrada
 clock = pygame.time.Clock()
 
-# Crea una instancia de Atacante y Defensor
+# Crea una instancia de Atacante y Defensor y pasa una tupla de coordenadas para definir la posición inicial en la pantalla
 atacante = Atacante((screen_width // 2, screen_height // 2))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
-# Imagenes botón pausa y play
-imagen_pausa = pygame.image.load("panel_elements/pause_play_buttons/pause_button1.png")
-imagen_play = pygame.image.load("panel_elements/pause_play_buttons/play_button.png")
-
-# posición del botón de pausa
-x,y = 10, 10
-
-# Estado del juego
-juego_pausado = False
-
-running = True
 
 # Bucle principal del juego
-while running:
+while True:
     for event in pygame.event.get():
         if event.type == QUIT:
-            running = False
-            #pygame.quit()
-    # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
-    bg = pygame.transform.scale(bg, (screen_width, screen_height))
+            pygame.quit()
+            sys.exit()
+        
+        if event.type == KEYDOWN: #Evento que permite cambiar el tipo de munición según la tecla seleccionada
+            if event.key == K_p:
+                atacante.cambiar_tipo_munición("fuego")
+            elif event.key == K_o:
+                atacante.cambiar_tipo_munición("hielo")
+            elif event.key == K_u:
+                atacante.cambiar_tipo_munición("bomba")
+
+
+    # Dibujar fondo e imágenes de defensor y atacante
+    bg = pygame.transform.scale(bg, (screen_width, screen_height)) #Se ajusta el background al ancho y largo de la pantalla
     screen.blit(bg, (0, 0))
     atacante.dibujar()
     defensor.dibujar()
-    screen.blit(imagen_pausa, (x, y))
 
     # Manejar eventos de teclado
     # Estado de las teclas
     keys = pygame.key.get_pressed()
-    if keys[K_p]:
-        atacante.cambiar_tipo_munición("fuego")
-    elif keys[K_o]:
-        atacante.cambiar_tipo_munición("hielo")
-    elif keys[K_u]:
-        atacante.cambiar_tipo_munición("bomba")
-
-    if keys[K_m]:
-        pause()
-    pygame.display.update()
 
 
-    dx, dy = 0, 0
 
-    # Mover atacante
+    dx, dy = 0, 0 #Inicializa la dirección del Atacante en 0 para "x" y "y"
+
+    # Mover Atacante 3px en eje "x/y"
     if keys[K_a]:
         dx = -3
         atacante.cambiar_direccion("left")
@@ -338,13 +330,13 @@ while running:
         dx, dy = 3, 3
         atacante.cambiar_direccion("dr")
 
-    if dx != 0 or dy != 0:
+    if dx != 0 or dy != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
         atacante.mover(dx, dy)
         atacante.actualizar_frame()
 
-    dr, dz = 0, 0
+    dr, dz = 0, 0 #Inicializa la dirección del Defensor en 0 para "x" y "y"
 
-    # Mover defensor
+    # Mover Defensor 3px en eje "x/y"
     if keys[K_j]:
         dr = -3
         defensor.cambiar_direccion("left")
@@ -370,7 +362,7 @@ while running:
         dr, dz = 3, 3
         defensor.cambiar_direccion("dr")
 
-    if dr != 0 or dz != 0:
+    if dr != 0 or dz != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
         defensor.mover(dr, dz)
         defensor.actualizar_frame()
 
