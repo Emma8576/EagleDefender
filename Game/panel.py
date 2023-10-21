@@ -4,6 +4,8 @@ import pygame
 import sys
 import time
 from pygame import *
+import subprocess
+import os
 
 pygame.init()
 # Obtener información de pantalla y ajustar a pantalla completa
@@ -12,8 +14,17 @@ screen_width = screen_info.current_w
 screen_height = screen_info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 
-#Se cargan los sonidos que se ejecutan según el tipo de munición disparada
+# Ruta al archivo .ttf de la fuente y tamaño
+ruta_fuente = "Fuentes/8bitOperatorPlus8-Bold.ttf"
+tamaño_fuente_texto = 50
+tamaño_fuente_titulo = 90
 
+# Cargar la fuente texto
+fuente_pausa_1 = pygame.font.Font(ruta_fuente, tamaño_fuente_texto)
+# Cargar la fuente titulo
+fuente_pausa_2 = pygame.font.Font(ruta_fuente, tamaño_fuente_titulo)
+
+#Se cargan los sonidos que se ejecutan según el tipo de munición disparada
 pygame.mixer.init()
 agua = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/agua.wav")
 fuego = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
@@ -34,19 +45,56 @@ def escalar_imagenes(imagenes, factor):
      """
     return {direccion: [pygame.transform.scale(imagen, (int(imagen.get_width()*factor), int(imagen.get_height()*factor))) for imagen in lista] for direccion, lista in imagenes.items()}
 
+#/////////////Contenido pantalla de pausa//////////////////////
+
+def message_screen(message, font, color, y_displacement=0):
+    text = font.render(message, True, color)
+    text_rect = text.get_rect()
+    text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
+    screen.blit(text, text_rect)
+    
 def pause():
+    white = (255, 255, 255)
+    
+    # Cargar la imagen de fondo
+    fondo = pygame.image.load("loginImages/fondo_reducido.png")
+    
+    #Función de pausar el juego
     pausa = True
     while pausa:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pausa = False
-                running = False
                 pygame.quit()
-                exit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
                     pausa = False
-                    
+                elif event.key == pygame.K_q:
+                    pausa = False
+                    subprocess.run(["python", "Login.py"])
+                    sys.exit()
+                               
+            screen.blit(fondo, (0,0))
+            
+            message_screen("Battle City",
+                    fuente_pausa_2,
+                    white,
+                    -300)
+            
+            message_screen("Juego pausado",
+                        fuente_pausa_1,
+                        white,
+                        -100)
+            message_screen("Presiona C para continuar o Q para salir",
+                        fuente_pausa_1,
+                        white,
+                        25)
+            pygame.display.update()
+            clock.tick(5)
+            
+#/////////////////////Fin pantalla de pausa////////////////////////
+             
 # Clase base para los personajes
 class Personaje:
     """Author:Bryan Monge
@@ -290,129 +338,119 @@ clock = pygame.time.Clock()
 atacante = Atacante((screen_width // 2, screen_height // 2))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
-# Imagenes botón pausa y play
-imagen_pausa = pygame.image.load("panel_elements/pause_play_buttons/pause_button1.png")
-imagen_play = pygame.image.load("panel_elements/pause_play_buttons/play_button.png")
+if __name__ == "__main__":
+    # Bucle principal del juego
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            # Manejar eventos de teclado
+            keys = pygame.key.get_pressed()
+            if keys[K_p]:
+                atacante.cambiar_tipo_munición("fuego")
+            elif keys[K_o]:
+                atacante.cambiar_tipo_munición("hielo")
+            elif keys[K_u]:
+                atacante.cambiar_tipo_munición("bomba")
 
-# posición del botón de pausa
-x,y = 10, 10
+            if keys[K_m]:
+                pause()
+           
+                    
+        # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
+        bg = pygame.transform.scale(bg, (screen_width, screen_height))
+        screen.blit(bg, (0, 0))
+        atacante.dibujar()
+        defensor.dibujar()
+    
 
-# Estado del juego
-juego_pausado = False
+        
 
-running = True
+        dx, dy = 0, 0 #Inicializa la dirección del Atacante en 0 para "x" y "y"
 
-# Bucle principal del juego
-while running:
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            running = False
-            pygame.quit()
-            sys.exit()
-            
-        # Manejar eventos de teclado
-        keys = pygame.key.get_pressed()
-        if keys[K_p]:
-            atacante.cambiar_tipo_munición("fuego")
-        elif keys[K_o]:
-            atacante.cambiar_tipo_munición("hielo")
-        elif keys[K_u]:
-            atacante.cambiar_tipo_munición("bomba")
+        # Mover Atacante 3px en eje "x/y"
+        if keys[K_a]:
+            dx = -3
+            atacante.cambiar_direccion("left")
+        if keys[K_d]:
+            dx = 3
+            atacante.cambiar_direccion("right")
+        if keys[K_w]:
+            dy = -3
+            atacante.cambiar_direccion("up")
+        if keys[K_s]:
+            dy = 3
+            atacante.cambiar_direccion("down")
+        if keys[K_w] and keys[K_a]:
+            dx, dy = -3, -3
+            atacante.cambiar_direccion("ul")
+        if keys[K_w] and keys[K_d]:
+            dx, dy = 3, -3
+            atacante.cambiar_direccion("ur")
+        if keys[K_s] and keys[K_a]:
+            dx, dy = -3, 3
+            atacante.cambiar_direccion("dl")
+        if keys[K_s] and keys[K_d]:
+            dx, dy = 3, 3
+            atacante.cambiar_direccion("dr")
 
-        if keys[K_m]:
-            pause()
-    # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
-    bg = pygame.transform.scale(bg, (screen_width, screen_height))
-    screen.blit(bg, (0, 0))
-    atacante.dibujar()
-    defensor.dibujar()
-    screen.blit(imagen_pausa, (x, y))
+        if dx != 0 or dy != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
+            atacante.mover(dx, dy)
+            atacante.actualizar_frame()
 
+        dr, dz = 0, 0 #Inicializa la dirección del Defensor en 0 para "x" y "y"
 
+        # Mover Defensor 3px en eje "x/y"
+        if keys[K_j]:
+            dr = -3
+            defensor.cambiar_direccion("left")
+        if keys[K_l]:
+            dr = 3
+            defensor.cambiar_direccion("right")
+        if keys[K_i]:
+            dz = -3
+            defensor.cambiar_direccion("up")
+        if keys[K_k]:
+            dz = 3
+            defensor.cambiar_direccion("down")
+        if keys[K_i] and keys[K_j]:
+            dr, dz = -3, -3
+            defensor.cambiar_direccion("ul")
+        if keys[K_i] and keys[K_l]:
+            dr, dz = 3, -3
+            defensor.cambiar_direccion("ur")
+        if keys[K_k] and keys[K_j]:
+            dr, dz = -3, 3
+            defensor.cambiar_direccion("dl")
+        if keys[K_k] and keys[K_l]:
+            dr, dz = 3, 3
+            defensor.cambiar_direccion("dr")
 
-    dx, dy = 0, 0 #Inicializa la dirección del Atacante en 0 para "x" y "y"
+        if dr != 0 or dz != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
+            defensor.mover(dr, dz)
+            defensor.actualizar_frame()
 
-    # Mover Atacante 3px en eje "x/y"
-    if keys[K_a]:
-        dx = -3
-        atacante.cambiar_direccion("left")
-    if keys[K_d]:
-        dx = 3
-        atacante.cambiar_direccion("right")
-    if keys[K_w]:
-        dy = -3
-        atacante.cambiar_direccion("up")
-    if keys[K_s]:
-        dy = 3
-        atacante.cambiar_direccion("down")
-    if keys[K_w] and keys[K_a]:
-        dx, dy = -3, -3
-        atacante.cambiar_direccion("ul")
-    if keys[K_w] and keys[K_d]:
-        dx, dy = 3, -3
-        atacante.cambiar_direccion("ur")
-    if keys[K_s] and keys[K_a]:
-        dx, dy = -3, 3
-        atacante.cambiar_direccion("dl")
-    if keys[K_s] and keys[K_d]:
-        dx, dy = 3, 3
-        atacante.cambiar_direccion("dr")
+        # Disparar
+        if keys[K_SPACE]:
+            atacante.disparar()
 
-    if dx != 0 or dy != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
-        atacante.mover(dx, dy)
-        atacante.actualizar_frame()
+        # Mover y actualizar las balas
+        for bullet in atacante.bullets:
+            bullet.mover()
+            bullet.current_frame = (bullet.current_frame + 1) % len(bullet.images[bullet.direction])
+            bullet.image = bullet.images[bullet.direction][bullet.current_frame]
 
-    dr, dz = 0, 0 #Inicializa la dirección del Defensor en 0 para "x" y "y"
+            # Borrar balas que salen de la pantalla
+            if not bullet.esta_en_pantalla():
+                atacante.bullets.remove(bullet)
+            else:
+                # Dibujar balas en la pantalla
+                screen.blit(bullet.image, bullet.rect)
 
-    # Mover Defensor 3px en eje "x/y"
-    if keys[K_j]:
-        dr = -3
-        defensor.cambiar_direccion("left")
-    if keys[K_l]:
-        dr = 3
-        defensor.cambiar_direccion("right")
-    if keys[K_i]:
-        dz = -3
-        defensor.cambiar_direccion("up")
-    if keys[K_k]:
-        dz = 3
-        defensor.cambiar_direccion("down")
-    if keys[K_i] and keys[K_j]:
-        dr, dz = -3, -3
-        defensor.cambiar_direccion("ul")
-    if keys[K_i] and keys[K_l]:
-        dr, dz = 3, -3
-        defensor.cambiar_direccion("ur")
-    if keys[K_k] and keys[K_j]:
-        dr, dz = -3, 3
-        defensor.cambiar_direccion("dl")
-    if keys[K_k] and keys[K_l]:
-        dr, dz = 3, 3
-        defensor.cambiar_direccion("dr")
+        # actualizar pantalla completa
+        pygame.display.flip()
 
-    if dr != 0 or dz != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
-        defensor.mover(dr, dz)
-        defensor.actualizar_frame()
-
-    # Disparar
-    if keys[K_SPACE]:
-        atacante.disparar()
-
-    # Mover y actualizar las balas
-    for bullet in atacante.bullets:
-        bullet.mover()
-        bullet.current_frame = (bullet.current_frame + 1) % len(bullet.images[bullet.direction])
-        bullet.image = bullet.images[bullet.direction][bullet.current_frame]
-
-        # Borrar balas que salen de la pantalla
-        if not bullet.esta_en_pantalla():
-            atacante.bullets.remove(bullet)
-        else:
-            # Dibujar balas en la pantalla
-            screen.blit(bullet.image, bullet.rect)
-
-    # actualizar pantalla completa
-    pygame.display.flip()
-
-    # velocidad de fotogramas a 60 fps
-    clock.tick(60)
+        # velocidad de fotogramas a 60 fps
+        clock.tick(60)
