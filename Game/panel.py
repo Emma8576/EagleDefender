@@ -34,6 +34,19 @@ def escalar_imagenes(imagenes, factor):
      """
     return {direccion: [pygame.transform.scale(imagen, (int(imagen.get_width()*factor), int(imagen.get_height()*factor))) for imagen in lista] for direccion, lista in imagenes.items()}
 
+def pause():
+    pausa = True
+    while pausa:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pausa = False
+                running = False
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    pausa = False
+                    
 # Clase base para los personajes
 class Personaje:
     """Author:Bryan Monge
@@ -277,32 +290,43 @@ clock = pygame.time.Clock()
 atacante = Atacante((screen_width // 2, screen_height // 2))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
+# Imagenes botón pausa y play
+imagen_pausa = pygame.image.load("panel_elements/pause_play_buttons/pause_button1.png")
+imagen_play = pygame.image.load("panel_elements/pause_play_buttons/play_button.png")
+
+# posición del botón de pausa
+x,y = 10, 10
+
+# Estado del juego
+juego_pausado = False
+
+running = True
 
 # Bucle principal del juego
-while True:
+while running:
     for event in pygame.event.get():
         if event.type == QUIT:
+            running = False
             pygame.quit()
             sys.exit()
-        
-        if event.type == KEYDOWN: #Evento que permite cambiar el tipo de munición según la tecla seleccionada
-            if event.key == K_p:
-                atacante.cambiar_tipo_munición("fuego")
-            elif event.key == K_o:
-                atacante.cambiar_tipo_munición("hielo")
-            elif event.key == K_u:
-                atacante.cambiar_tipo_munición("bomba")
+            
+        # Manejar eventos de teclado
+        keys = pygame.key.get_pressed()
+        if keys[K_p]:
+            atacante.cambiar_tipo_munición("fuego")
+        elif keys[K_o]:
+            atacante.cambiar_tipo_munición("hielo")
+        elif keys[K_u]:
+            atacante.cambiar_tipo_munición("bomba")
 
-
-    # Dibujar fondo e imágenes de defensor y atacante
-    bg = pygame.transform.scale(bg, (screen_width, screen_height)) #Se ajusta el background al ancho y largo de la pantalla
+        if keys[K_m]:
+            pause()
+    # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
+    bg = pygame.transform.scale(bg, (screen_width, screen_height))
     screen.blit(bg, (0, 0))
     atacante.dibujar()
     defensor.dibujar()
-
-    # Manejar eventos de teclado
-    # Estado de las teclas
-    keys = pygame.key.get_pressed()
+    screen.blit(imagen_pausa, (x, y))
 
 
 
