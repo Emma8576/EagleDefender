@@ -71,61 +71,66 @@ def salir():
     except:
         print("")
 
+def volver_ventana_inicio():
+    ventana_1.destroy()
+    inicio.deiconify()
+    
+    
+def inicio_partida():
+    global inicio
+    inicio = tk.Tk()
+    inicio.configure(cursor="star")
+    cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
+    inicio.attributes("-fullscreen", True)
 
-if __name__ == "__main__":
-    def inicio_partida():
-        global inicio
-        inicio = tk.Tk()
-        inicio.configure(cursor="star")
-        cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
-        inicio.attributes("-fullscreen", True)
+    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
 
-        fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
+    # Etiqueta de bienvenida
+    ancho_pantalla = inicio.winfo_screenwidth()
+    global etiqueta_bienvenida
+    etiqueta_bienvenida = Label(inicio, text="Bienvenidos", bg="#101654", fg="white", font=fuente_retro_2)
 
-        # Etiqueta de bienvenida
-        ancho_pantalla = inicio.winfo_screenwidth()
-        global etiqueta_bienvenida
-        etiqueta_bienvenida = Label(inicio, text="Bienvenidos", bg="#101654", fg="white", font=fuente_retro_2)
+    # Calcula la posición x para que la etiqueta esté en el centro horizontal
+    x = (ancho_pantalla - etiqueta_bienvenida.winfo_reqwidth()) // 2
+    etiqueta_bienvenida.place(relx=0.5 - 0.17, rely=0.5 - 0.25)
 
-        # Calcula la posición x para que la etiqueta esté en el centro horizontal
-        x = (ancho_pantalla - etiqueta_bienvenida.winfo_reqwidth()) // 2
-        etiqueta_bienvenida.place(relx=0.5 - 0.17, rely=0.5 - 0.25)
-
-        global boton_cerrar
-        boton_cerrar = tk.Button(inicio, text="Salir",
-                                 command=salir,
-                                 fg="white",
-                                 bg="#9e2254",
-                                 relief="sunken",
-                                 font=("System 35 bold"),
-                                 cursor="exchange")
-        boton_cerrar.pack()
-        boton_cerrar.place(relx=0.5, rely=0.9 - 0.2, anchor="center", width=300)
-
-        global boton_abrir
-        boton_abrir = tk.Button(inicio, text="Iniciar",
-                                command=menu_login,
+    global boton_cerrar
+    boton_cerrar = tk.Button(inicio, text="Salir",
+                                command=salir,
                                 fg="white",
-                                bg="#FF9900",
+                                bg="#9e2254",
                                 relief="sunken",
                                 font=("System 35 bold"),
                                 cursor="exchange")
-        boton_abrir.pack()
-        boton_abrir.place(relx=0.5, rely=0.5, anchor="center", width=300)
+    boton_cerrar.pack()
+    boton_cerrar.place(relx=0.5, rely=0.9 - 0.2, anchor="center", width=300)
 
-        etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
-        etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
+    global boton_abrir
+    boton_abrir = tk.Button(inicio, text="Iniciar",
+                            command=menu_login,
+                            fg="white",
+                            bg="#FF9900",
+                            relief="sunken",
+                            font=("System 35 bold"),
+                            cursor="exchange")
+    boton_abrir.pack()
+    boton_abrir.place(relx=0.5, rely=0.5, anchor="center", width=300)
 
-        if config["idioma"] == "inglés":
-            boton_cerrar.config(text="Leave Game")
-            boton_abrir.config(text="Start Game")
-            etiqueta_bienvenida.config(text="Welcome")
-        if __name__ == "__main__":
-            inicio.mainloop()
+    etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
+    etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
+
+    if config["idioma"] == "inglés":
+        boton_cerrar.config(text="Leave Game")
+        boton_abrir.config(text="Start Game")
+        etiqueta_bienvenida.config(text="Welcome")
+        
+    if __name__ == "__main__":
+        inicio.mainloop()
 
 
 # Función ventana Login
 def menu_login():
+    inicio.withdraw()
     global ventana_1, seleccion
     # Crear una instancia de la ventana principal
     ventana_1 = Toplevel(inicio)
@@ -246,7 +251,7 @@ def menu_login():
     # Botón de Salir
     global boton_salir
     boton_salir = tk.Button(ventana_1, cursor="exchange", text="Salir", height="4", width="30", background="#0a0c3f",
-                            fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=ventana_1.destroy)
+                            fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_ventana_inicio)
     boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones / 100, anchor='center')
 
     global boton_configuración
