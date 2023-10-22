@@ -7,6 +7,12 @@ from pygame import *
 import subprocess
 import os
 
+# Colores de bloques
+WHITE = (255, 255, 255)
+BROWN = (165, 42, 42)
+GRAY = (128, 128, 128)
+SILVER = (192, 192, 192)
+
 pygame.init()
 # Obtener información de pantalla y ajustar a pantalla completa
 screen_info = pygame.display.Info()
@@ -352,6 +358,42 @@ class Defensor(Personaje):
 
         self.images = escalar_imagenes(self.images, 0.8)
 
+#Clase para los bloques
+class Bloque:
+    def __init__(self, tipo, x, y):
+        self.tipo = tipo
+        self.rect = pygame.Rect(x, y, 50, 50)
+        self.selected = False
+
+bloques = []
+
+# Diccionario para contar cuántos bloques de cada tipo se han creado
+bloques_creados = {
+    "madera": 0,
+    "concreto": 0,
+    "acero": 0
+}
+
+# Botones para seleccionar tipos de bloques
+boton_madera = pygame.Rect(100, 10, 100, 50)
+boton_concreto = pygame.Rect(250, 10, 110, 50)
+boton_acero = pygame.Rect(400, 10, 100, 50)
+
+# Texto para las etiquetas
+font = pygame.font.Font(None, 36)
+etiqueta_madera = font.render("Madera", True, "black")
+etiqueta_concreto = font.render("Concreto", True, "black")
+etiqueta_acero = font.render("Acero", True, "black")
+
+etiquetas = {
+    "madera": (etiqueta_madera, (105, 20)),
+    "concreto": (etiqueta_concreto, (250, 20)),
+    "acero": (etiqueta_acero, (410, 20))
+}
+
+# Lista de botones
+botones = [boton_madera, boton_concreto, boton_acero]
+
 #OKbjeto que limita los FPS, para asegurar una velocidad equilibrada
 clock = pygame.time.Clock()
 
@@ -382,13 +424,51 @@ if __name__ == "__main__":
 
             if keys[K_m]:
                 pause()
-           
+
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                for i, boton in enumerate(botones):
+                    if boton.collidepoint(event.pos):
+                        tipo = ["madera", "concreto", "acero"][i]
+                        if bloques_creados[tipo] < 3:
+                            x, y = event.pos
+                            nuevo_bloque = Bloque(tipo, x, y)
+                            bloques.append(nuevo_bloque)
+                            bloques_creados[tipo] += 1
+
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                for bloque in bloques:
+                    if bloque.rect.collidepoint(event.pos):
+                        bloque.selected = not bloque.selected
+
+            elif event.type == pygame.MOUSEMOTION:
+                for bloque in bloques:
+                    if bloque.selected:
+                        mouse_x, mouse_y = event.pos
+                        bloque.rect.topleft = (mouse_x - 25, mouse_y - 25)
+
                     
         # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
         bg = pygame.transform.scale(bg, (screen_width, screen_height))
         screen.blit(bg, (0, 0))
         atacante.dibujar()
         defensor.dibujar()
+
+        # Dibujar los bloques y botones
+        #screen.fill("yellow")
+        for bloque in bloques:
+            if bloque.tipo == "madera":
+                pygame.draw.rect(screen, BROWN, bloque.rect)
+            elif bloque.tipo == "concreto":
+                pygame.draw.rect(screen, GRAY, bloque.rect)
+            elif bloque.tipo == "acero":
+                pygame.draw.rect(screen, SILVER, bloque.rect)
+        pygame.draw.rect(screen, BROWN, boton_madera)
+        pygame.draw.rect(screen, GRAY, boton_concreto)
+        pygame.draw.rect(screen, SILVER, boton_acero)
+
+        # Dibujar etiquetas
+        for texto, (x, y) in etiquetas.values():
+            screen.blit(texto, (x, y))
         
         # Dibujar los nombres de usuario
         font = pygame.font.Font(None, 30) 
