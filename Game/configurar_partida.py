@@ -3,7 +3,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 import subprocess
 import sys
-
+import time
 # hacer variables de fuentes globales
 global fuente_retro
 global fuente_retro_1
@@ -37,6 +37,8 @@ def volver_inicio_sesion():
     archivo = 'Login.py'
     try:
         subprocess.Popen(['python', archivo])
+        time.sleep(1.5)
+        sys.exit()
     except FileNotFoundError:
         print(f'El archivo "{archivo}" no se encontró o no se pudo ejecutar.')
 
@@ -50,7 +52,7 @@ def cargar_nombres_usuarios():
         return usuario_1, usuario_2
 
 
-# Función para actualizar las etiquetas de roles
+# Funciones para actualizar las etiquetas de roles
 def seleccionar_defensor(usuario):
     etiqueta_jugador_1.config(text=f"Defensor: {usuario}")
 
@@ -58,7 +60,25 @@ def seleccionar_defensor(usuario):
 def seleccionar_atacante(usuario):
     etiqueta_jugador_2.config(text=f"Atacante: {usuario}")
 
-
+# Función del botón de iniciar la partida
+def iniciar_partida():
+    archivo_partida = 'panel.py'
+    # obtener los nombres de usuario y roles seleccionados
+    usuario_defensor = etiqueta_jugador_1.cget("text").split(": ")[1]
+    usuario_atacante = etiqueta_jugador_2.cget("text").split(": ")[1]
+    
+    # Guardar los roles en el archivo de texto
+    with open('nombres_usuarios.txt', 'w') as file:
+        file.write(f"Defensor: {usuario_defensor}\n")
+        file.write(f"Atacante: {usuario_atacante}\n")
+        
+    try:
+        subprocess.Popen(['python', archivo_partida])
+        time.sleep(1)
+        sys.exit()
+    except FileNotFoundError:
+        print(f'El archivo "{archivo_partida}" no se encontró o no se pudo ejecutar.')
+        
 # Función ventana configurar partida
 def configurar_partida():
     global ventana_1, seleccion
@@ -199,7 +219,7 @@ def configurar_partida():
     global boton_inicio
     boton_inicio = tk.Button(ventana_1, cursor="exchange", text="Iniciar partida", height="4", width="30",
                              background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised",
-                             borderwidth=10, command="")
+                             borderwidth=10, command=iniciar_partida)
     boton_inicio.place(relx=0.5 + 0.25, rely=0.5 + 0.35, anchor='center')
 
     # Espacio entre botones
@@ -209,7 +229,7 @@ def configurar_partida():
     global boton_salir
     boton_salir = tk.Button(ventana_1, cursor="exchange", text="Regresar", height="4", width="30",
                             background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised",
-                            borderwidth=10, command=ventana_1.destroy)
+                            borderwidth=10, command=volver_inicio_sesion)
     boton_salir.place(relx=0.5 - 0.25, rely=0.5 + 0.35, anchor='center')
 
     global boton_configuración

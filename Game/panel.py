@@ -18,7 +18,6 @@ screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 ruta_fuente = "Fuentes/8bitOperatorPlus8-Bold.ttf"
 tamaño_fuente_texto = 50
 tamaño_fuente_titulo = 90
-
 # Cargar la fuente texto
 fuente_pausa_1 = pygame.font.Font(ruta_fuente, tamaño_fuente_texto)
 # Cargar la fuente titulo
@@ -47,12 +46,14 @@ def escalar_imagenes(imagenes, factor):
 
 #/////////////Contenido pantalla de pausa//////////////////////
 
+# Función que muestra un mensaje en la pantalla de juego.
 def message_screen(message, font, color, y_displacement=0):
     text = font.render(message, True, color)
     text_rect = text.get_rect()
     text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
     screen.blit(text, text_rect)
     
+    # función de pausa
 def pause():
     white = (255, 255, 255)
     
@@ -93,6 +94,27 @@ def pause():
             pygame.display.update()
             clock.tick(5)
             
+# Ejemplo de lectura de roles desde un archivo de texto
+def leer_roles(archivo):
+    roles = {}
+    with open(archivo, 'r') as file:
+        for line in file:
+            parts = line.strip().split(": ")
+            if len(parts) == 2:
+                key, value = parts
+                roles[key] = value
+    return roles
+
+roles = leer_roles('nombres_usuarios.txt') 
+
+# Imprimir el rol del Defensor
+if 'Defensor' in roles:
+    print('Rol del Defensor:', roles['Defensor'])
+
+# Prueba: Imprimir el rol del Atacante
+if 'Atacante' in roles:
+    print('Rol del Atacante:', roles['Atacante'])
+           
 #/////////////////////Fin pantalla de pausa////////////////////////
              
 # Clase base para los personajes
@@ -184,6 +206,7 @@ class Atacante(Personaje):
                 self.fuego.play()
             elif self.current_municion == "bomba":
                 self.bomba.play()
+                
 #Clase que representa el tipo de municion Fuego
 class proyectilFuego:
     """Author: Bryan Monge
