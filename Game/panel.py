@@ -13,7 +13,6 @@ screen_info = pygame.display.Info()
 screen_width = screen_info.current_w
 screen_height = screen_info.current_h
 screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
-
 # Ruta al archivo .ttf de la fuente y tamaño
 ruta_fuente = "Fuentes/8bitOperatorPlus8-Bold.ttf"
 tamaño_fuente_texto = 50
@@ -94,7 +93,6 @@ def pause():
             pygame.display.update()
             clock.tick(5)
             
-# Ejemplo de lectura de roles desde un archivo de texto
 def leer_roles(archivo):
     roles = {}
     with open(archivo, 'r') as file:
@@ -105,16 +103,16 @@ def leer_roles(archivo):
                 roles[key] = value
     return roles
 
-roles = leer_roles('nombres_usuarios.txt') 
+roles = leer_roles('nombres_usuarios.txt')
 
-# Imprimir el rol del Defensor
-if 'Defensor' in roles:
-    print('Rol del Defensor:', roles['Defensor'])
+# Obtener los nombres de usuario para el Atacante y el Defensor
+atacante_name = roles.get('Atacante', 'Atacante no identificado')
+defensor_name = roles.get('Defensor', 'Defensor no identificado')
 
-# Prueba: Imprimir el rol del Atacante
-if 'Atacante' in roles:
-    print('Rol del Atacante:', roles['Atacante'])
-           
+# Imprimir los nombres de usuario
+print('Nombre del Atacante:', atacante_name)
+print('Nombre del Defensor:', defensor_name)
+              
 #/////////////////////Fin pantalla de pausa////////////////////////
              
 # Clase base para los personajes
@@ -361,6 +359,10 @@ clock = pygame.time.Clock()
 atacante = Atacante((screen_width // 2, screen_height // 2))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
+# Asigna el rol a cada personaje
+atacante.rol = "Atacante"
+defensor.rol = "Defensor"
+
 if __name__ == "__main__":
     # Bucle principal del juego
     while True:
@@ -387,10 +389,23 @@ if __name__ == "__main__":
         screen.blit(bg, (0, 0))
         atacante.dibujar()
         defensor.dibujar()
-    
-
         
+        # Dibujar los nombres de usuario
+        font = pygame.font.Font(None, 30) 
+        color = (255, 255, 255) 
 
+        # colocar el nombre de usuario del atacante sobre el tanque
+        text = font.render(atacante_name, True, color) 
+        text_rect = text.get_rect()
+        text_rect.midtop = (atacante.rect.centerx + 10, atacante.rect.top - 30)
+        screen.blit(text, text_rect)
+        
+        # Colocar el nombre de usuario del defensor sobre el águila
+        text = font.render(defensor_name, True, color) 
+        text_rect = text.get_rect()
+        text_rect.midtop = (defensor.rect.centerx, defensor.rect.top - 20) 
+        screen.blit(text, text_rect)
+        
         dx, dy = 0, 0 #Inicializa la dirección del Atacante en 0 para "x" y "y"
 
         # Mover Atacante 3px en eje "x/y"
