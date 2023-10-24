@@ -57,7 +57,12 @@ def message_screen(message, font, color, y_displacement=0):
     text_rect = text.get_rect()
     text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
     screen.blit(text, text_rect)
-    
+ 
+def salir():
+    pygame.quit()
+    subprocess.run(["python", "Login.py"])
+    sys.exit()
+       
     # función de pausa
 def pause():
     white = (255, 255, 255)
@@ -78,8 +83,7 @@ def pause():
                     pausa = False
                 elif event.key == pygame.K_q:
                     pausa = False
-                    subprocess.run(["python", "Login.py"])
-                    sys.exit()
+                    salir()
                                
             screen.blit(fondo, (0,0))
             
