@@ -784,8 +784,7 @@ def verificar_contraseña():
     contrasena = contrasena_usuario_entry.get()
 
     # se comprueba una longitud adecuada para el nombre de usuario
-    if len(usuario) > 10:
-
+    if len(usuario) <= 10:
         if len(contrasena) >= 8:
             insertar_datos()
             # Eliminar el contenido de los campos una vez se haya completado el registro
@@ -796,7 +795,7 @@ def verificar_contraseña():
             # Botón de registrarse de la ventana de registro
             global boton_inicio_sesion
             boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181",
-                                         fg="black", font=fuente_retro_3, relief="raised", borderwidth=10,
+                                         fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
                                          command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
         else:
@@ -806,6 +805,10 @@ def verificar_contraseña():
             else:
                 messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
     else:
+        # Eliminar el contenido de los campos una vez se haya completado el registro
+        nombre_usuario_entry.delete(0, END)
+        correo_usuario_entry.delete(0, END)
+        contrasena_usuario_entry.delete(0, END)
         if config["idioma"] == "inglés":
             messagebox.showerror(title="Aviso", message="Username cannot be longer than 10 characters")
         else:
@@ -1027,7 +1030,10 @@ def validar_datos():
 
             global usuario_1
             global usuario_2
-
+            
+            nombre_usuario_entry1.delete(0, END)
+            contrasena_usuario_entry1.delete(0, END)
+            
             if contar_usuarios == 1:
                 etiqueta_usuario.config(text="Usuario 2")
                 usuario_1 = nombre_usuario
@@ -1042,19 +1048,15 @@ def validar_datos():
                 # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
                 archivo_python = 'configurar_partida.py'
                 print("El usuario #1 es: " + usuario_1 + " y el usuario 2 es: " + usuario_2)
-
+    
                 try:
                     subprocess.Popen(['python', archivo_python])
-
+                    ventana_2.destroy()
                 except FileNotFoundError:
                     print(f'El archivo "{archivo_python}" no se encontró o no se pudo ejecutar.')
-
-        nombre_usuario_entry1.delete(0, END)
-        contrasena_usuario_entry1.delete(0, END)
-
-
     else:
         messagebox.showerror(title="Inicio de sesión incorrecto", message="Usuario o Contraseña incorrecta")
+        
     bd.close()
 
 
