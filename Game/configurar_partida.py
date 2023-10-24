@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import filedialog
 from PIL import Image, ImageTk
 import subprocess
 import sys
@@ -34,7 +35,7 @@ def cargar_imagen_de_fondo(ventana_1, ruta_imagen):
 
 
 def volver_inicio_sesion():
-    archivo = 'Login.py'
+    archivo = 'Game/Login.py'
     try:
         subprocess.Popen(['python', archivo])
         time.sleep(1.5)
@@ -138,18 +139,76 @@ def configurar_partida():
                            activebackground="blue", relief="groove", border=5)
     boton_menu.place(relx=0.5 - 0.38, rely=0.7 - 0.20)
 
+#######
+
+    # Add a list to store selected songs
+    selected_songs = [None, None, None, None, None]
+
+    # Create radio buttons to mark favorite songs
+    favorite_song = tk.IntVar()
+    
+#######seleccionar canciones
+
+    def seleccionar_musica_cancion1():
+        file_path = filedialog.askopenfilename(title="Seleccione la Canción 1",
+                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
+        if file_path:
+            selected_songs[0] = file_path
+            print("Seleccionó la Canción 1:", file_path)
+    
+    def seleccionar_musica_cancion2():
+        file_path = filedialog.askopenfilename(title="Seleccione la Canción 2",
+                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
+        if file_path:
+            selected_songs[1] = file_path
+            print("Seleccionó la Canción 2:", file_path)
+    
+    def seleccionar_musica_cancion3():
+        file_path = filedialog.askopenfilename(title="Seleccione la Canción 3",
+                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
+        if file_path:
+            selected_songs[2] = file_path
+            print("Seleccionó la Canción 3:", file_path)
+    
+    def seleccionar_musica_cancion4():
+        file_path = filedialog.askopenfilename(title="Seleccione la Canción 4",
+                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
+        if file_path:
+            selected_songs[3] = file_path
+            print("Seleccionó la Canción 4:", file_path)
+            
+    def seleccionar_musica_cancion5():
+        file_path = filedialog.askopenfilename(title="Seleccione la Canción 5",
+                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
+        if file_path:
+            selected_songs[4] = file_path
+            print("Seleccionó la Canción 5:", file_path)
+            
+    def marcar_favorita(numero_cancion):
+        favorite_song.set(numero_cancion)
+
+    # Create radio buttons for favorite songs
+    radio_button_cancion1 = tk.Radiobutton(ventana_1, text="Favorita", variable=favorite_song, value=0)
+    radio_button_cancion2 = tk.Radiobutton(ventana_1, text="Favorita", variable=favorite_song, value=1)
+    radio_button_cancion3 = tk.Radiobutton(ventana_1, text="Favorita", variable=favorite_song, value=0)
+    radio_button_cancion4 = tk.Radiobutton(ventana_1, text="Favorita", variable=favorite_song, value=1)
+    radio_button_cancion5 = tk.Radiobutton(ventana_1, text="Favorita", variable=favorite_song, value=0)
+    # Repeat the above pattern for the other song radio buttons
+
+################
+
     # Crear un menú desplegable
     menu_principal = Menu(ventana_1, tearoff=0)
     menu_principal.add_command(label="Insertar canción 1", font=fuente_retro_9, foreground="white",
-                               background="#101654", command=lambda: print("Cancion 1"))
+                               background="#101654", command=seleccionar_musica_cancion1)
     menu_principal.add_command(label="Insertar canción 2", font=fuente_retro_9,
-                               foreground="white", background="#101654", command=lambda: print("Cancion 2"))
+                               foreground="white", background="#101654", command=seleccionar_musica_cancion2)
     menu_principal.add_command(label="Insertar canción 3", font=fuente_retro_9, foreground="white",
-                               background="#101654", command=lambda: print("Cancion 3"))
+                               background="#101654", command=seleccionar_musica_cancion3)
     menu_principal.add_command(label="Insertar canción 4", font=fuente_retro_9, foreground="white",
-                               background="#101654", command=lambda: print("Cancion 4"))
+                               background="#101654", command=seleccionar_musica_cancion4)
     menu_principal.add_command(label="Insertar canción 5", font=fuente_retro_9, foreground="white",
-                               background="#101654", command=lambda: print("Cancion 5"))
+                               background="#101654", command=seleccionar_musica_cancion5)
 
     # Asociar la función mostrar_menu al evento de clic en el botón
     boton_menu.bind("<Button-1>", mostrar_menu)
