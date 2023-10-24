@@ -71,66 +71,61 @@ def salir():
     except:
         print("")
 
-def volver_ventana_inicio():
-    ventana_1.destroy()
-    inicio.deiconify()
-    
-    
-def inicio_partida():
-    global inicio
-    inicio = tk.Tk()
-    inicio.configure(cursor="star")
-    cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
-    inicio.attributes("-fullscreen", True)
 
-    fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
+if __name__ == "__main__":
+    def inicio_partida():
+        global inicio
+        inicio = tk.Tk()
+        inicio.configure(cursor="star")
+        cargar_imagen_de_fondo(inicio, "loginImages/fondo1.png")
+        inicio.attributes("-fullscreen", True)
 
-    # Etiqueta de bienvenida
-    ancho_pantalla = inicio.winfo_screenwidth()
-    global etiqueta_bienvenida
-    etiqueta_bienvenida = Label(inicio, text="Bienvenidos", bg="#101654", fg="white", font=fuente_retro_2)
+        fondo = tk.PhotoImage(file="welcomeInterfaceFramesSprites/SavedItems/bg.png")
 
-    # Calcula la posición x para que la etiqueta esté en el centro horizontal
-    x = (ancho_pantalla - etiqueta_bienvenida.winfo_reqwidth()) // 2
-    etiqueta_bienvenida.place(relx=0.5 - 0.17, rely=0.5 - 0.25)
+        # Etiqueta de bienvenida
+        ancho_pantalla = inicio.winfo_screenwidth()
+        global etiqueta_bienvenida
+        etiqueta_bienvenida = Label(inicio, text="Bienvenidos", bg="#101654", fg="white", font=fuente_retro_2)
 
-    global boton_cerrar
-    boton_cerrar = tk.Button(inicio, text="Salir",
-                                command=salir,
+        # Calcula la posición x para que la etiqueta esté en el centro horizontal
+        x = (ancho_pantalla - etiqueta_bienvenida.winfo_reqwidth()) // 2
+        etiqueta_bienvenida.place(relx=0.5 - 0.17, rely=0.5 - 0.25)
+
+        global boton_cerrar
+        boton_cerrar = tk.Button(inicio, text="Salir",
+                                 command=salir,
+                                 fg="white",
+                                 bg="#9e2254",
+                                 relief="sunken",
+                                 font=("System 35 bold"),
+                                 cursor="exchange")
+        boton_cerrar.pack()
+        boton_cerrar.place(relx=0.5, rely=0.9 - 0.2, anchor="center", width=300)
+
+        global boton_abrir
+        boton_abrir = tk.Button(inicio, text="Iniciar",
+                                command=menu_login,
                                 fg="white",
-                                bg="#9e2254",
+                                bg="#FF9900",
                                 relief="sunken",
                                 font=("System 35 bold"),
                                 cursor="exchange")
-    boton_cerrar.pack()
-    boton_cerrar.place(relx=0.5, rely=0.9 - 0.2, anchor="center", width=300)
+        boton_abrir.pack()
+        boton_abrir.place(relx=0.5, rely=0.5, anchor="center", width=300)
 
-    global boton_abrir
-    boton_abrir = tk.Button(inicio, text="Iniciar",
-                            command=menu_login,
-                            fg="white",
-                            bg="#FF9900",
-                            relief="sunken",
-                            font=("System 35 bold"),
-                            cursor="exchange")
-    boton_abrir.pack()
-    boton_abrir.place(relx=0.5, rely=0.5, anchor="center", width=300)
+        etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
+        etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
 
-    etiqueta_retro2 = Label(inicio, text="Battle City", bg="#180546", fg="white", font="8-Bit 100")
-    etiqueta_retro2.place(relx=0.5, rely=0.1, anchor="center")
-
-    if config["idioma"] == "inglés":
-        boton_cerrar.config(text="Leave Game")
-        boton_abrir.config(text="Start Game")
-        etiqueta_bienvenida.config(text="Welcome")
-        
-    if __name__ == "__main__":
-        inicio.mainloop()
+        if config["idioma"] == "inglés":
+            boton_cerrar.config(text="Leave Game")
+            boton_abrir.config(text="Start Game")
+            etiqueta_bienvenida.config(text="Welcome")
+        if __name__ == "__main__":
+            inicio.mainloop()
 
 
 # Función ventana Login
 def menu_login():
-    inicio.withdraw()
     global ventana_1, seleccion
     # Crear una instancia de la ventana principal
     ventana_1 = Toplevel(inicio)
@@ -251,7 +246,7 @@ def menu_login():
     # Botón de Salir
     global boton_salir
     boton_salir = tk.Button(ventana_1, cursor="exchange", text="Salir", height="4", width="30", background="#0a0c3f",
-                            fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_ventana_inicio)
+                            fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=ventana_1.destroy)
     boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones / 100, anchor='center')
 
     global boton_configuración
@@ -544,11 +539,6 @@ def inicio_sesion():
     cargar_imagen_de_fondo(ventana_2, "loginImages/fondo1.png")
 
     # Se añade la fuente retro en diversos tamañosglobal ventana_configuracion, seleccion
-    ventana_configuracion = tk.Toplevel(ventana_1)
-    ventana_configuracion.configure(bg="black")
-
-    label_configuracion = tk.Label(ventana_configuracion, text="Seleccione el idioma:", bg="black", fg="white")
-    label_configuracion.pack()
 
     seleccion.set(config["idioma"])
 
@@ -784,7 +774,8 @@ def verificar_contraseña():
     contrasena = contrasena_usuario_entry.get()
 
     # se comprueba una longitud adecuada para el nombre de usuario
-    if len(usuario) <= 10:
+    if len(usuario) > 10:
+
         if len(contrasena) >= 8:
             insertar_datos()
             # Eliminar el contenido de los campos una vez se haya completado el registro
@@ -795,7 +786,7 @@ def verificar_contraseña():
             # Botón de registrarse de la ventana de registro
             global boton_inicio_sesion
             boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181",
-                                         fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
+                                         fg="black", font=fuente_retro_3, relief="raised", borderwidth=10,
                                          command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
         else:
@@ -805,10 +796,6 @@ def verificar_contraseña():
             else:
                 messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
     else:
-        # Eliminar el contenido de los campos una vez se haya completado el registro
-        nombre_usuario_entry.delete(0, END)
-        correo_usuario_entry.delete(0, END)
-        contrasena_usuario_entry.delete(0, END)
         if config["idioma"] == "inglés":
             messagebox.showerror(title="Aviso", message="Username cannot be longer than 10 characters")
         else:
@@ -1030,10 +1017,7 @@ def validar_datos():
 
             global usuario_1
             global usuario_2
-            
-            nombre_usuario_entry1.delete(0, END)
-            contrasena_usuario_entry1.delete(0, END)
-            
+
             if contar_usuarios == 1:
                 etiqueta_usuario.config(text="Usuario 2")
                 usuario_1 = nombre_usuario
@@ -1048,15 +1032,19 @@ def validar_datos():
                 # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
                 archivo_python = 'configurar_partida.py'
                 print("El usuario #1 es: " + usuario_1 + " y el usuario 2 es: " + usuario_2)
-    
+
                 try:
                     subprocess.Popen(['python', archivo_python])
-                    ventana_2.destroy()
+
                 except FileNotFoundError:
                     print(f'El archivo "{archivo_python}" no se encontró o no se pudo ejecutar.')
+
+        nombre_usuario_entry1.delete(0, END)
+        contrasena_usuario_entry1.delete(0, END)
+
+
     else:
         messagebox.showerror(title="Inicio de sesión incorrecto", message="Usuario o Contraseña incorrecta")
-        
     bd.close()
 
 
