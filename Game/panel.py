@@ -363,40 +363,67 @@ class Defensor(Personaje):
         self.images = escalar_imagenes(self.images, 0.8)
 
 #Clase para los bloques
+WHITE = (255, 255, 255)
+
 class Bloque:
-    def __init__(self, tipo, x, y):
+    def __init__(self, tipo, x, y, resistencia):
         self.tipo = tipo
         self.rect = pygame.Rect(x, y, 50, 50)
         self.selected = False
+        self.resistencia = resistencia
 
 bloques = []
 
-# Diccionario para contar cuántos bloques de cada tipo se han creado
+# Diccionarios para contar cuántos bloques de cada tipo se han creado
 bloques_creados = {
     "madera": 0,
     "concreto": 0,
     "acero": 0
 }
 
+bloques_restantes = {
+    "madera": 10,
+    "concreto": 10,
+    "acero": 10
+}
+
+# Cargar imágenes
+imagen_madera = pygame.image.load("panel_elements\defensor_elementos\madera.png")
+imagen_concreto = pygame.image.load("panel_elements\defensor_elementos\concreto.png")
+imagen_acero = pygame.image.load("panel_elements\defensor_elementos\Iron.png")
+
+# Escalar imágenes (si es necesario)
+imagen_madera = pygame.transform.scale(imagen_madera, (50, 50))
+imagen_concreto = pygame.transform.scale(imagen_concreto, (50, 50))
+imagen_acero = pygame.transform.scale(imagen_acero, (50, 50))
+
+# Diccionario para mapear tipo de bloque a su imagen y resistencia
+bloques_info = {
+    "madera": {"imagen": imagen_madera, "resistencia": 50},
+    "concreto": {"imagen": imagen_concreto, "resistencia": 100},
+    "acero": {"imagen": imagen_acero, "resistencia": 200}
+}
+
 # Botones para seleccionar tipos de bloques
-boton_madera = pygame.Rect(100, 10, 100, 50)
-boton_concreto = pygame.Rect(250, 10, 110, 50)
-boton_acero = pygame.Rect(400, 10, 100, 50)
+boton_madera = pygame.Rect(50, 10, 100, 50)
+boton_concreto = pygame.Rect(170, 10, 115, 50)
+boton_acero = pygame.Rect(305, 10, 100, 50)
 
 # Texto para las etiquetas
 font = pygame.font.Font(None, 36)
-etiqueta_madera = font.render("Madera", True, "black")
-etiqueta_concreto = font.render("Concreto", True, "black")
-etiqueta_acero = font.render("Acero", True, "black")
+etiqueta_madera = font.render("Madera", True, WHITE)
+etiqueta_concreto = font.render("Concreto", True, WHITE)
+etiqueta_acero = font.render("Acero", True, WHITE)
 
 etiquetas = {
-    "madera": (etiqueta_madera, (105, 20)),
-    "concreto": (etiqueta_concreto, (250, 20)),
-    "acero": (etiqueta_acero, (410, 20))
+    "madera": (etiqueta_madera, (55, 20)),
+    "concreto": (etiqueta_concreto, (175, 20)),
+    "acero": (etiqueta_acero, (320, 20))
 }
 
 # Lista de botones
 botones = [boton_madera, boton_concreto, boton_acero]
+
 
 #OKbjeto que limita los FPS, para asegurar una velocidad equilibrada
 clock = pygame.time.Clock()
@@ -429,27 +456,42 @@ if __name__ == "__main__":
             if keys[K_m]:
                 pause()
 
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
                 for i, boton in enumerate(botones):
+
                     if boton.collidepoint(event.pos):
+
                         tipo = ["madera", "concreto", "acero"][i]
-                        if bloques_creados[tipo] < 3:
+
+                        if bloques_creados[tipo] < 11 and bloques_restantes[tipo] > 0:
                             x, y = event.pos
-                            nuevo_bloque = Bloque(tipo, x, y)
+
+                            info_bloque = bloques_info[tipo]
+
+                            nuevo_bloque = Bloque(tipo, x, y, info_bloque["resistencia"])
+
                             bloques.append(nuevo_bloque)
+
                             bloques_creados[tipo] += 1
 
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                            bloques_restantes[tipo] -= 1
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+
                 for bloque in bloques:
+
                     if bloque.rect.collidepoint(event.pos):
                         bloque.selected = not bloque.selected
 
-            elif event.type == pygame.MOUSEMOTION:
+            if event.type == pygame.MOUSEMOTION:
+
                 for bloque in bloques:
+
                     if bloque.selected:
                         mouse_x, mouse_y = event.pos
-                        bloque.rect.topleft = (mouse_x - 25, mouse_y - 25)
 
+                        bloque.rect.topleft = (mouse_x - 25, mouse_y - 25)
                     
         # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
         bg = pygame.transform.scale(bg, (screen_width, screen_height))
@@ -458,21 +500,26 @@ if __name__ == "__main__":
         defensor.dibujar()
 
         # Dibujar los bloques y botones
-        #screen.fill("yellow")
+
         for bloque in bloques:
-            if bloque.tipo == "madera":
-                pygame.draw.rect(screen, BROWN, bloque.rect)
-            elif bloque.tipo == "concreto":
-                pygame.draw.rect(screen, GRAY, bloque.rect)
-            elif bloque.tipo == "acero":
-                pygame.draw.rect(screen, SILVER, bloque.rect)
-        pygame.draw.rect(screen, BROWN, boton_madera)
-        pygame.draw.rect(screen, GRAY, boton_concreto)
-        pygame.draw.rect(screen, SILVER, boton_acero)
+            imagen = bloques_info[bloque.tipo]["imagen"]
+            screen.blit(imagen, bloque.rect)
+        pygame.draw.rect(screen, (165, 42, 42), boton_madera)
+        pygame.draw.rect(screen, (128, 128, 128), boton_concreto)
+        pygame.draw.rect(screen, (192, 192, 192), boton_acero)
 
         # Dibujar etiquetas
         for texto, (x, y) in etiquetas.values():
             screen.blit(texto, (x, y))
+            # Dibujar contadores
+            font = pygame.font.Font(None, 30)
+            texto_bloques_restantes = [font.render(f"{tipo.capitalize()} restantes: {restantes}", True, WHITE)
+                                       for tipo, restantes in bloques_restantes.items()]
+            texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, WHITE)
+
+            for i, texto in enumerate(texto_bloques_restantes):
+                screen.blit(texto, (450, 10 + 20 * i))
+            screen.blit(texto_bloques_usados, (1050, 10))
         
         # Dibujar los nombres de usuario
         font = pygame.font.Font(None, 30) 
