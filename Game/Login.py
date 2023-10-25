@@ -1,3 +1,5 @@
+#check
+
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
@@ -46,7 +48,7 @@ def leer_volumen():
 
 volumen = leer_volumen()
 
-pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/mainSound1.mp3')
+pygame.mixer.music.load('welcomeInterfaceFramesSprites/Sounds/main.mp3')
 pygame.mixer.music.set_volume(volumen)
 pygame.mixer.music.play()
 
