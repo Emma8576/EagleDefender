@@ -156,6 +156,8 @@ class Personaje:
         new_rect = self.rect.move(dx, dy)
         if screen.get_rect().contains(new_rect): #Mantiene el personaje dentro de la pantalla
             self.rect = new_rect
+
+
     #Dibuja al personaje en la direccion actual
     def dibujar(self):
         screen.blit(self.images[self.direction][self.current_frame], self.rect)
@@ -236,7 +238,7 @@ class proyectilFuego:
 
 
         self.direction = direction #Dirección del proyectil
-        self.current_frame = 0
+        self.current_frame = 0    
         self.image = self.images[direction][0] #Imagen actual del proyectil
         self.rect = self.image.get_rect() #Representa la posición y tamaño del proyectil
         self.rect.topleft = start_pos
@@ -361,6 +363,30 @@ class Defensor(Personaje):
         super().__init__(image_paths, start_pos)
 
         self.images = escalar_imagenes(self.images, 0.8)
+
+        self.vida = 3  # Agrega una variable de vida inicial
+
+    def impacto(self, tipo_proyectil):
+        if tipo_proyectil == "fuego":
+            self.vida -= 2
+        elif tipo_proyectil == "hielo":
+            self.vida -= 1
+        elif tipo_proyectil == "bomba":
+            self.vida = 0
+
+        if self.vida <= 0:
+            self.vida = 0
+            self.desaparecer()
+
+
+    def desaparecer(self):
+        self.images = []
+
+def mostrar_vida_defensor(defensor):
+        font = pygame.font.Font(None, 36)
+        vida_texto = font.render(f"Vidas del Defensor: {defensor.vida}", True, WHITE)
+        screen.blit(vida_texto, (10, 100))
+
 
 #Clase para los bloques
 WHITE = (255, 255, 255)
@@ -498,7 +524,7 @@ if __name__ == "__main__":
         screen.blit(bg, (0, 0))
         atacante.dibujar()
         defensor.dibujar()
-
+        mostrar_vida_defensor(defensor)
         # Dibujar los bloques y botones
 
         for bloque in bloques:
@@ -600,24 +626,34 @@ if __name__ == "__main__":
         if dr != 0 or dz != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
             defensor.mover(dr, dz)
             defensor.actualizar_frame()
-
+            if defensor.vida <= 0:
+                defensor.desaparecer()
         # Disparar
         if keys[K_SPACE]:
             atacante.disparar()
 
         # Mover y actualizar las balas
         for bullet in atacante.bullets:
-            bullet.mover()
-            bullet.current_frame = (bullet.current_frame + 1) % len(bullet.images[bullet.direction])
-            bullet.image = bullet.images[bullet.direction][bullet.current_frame]
-
-            # Borrar balas que salen de la pantalla
-            if not bullet.esta_en_pantalla():
-                atacante.bullets.remove(bullet)
-            else:
-                # Dibujar balas en la pantalla
+            if bullet.esta_en_pantalla():
+                bullet.mover()
+                bullet.rect.topleft = (bullet.rect.topleft[0], bullet.rect.topleft[1])
                 screen.blit(bullet.image, bullet.rect)
 
+                for bloque in bloques:
+                    if bullet.rect.colliderect(bloque.rect):
+                        atacante.bullets.remove(bullet)
+                        bloques.remove(bloque)
+                        continue
+
+                if defensor.rect.colliderect(bullet.rect):
+                    defensor.impacto(atacante.current_municion)
+                    atacante.bullets.remove(bullet)
+        for bala in atacante.bullets:
+    # Verificar colisiones con el Defensor
+            if bala.rect.colliderect(defensor.rect):
+                tipo_proyectil = bala.__class__.__name__  # Obtener el tipo de proyectil
+                defensor.impacto(tipo_proyectil)  # Aplicar impacto al Defensor
+                atacante.bullets.remove(bala) 
         # actualizar pantalla completa
         pygame.display.flip()
 
