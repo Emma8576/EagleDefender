@@ -1,2 +1,2 @@
-Usuario 1: Emma
-Usuario 2: marco2023
+Defensor: Emma
+Atacante: marco2023
