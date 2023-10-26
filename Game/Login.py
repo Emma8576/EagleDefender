@@ -7,7 +7,7 @@ import pymysql
 import json
 import pygame
 import subprocess
-
+import time
 # hacer variables de fuentes globales
 global fuente_retro
 global fuente_retro_1
@@ -530,9 +530,15 @@ def cerrar_juego():
 # Función para mostrar la ventana de inicio de sesión
 def inicio_sesion():
     global ventana_2, seleccion
+    
+    #quita ventana 1
     if ventana_1:
         ventana_1.withdraw()
 
+    #quita ventana 3
+    if ventana_3:
+        ventana_3.destroy()
+        
     # Crear una instancia de la ventana secundaria
     ventana_2 = Toplevel(ventana_1)
     ventana_2.attributes("-fullscreen", True)
@@ -785,7 +791,7 @@ def verificar_contraseña():
             correo_usuario_entry.delete(0, END)
             contrasena_usuario_entry.delete(0, END)
 
-            # Botón de registrarse de la ventana de registro
+            # Botón de inicio de sesion de la ventana de registro
             global boton_inicio_sesion
             boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181",
                                          fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
