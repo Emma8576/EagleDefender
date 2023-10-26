@@ -59,6 +59,7 @@ def message_screen(message, font, color, y_displacement=0):
     screen.blit(text, text_rect)
  
 def salir():
+    pygame.mixer.music.stop()
     pygame.quit()
     subprocess.run(["python", "Login.py"])
     sys.exit()
