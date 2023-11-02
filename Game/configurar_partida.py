@@ -51,7 +51,7 @@ def volver_inicio_sesion():
 
 # Función para cargar los nombres de usuario que iniciaron sesión
 def cargar_nombres_usuarios():
-    with open('Game/nombres_usuarios.txt', 'r') as file:
+    with open('nombres_usuarios.txt', 'r') as file:
         lineas = file.readlines()
         usuario_1 = lineas[0].strip().split(": ")[1]
         usuario_2 = lineas[1].strip().split(": ")[1]
@@ -100,10 +100,10 @@ def configurar_partida():
     ventana_1.title("Bienvenidos")
 
     # Cargar icono de la ventana
-    ventana_1.iconbitmap("Game/loginImages/icon.ico")
+    ventana_1.iconbitmap("loginImages/icon.ico")
 
     # Obtener la imagen de fondo
-    fondo_imagen = cargar_imagen_de_fondo(ventana_1, "Game/loginImages/fondo1.png")
+    fondo_imagen = cargar_imagen_de_fondo(ventana_1, "loginImages/fondo1.png")
 
     # Crear un Label para mostrar la imagen de fondo
     fondo_label = Label(ventana_1, image=fondo_imagen)

@@ -161,6 +161,7 @@ class Personaje:
 
     #Dibuja al personaje en la direccion actual
     def dibujar(self):
+        print("Dirección actual:", self.direction)  # Agrega esta línea para depuración
         screen.blit(self.images[self.direction][self.current_frame], self.rect)
     #Cambiar la direccion del personaje
     def cambiar_direccion(self, new_direction):
@@ -248,21 +249,25 @@ class proyectilFuego:
     #Si la dirección actual es __ entonces se mueve "x" y "y" unidades
     def mover(self):
         if self.direction == "up":
-            self.rect.move_ip(0,-6)
+            self.rect.move_ip(0, -6)
         elif self.direction == "down":
-            self.rect.move_ip(0,6)
+            self.rect.move_ip(0, 6)
         elif self.direction == "left":
-            self.rect.move_ip(-6,0)
+            self.rect.move_ip(-6, 0)
         elif self.direction == "right":
-            self.rect.move_ip(6,0)
+            self.rect.move_ip(6, 0)
         elif self.direction == "ul":
-            self.rect.move_ip(-6,-6)
+            self.rect.move_ip(-6, -6)
         elif self.direction == "ur":
-            self.rect.move_ip(6,-6)
+            self.rect.move_ip(6, -6)
         elif self.direction == "dl":
-            self.rect.move_ip(-6,6)
+            self.rect.move_ip(-6, 6)
         elif self.direction == "dr":
-            self.rect.move_ip(6,6)
+            self.rect.move_ip(6, 6)
+        current_images = self.images.get(self.direction, [])
+        if current_images:
+            self.image = current_images[0] 
+
     #Verifica si el proyectil está dentro de la pantalla, sino, este es destruido
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
@@ -365,18 +370,17 @@ class Defensor(Personaje):
 
         self.images = escalar_imagenes(self.images, 0.8)
 
-        self.vida = 3  # Agrega una variable de vida inicial
+        self.vida = 1  # Agrega una variable de vida inicial
 
     def impacto(self, tipo_proyectil):
         if tipo_proyectil == "fuego":
-            self.vida -= 2
+            self.vida -= 1
         elif tipo_proyectil == "hielo":
             self.vida -= 1
         elif tipo_proyectil == "bomba":
             self.vida = 0
 
-        if self.vida <= 0:
-            self.vida = 0
+        if self.vida <= 0 or self.vida == 0:
             self.desaparecer()
 
 
