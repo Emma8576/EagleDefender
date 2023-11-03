@@ -6,6 +6,7 @@ import time
 from pygame import *
 import subprocess
 import os
+from animacion_destruccion import AnimacionDestruccion
 
 # Colores de bloques
 WHITE = (255, 255, 255)
@@ -33,6 +34,12 @@ pygame.mixer.init()
 agua = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/agua.wav")
 fuego = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/fuego.wav")
 bomba = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/bomba.wav")
+
+#Se cargan los sonidos que se ejecutan según el tipo de bloque puesto
+madera = pygame.mixer.Sound("C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\defensor_elementos\\bloques_sonido\\madera.mp3")
+concreto = pygame.mixer.Sound("C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\defensor_elementos\\bloques_sonido\\concreto.mp3")
+acero = pygame.mixer.Sound("C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\defensor_elementos\\bloques_sonido\\acero.mp3")
+
 # Cargar background
 bg = pygame.image.load("panel_elements/bg/bag.jpg") 
 
@@ -52,12 +59,7 @@ def escalar_imagenes(imagenes, factor):
 #/////////////Contenido pantalla de pausa//////////////////////
 
 # Función que muestra un mensaje en la pantalla de juego.
-def message_screen(message, font, color, y_displacement=0):
-    text = font.render(message, True, color)
-    text_rect = text.get_rect()
-    text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
-    screen.blit(text, text_rect)
- 
+
 def salir():
     pygame.mixer.music.stop()
     pygame.quit()
@@ -102,7 +104,7 @@ def pause():
                         white,
                         25)
             pygame.display.update()
-            clock.tick(5)
+            clock.tick(5) 
             
 def leer_roles(archivo):
     roles = {}
@@ -243,8 +245,10 @@ class proyectilFuego:
         self.image = self.images[direction][0] #Imagen actual del proyectil
         self.rect = self.image.get_rect() #Representa la posición y tamaño del proyectil
         self.rect.topleft = start_pos
+
+        self.start_time = pygame.time.get_ticks()
         
-    #Mueve el proyectil en la clase especificada
+        self.distancia_recorrida = 0      #Mueve el proyectil en la clase especificada
     #Si la dirección actual es __ entonces se mueve "x" y "y" unidades
     def mover(self):
         if self.direction == "up":
@@ -263,6 +267,19 @@ class proyectilFuego:
             self.rect.move_ip(-6, 6)
         elif self.direction == "dr":
             self.rect.move_ip(6, 6)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time >= 2500:
+            self.rect.topleft = (-100, -100)
+
+        self.distancia_recorrida += abs(dx) + abs(dy)  # Actualiza la distancia recorrida
+        
+        if self.distancia_recorrida >= 2500:
+            # Crea una instancia de AnimacionDestruccion en el lugar actual
+            animacion = AnimacionDestruccion(self.rect.topleft)
+            self.distancia_recorrida = 0
+
+
+
         current_images = self.images.get(self.direction, [])
         if current_images:
             self.image = current_images[0] 
@@ -288,6 +305,8 @@ class proyectilHielo:
         self.direction = direction
         self.current_frame = 0
         self.image = self.images[direction][0]
+
+        self.start_time = pygame.time.get_ticks()
         
         
     def mover(self):
@@ -307,6 +326,9 @@ class proyectilHielo:
             self.rect.move_ip(-5,5)
         elif self.direction == "dr":
             self.rect.move_ip(5,5)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time >= 2500:
+            self.rect.topleft = (-100, -100)
 
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
@@ -328,6 +350,8 @@ class proyectilBomba:
         self.direction = direction
         self.current_frame = 0
         self.image = self.images[direction][0]
+
+        self.start_time = pygame.time.get_ticks()
         
         
     def mover(self):
@@ -347,6 +371,9 @@ class proyectilBomba:
             self.rect.move_ip(-7,7)
         elif self.direction == "dr":
             self.rect.move_ip(7,7)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time >= 2500:
+            self.rect.topleft = (-100, -100)
 
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
@@ -402,7 +429,6 @@ class Defensor(Personaje):
         elif direccion == "right":
             x += 0
 
-        print(f"Antes de colocar el bloque: Bloques restantes ({bloques_restantes})")
 
         if bloques_restantes[self.bloque_seleccionado] > 0:
             tipo = self.bloque_seleccionado
@@ -414,7 +440,6 @@ class Defensor(Personaje):
 
             bloques_creados[tipo] += 1
             bloques_restantes[tipo] -= 1
-        print(f"Después de colocar el bloque: Bloques restantes ({bloques_restantes}), Bloques creados ({bloques_creados})")
 
 
 #Clase para los bloques
@@ -438,6 +463,17 @@ class Bloque:
         self.rect = pygame.Rect(x, y, 50, 50)
         self.selected = False
         self.resistencia = resistencia
+
+        self.madera = madera
+        self.concreto = concreto
+        self.acero = acero
+
+        if self.tipo == "madera":
+            self.madera.play()
+        elif self.tipo == "concreto":
+            self.concreto.play()
+        elif self.tipo == "acero":
+            self.acero.play()
 
 bloques = []
 
@@ -495,8 +531,9 @@ defensor.rol = "Defensor"
 
 if __name__ == "__main__":
     # Bucle principal del juego
+    animacion = None
     while True:
-
+        pygame.mouse.set_visible(False)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -670,6 +707,19 @@ if __name__ == "__main__":
                 if defensor.rect.colliderect(bullet.rect):
                     defensor.impacto(atacante.current_municion)
                     atacante.bullets.remove(bullet)
+
+            if not bullet.esta_en_pantalla():
+                posicion_bala = bullet.rect.topleft  # Guarda la posición antes de eliminar la bala
+                atacante.bullets.remove(bullet)
+
+                animacion = AnimacionDestruccion(posicion_bala)  # Crea la animación con la posición guardada
+
+        if animacion:
+            if animacion.actualizar():
+                screen.blit(animacion.image, animacion.rect)
+            else:
+                animacion = None
+
         for bala in atacante.bullets:
     # Verificar colisiones con el Defensor
             if bala.rect.colliderect(defensor.rect):
