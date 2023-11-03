@@ -161,7 +161,6 @@ class Personaje:
 
     #Dibuja al personaje en la direccion actual
     def dibujar(self):
-        print("Dirección actual:", self.direction)  # Agrega esta línea para depuración
         screen.blit(self.images[self.direction][self.current_frame], self.rect)
     #Cambiar la direccion del personaje
     def cambiar_direccion(self, new_direction):
@@ -372,6 +371,8 @@ class Defensor(Personaje):
 
         self.vida = 1  # Agrega una variable de vida inicial
 
+        self.bloque_seleccionado = "madera"  
+
     def impacto(self, tipo_proyectil):
         if tipo_proyectil == "fuego":
             self.vida -= 1
@@ -387,25 +388,38 @@ class Defensor(Personaje):
     def desaparecer(self):
         self.images = []
 
-def mostrar_vida_defensor(defensor):
-        font = pygame.font.Font(None, 36)
-        vida_texto = font.render(f"Vidas del Defensor: {defensor.vida}", True, WHITE)
-        screen.blit(vida_texto, (10, 100))
+
+    def colocar_bloque(self, bloques):
+        x, y = self.rect.center
+        direccion = self.direction
+
+        if direccion == "up":
+            y -= 0
+        elif direccion == "down":
+            y += 0
+        elif direccion == "left":
+            x -= 0
+        elif direccion == "right":
+            x += 0
+
+        print(f"Antes de colocar el bloque: Bloques restantes ({bloques_restantes})")
+
+        if bloques_restantes[self.bloque_seleccionado] > 0:
+            tipo = self.bloque_seleccionado
+            info_bloque = bloques_info[tipo]
+
+            nuevo_bloque = Bloque(tipo, x, y, info_bloque["resistencia"])
+
+            bloques.append(nuevo_bloque)
+
+            bloques_creados[tipo] += 1
+            bloques_restantes[tipo] -= 1
+        print(f"Después de colocar el bloque: Bloques restantes ({bloques_restantes}), Bloques creados ({bloques_creados})")
 
 
 #Clase para los bloques
 WHITE = (255, 255, 255)
 
-class Bloque:
-    def __init__(self, tipo, x, y, resistencia):
-        self.tipo = tipo
-        self.rect = pygame.Rect(x, y, 50, 50)
-        self.selected = False
-        self.resistencia = resistencia
-
-bloques = []
-
-# Diccionarios para contar cuántos bloques de cada tipo se han creado
 bloques_creados = {
     "madera": 0,
     "concreto": 0,
@@ -417,6 +431,18 @@ bloques_restantes = {
     "concreto": 10,
     "acero": 10
 }
+
+class Bloque:
+    def __init__(self, tipo, x, y, resistencia):
+        self.tipo = tipo
+        self.rect = pygame.Rect(x, y, 50, 50)
+        self.selected = False
+        self.resistencia = resistencia
+
+bloques = []
+
+# Diccionarios para contar cuántos bloques de cada tipo se han creado
+
 
 # Cargar imágenes
 imagen_madera = pygame.image.load("panel_elements\defensor_elementos\madera.png")
@@ -442,14 +468,14 @@ boton_acero = pygame.Rect(305, 10, 100, 50)
 
 # Texto para las etiquetas
 font = pygame.font.Font(None, 36)
-etiqueta_madera = font.render("Madera", True, WHITE)
-etiqueta_concreto = font.render("Concreto", True, WHITE)
-etiqueta_acero = font.render("Acero", True, WHITE)
+etiqueta_madera = font.render("", True, WHITE)
+etiqueta_concreto = font.render("", True, WHITE)
+etiqueta_acero = font.render("", True, WHITE)
 
 etiquetas = {
-    "madera": (etiqueta_madera, (55, 20)),
-    "concreto": (etiqueta_concreto, (175, 20)),
-    "acero": (etiqueta_acero, (320, 20))
+    "": (etiqueta_madera, (55, 20)),
+    "": (etiqueta_concreto, (175, 20)),
+    "": (etiqueta_acero, (320, 20))
 }
 
 # Lista de botones
@@ -470,6 +496,7 @@ defensor.rol = "Defensor"
 if __name__ == "__main__":
     # Bucle principal del juego
     while True:
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -477,36 +504,17 @@ if __name__ == "__main__":
                 
             # Manejar eventos de teclado
             keys = pygame.key.get_pressed()
-            if keys[K_p]:
+            if keys[K_e]:
                 atacante.cambiar_tipo_munición("fuego")
-            elif keys[K_o]:
+            elif keys[K_q]:
                 atacante.cambiar_tipo_munición("hielo")
-            elif keys[K_u]:
+            elif keys[K_r]:
                 atacante.cambiar_tipo_munición("bomba")
 
             if keys[K_m]:
                 pause()
 
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
-                for i, boton in enumerate(botones):
-
-                    if boton.collidepoint(event.pos):
-
-                        tipo = ["madera", "concreto", "acero"][i]
-
-                        if bloques_creados[tipo] < 11 and bloques_restantes[tipo] > 0:
-                            x, y = event.pos
-
-                            info_bloque = bloques_info[tipo]
-
-                            nuevo_bloque = Bloque(tipo, x, y, info_bloque["resistencia"])
-
-                            bloques.append(nuevo_bloque)
-
-                            bloques_creados[tipo] += 1
-
-                            bloques_restantes[tipo] -= 1
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
 
@@ -523,21 +531,30 @@ if __name__ == "__main__":
                         mouse_x, mouse_y = event.pos
 
                         bloque.rect.topleft = (mouse_x - 25, mouse_y - 25)
-                    
+
+
+            keys = pygame.key.get_pressed()
+            if keys[K_p]:
+                defensor.bloque_seleccionado = "madera"
+            elif keys[K_o]:
+                defensor.bloque_seleccionado = "concreto"
+            elif keys[K_u]:
+                defensor.bloque_seleccionado = "acero"
+
+            if keys[K_h]:
+                defensor.colocar_bloque(bloques)
+                        
         # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
         bg = pygame.transform.scale(bg, (screen_width, screen_height))
         screen.blit(bg, (0, 0))
         atacante.dibujar()
         defensor.dibujar()
-        mostrar_vida_defensor(defensor)
         # Dibujar los bloques y botones
 
         for bloque in bloques:
             imagen = bloques_info[bloque.tipo]["imagen"]
             screen.blit(imagen, bloque.rect)
-        pygame.draw.rect(screen, (165, 42, 42), boton_madera)
-        pygame.draw.rect(screen, (128, 128, 128), boton_concreto)
-        pygame.draw.rect(screen, (192, 192, 192), boton_acero)
+
 
         # Dibujar etiquetas
         for texto, (x, y) in etiquetas.values():
@@ -549,8 +566,8 @@ if __name__ == "__main__":
             texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, WHITE)
 
             for i, texto in enumerate(texto_bloques_restantes):
-                screen.blit(texto, (450, 10 + 20 * i))
-            screen.blit(texto_bloques_usados, (1050, 10))
+                screen.blit(texto, (10, 10 + 20 * i))
+            screen.blit(texto_bloques_usados, (300, 10))
         
         # Dibujar los nombres de usuario
         font = pygame.font.Font(None, 30) 
