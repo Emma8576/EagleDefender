@@ -38,9 +38,9 @@ fuego = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_
 bomba = pygame.mixer.Sound("panel_elements/atacante_elementos/atacante_municion_sonidos/bomba.wav")
 
 #Se cargan los sonidos que se ejecutan según el tipo de bloque puesto
-madera = pygame.mixer.Sound("C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\defensor_elementos\\bloques_sonido\\madera.mp3")
-concreto = pygame.mixer.Sound("C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\defensor_elementos\\bloques_sonido\\concreto.mp3")
-acero = pygame.mixer.Sound("C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\defensor_elementos\\bloques_sonido\\acero.mp3")
+madera = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonido\\madera.mp3")
+concreto = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonido\\concreto.mp3")
+acero = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonido\\acero.mp3")
 
 # Cargar background
 bg = pygame.image.load("panel_elements/bg/bag.jpg") 

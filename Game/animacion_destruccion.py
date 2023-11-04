@@ -2,7 +2,7 @@ import pygame
 
 class AnimacionDestruccion:
     def __init__(self, start_pos):
-        self.frames = [pygame.image.load(f"C:\\Users\\User\\OneDrive - Estudiantes ITCR\\Documentos\\EagleDefender\\Game\\panel_elements\\atacante_elementos\\atacante_municion\\municion_destruccion\\frame-{i}.gif") for i in range(1, 13)]
+        self.frames = [pygame.image.load(f"panel_elements\\atacante_elementos\\atacante_municion\\municion_destruccion\\frame-{i}.gif") for i in range(1, 13)]
         self.current_frame = 0
         self.image = self.frames[0]
         self.rect = self.image.get_rect()
