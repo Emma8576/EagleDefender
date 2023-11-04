@@ -203,16 +203,16 @@ class Atacante(Personaje):
         self.fuego = fuego #Efecto de sonido fuego
         self.bomba = bomba #Efecto de sonido bomba
 
-        self.municiones_restantes = 5
+        self.municiones_restantes = {"fuego":5, "hielo":5, "bomba":5}
         self.last_shot_time = 0
-        self.last_regeneration_time = datetime.datetime.now().timestamp()
+        self.last_regeneration_time = {"fuego": datetime.datetime.now().timestamp(),"hielo": datetime.datetime.now().timestamp(),"bomba": datetime.datetime.now().timestamp()}
         #cambia el tipo de saldo
     def cambiar_tipo_munición(self, tipo):
         self.current_municion = tipo
 
     #Dispara un proyectil en la dirección actual
     def disparar(self):
-        if self.municiones_restantes > 0:
+        if self.municiones_restantes[self.current_municion] > 0:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot_time >= 1000: #Intervalo de un segundo por disparo
                 self.last_shot_time = current_time
@@ -220,7 +220,7 @@ class Atacante(Personaje):
                 bullet = municion(self.rect.topleft, self.direction)
                 self.bullets.append(bullet)
 
-                self.municiones_restantes -= 1
+                self.municiones_restantes[self.current_municion] -= 1
 
                 #Reproduce los sonidos por cada tipo de munición
                 if self.current_municion == "agua":
@@ -232,9 +232,9 @@ class Atacante(Personaje):
 
     def regenerar_municiones(self):
         current_time = datetime.datetime.now().timestamp()
-        if current_time - self.last_regeneration_time >= 30:
-            self.last_regeneration_time = current_time
-            self.municiones_restantes = min(self.municiones_restantes +1,5)
+        if current_time - self.last_regeneration_time.get(self.current_municion, 0) >= 30:
+            self.last_regeneration_time[self.current_municion] = current_time
+            self.municiones_restantes[self.current_municion] = min(self.municiones_restantes[self.current_municion] +1,5)
 
 municion_restante = {
     "hielo": 5,
@@ -610,9 +610,11 @@ if __name__ == "__main__":
 
         atacante.regenerar_municiones()
 
-        font = pygame.font.Font(None, 30)
-        text = font.render(f'Municiones de fuego restantes: {atacante.municiones_restantes}', True, WHITE)
-        screen.blit(text, (700,10))
+        font = pygame.font.Font(None, 25)
+        for tipo, cantidad in atacante.municiones_restantes.items():
+            text = font.render(f'Municiones de {tipo} restantes: {cantidad}', True, WHITE)
+            screen.blit(text, (700,10 + 30 * list(atacante.municiones_restantes.keys()).index(tipo)))
+
         # Dibujar los bloques y botones
 
         for bloque in bloques:
