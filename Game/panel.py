@@ -7,6 +7,8 @@ from pygame import *
 import subprocess
 import os
 from animacion_destruccion import AnimacionDestruccion
+import datetime
+
 
 # Colores de bloques
 WHITE = (255, 255, 255)
@@ -200,26 +202,45 @@ class Atacante(Personaje):
         self.agua = agua #Efecto de sonido agua
         self.fuego = fuego #Efecto de sonido fuego
         self.bomba = bomba #Efecto de sonido bomba
+
+        self.municiones_restantes = 5
+        self.last_shot_time = 0
+        self.last_regeneration_time = datetime.datetime.now().timestamp()
         #cambia el tipo de saldo
     def cambiar_tipo_munición(self, tipo):
         self.current_municion = tipo
 
     #Dispara un proyectil en la dirección actual
     def disparar(self):
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_shot_time >= 1000: #Intervalo de un segundo por disparo
-            self.last_shot_time = current_time
-            municion = self.municiones[self.current_municion]
-            bullet = municion(self.rect.topleft, self.direction)
-            self.bullets.append(bullet)
-            #Reproduce los sonidos por cada tipo de munición
-            if self.current_municion == "agua":
-                self.agua.play()
-            elif self.current_municion == "fuego":
-                self.fuego.play()
-            elif self.current_municion == "bomba":
-                self.bomba.play()
-                
+        if self.municiones_restantes > 0:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_shot_time >= 1000: #Intervalo de un segundo por disparo
+                self.last_shot_time = current_time
+                municion = self.municiones[self.current_municion]
+                bullet = municion(self.rect.topleft, self.direction)
+                self.bullets.append(bullet)
+
+                self.municiones_restantes -= 1
+
+                #Reproduce los sonidos por cada tipo de munición
+                if self.current_municion == "agua":
+                    self.agua.play()
+                elif self.current_municion == "fuego":
+                    self.fuego.play()
+                elif self.current_municion == "bomba":
+                    self.bomba.play()
+
+    def regenerar_municiones(self):
+        current_time = datetime.datetime.now().timestamp()
+        if current_time - self.last_regeneration_time >= 30:
+            self.last_regeneration_time = current_time
+            self.municiones_restantes = min(self.municiones_restantes +1,5)
+
+municion_restante = {
+    "hielo": 5,
+    "fuego": 5,
+    "bomba": 5
+}
 #Clase que representa el tipo de municion Fuego
 class proyectilFuego:
     """Author: Bryan Monge
@@ -586,6 +607,12 @@ if __name__ == "__main__":
         screen.blit(bg, (0, 0))
         atacante.dibujar()
         defensor.dibujar()
+
+        atacante.regenerar_municiones()
+
+        font = pygame.font.Font(None, 30)
+        text = font.render(f'Municiones de fuego restantes: {atacante.municiones_restantes}', True, WHITE)
+        screen.blit(text, (700,10))
         # Dibujar los bloques y botones
 
         for bloque in bloques:
@@ -598,9 +625,9 @@ if __name__ == "__main__":
             screen.blit(texto, (x, y))
             # Dibujar contadores
             font = pygame.font.Font(None, 30)
-            texto_bloques_restantes = [font.render(f"{tipo.capitalize()} restantes: {restantes}", True, WHITE)
+            texto_bloques_restantes = [font.render(f"{tipo.capitalize()} restantes: {restantes}", True, SILVER)
                                        for tipo, restantes in bloques_restantes.items()]
-            texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, WHITE)
+            texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, SILVER)
 
             for i, texto in enumerate(texto_bloques_restantes):
                 screen.blit(texto, (10, 10 + 20 * i))
