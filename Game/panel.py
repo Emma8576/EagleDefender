@@ -9,7 +9,6 @@ import os
 from animacion_destruccion import AnimacionDestruccion
 import datetime
 
-
 # Colores de bloques
 WHITE = (255, 255, 255)
 BROWN = (165, 42, 42)
@@ -67,7 +66,15 @@ def salir():
     pygame.quit()
     subprocess.run(["python", "Login.py"])
     sys.exit()
-       
+ 
+ #/////////////Contenido pantalla de pausa//////////////////////
+
+def message_screen(message, font, color, y_displacement=0):
+    text = font.render(message, True, color)
+    text_rect = text.get_rect()
+    text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
+    screen.blit(text, text_rect)
+          
     # función de pausa
 def pause():
     white = (255, 255, 255)
@@ -156,11 +163,13 @@ class Personaje:
         self.rect = self.images["up"][0].get_rect() #Rectángulo para detectar posicionamiento y colisiones
         self.rect.topleft = start_pos
         self.direction = "up"
-    #Mueve al personaje en el eje "x" y "y"
     def mover(self, dx, dy):
         new_rect = self.rect.move(dx, dy)
-        if screen.get_rect().contains(new_rect): #Mantiene el personaje dentro de la pantalla
-            self.rect = new_rect
+        # Restringir el movimiento para mantener al personaje dentro de la pantalla
+        if screen.get_rect().contains(new_rect):
+            # Limitar el movimiento hacia arriba
+            if new_rect.top >= 100:
+                self.rect = new_rect
 
 
     #Dibuja al personaje en la direccion actual
@@ -504,7 +513,7 @@ bloques = []
 # Cargar imágenes
 imagen_madera = pygame.image.load("panel_elements\defensor_elementos\madera.png")
 imagen_concreto = pygame.image.load("panel_elements\defensor_elementos\concreto.png")
-imagen_acero = pygame.image.load("panel_elements\defensor_elementos\Iron.png")
+imagen_acero = pygame.image.load("panel_elements\defensor_elementos\Iron.png") 
 
 # Escalar imágenes (si es necesario)
 imagen_madera = pygame.transform.scale(imagen_madera, (50, 50))
@@ -550,6 +559,15 @@ defensor = Defensor((screen_width // 3, screen_height // 3))
 atacante.rol = "Atacante"
 defensor.rol = "Defensor"
 
+# Color de la banda superior
+banda_color = (0, 0, 139)
+
+# Altura de la banda superior
+banda_alto = 100
+
+# Obtiene el tamaño de la pantalla del sistema
+ventana_ancho, ventana_alto = pygame.display.Info().current_w, pygame.display.Info().current_h
+
 if __name__ == "__main__":
     # Bucle principal del juego
     animacion = None
@@ -559,7 +577,7 @@ if __name__ == "__main__":
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-                
+           
             # Manejar eventos de teclado
             keys = pygame.key.get_pressed()
             if keys[K_e]:
@@ -601,7 +619,10 @@ if __name__ == "__main__":
 
             if keys[K_h]:
                 defensor.colocar_bloque(bloques)
-                        
+                
+        # Dibuja la banda superior
+        pygame.draw.rect(bg, banda_color, (0, 0, ventana_ancho, banda_alto))
+           
         # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
         bg = pygame.transform.scale(bg, (screen_width, screen_height))
         screen.blit(bg, (0, 0))
@@ -611,9 +632,14 @@ if __name__ == "__main__":
         atacante.regenerar_municiones()
 
         font = pygame.font.Font(None, 25)
+        x = screen.get_width() - 10 - font.size("Texto muy largo")[0]  # Ajusta el espacio de margen deseado
+        y = 10  # Ajusta la posición vertical si es necesario
+
         for tipo, cantidad in atacante.municiones_restantes.items():
-            text = font.render(f'Municiones de {tipo} restantes: {cantidad}', True, WHITE)
-            screen.blit(text, (700,10 + 30 * list(atacante.municiones_restantes.keys()).index(tipo)))
+            tipo_capitalizado = tipo.capitalize()  # Convierte la primera letra en mayúscula
+            text = font.render(f'{tipo_capitalizado} : {cantidad}', True, WHITE)
+            screen.blit(text, (x, y))
+            y += 30  # Ajusta el espaciado vertical si es necesario
 
         # Dibujar los bloques y botones
 
@@ -622,19 +648,27 @@ if __name__ == "__main__":
             screen.blit(imagen, bloque.rect)
 
 
+        # Utiliza la misma fuente que se usa para las etiquetas
+        font = pygame.font.Font(None, 25)
+
         # Dibujar etiquetas
         for texto, (x, y) in etiquetas.values():
             screen.blit(texto, (x, y))
-            # Dibujar contadores
-            font = pygame.font.Font(None, 30)
-            texto_bloques_restantes = [font.render(f"{tipo.capitalize()} restantes: {restantes}", True, SILVER)
-                                       for tipo, restantes in bloques_restantes.items()]
-            texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, SILVER)
 
-            for i, texto in enumerate(texto_bloques_restantes):
-                screen.blit(texto, (10, 10 + 20 * i))
-            screen.blit(texto_bloques_usados, (300, 10))
-        
+        font = pygame.font.Font(None, 25)
+        screen_width, screen_height = screen.get_size()  # Obtiene el ancho y alto de la pantalla
+        x_bloques_usados = (screen_width - font.size("Bloques Usados: 999")[0]) / 2  # Centra el texto en el eje X
+        y_bloques_usados = 80  # Ajusta 90 píxeles hacia abajo desde la parte superior
+
+        texto_bloques_restantes = [font.render(f"{tipo.capitalize()}: {restantes}", True, SILVER)
+                                    for tipo, restantes in bloques_restantes.items()]
+        texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, SILVER)
+
+        for i, texto in enumerate(texto_bloques_restantes):
+            screen.blit(texto, (10, 10 + 25 * i))  # Ajusta el valor 25 para el espaciado que desees
+        screen.blit(texto_bloques_usados, (x_bloques_usados, y_bloques_usados))
+
+ 
         # Dibujar los nombres de usuario
         font = pygame.font.Font(None, 30) 
         color = (255, 255, 255) 

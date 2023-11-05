@@ -40,7 +40,7 @@ def cargar_imagen_de_fondo(ventana_1, ruta_imagen):
 
 
 def volver_inicio_sesion():
-    archivo = 'Game/Login.py'
+    archivo = 'Login.py'
     try:
         subprocess.Popen(['python', archivo])
         time.sleep(1.5)
@@ -68,13 +68,13 @@ def seleccionar_atacante(usuario):
 
 # Función del botón de iniciar la partida
 def iniciar_partida():
-    archivo_partida = 'Game/panel.py'
+    archivo_partida = 'panel.py'
     # obtener los nombres de usuario y roles seleccionados
     usuario_defensor = etiqueta_jugador_1.cget("text").split(": ")[1]
     usuario_atacante = etiqueta_jugador_2.cget("text").split(": ")[1]
     
     # Guardar los roles en el archivo de texto
-    with open('Game/nombres_usuarios.txt', 'w') as file:
+    with open('nombres_usuarios.txt', 'w') as file:
         file.write(f"Defensor: {usuario_defensor}\n")
         file.write(f"Atacante: {usuario_atacante}\n")
         
