@@ -239,7 +239,7 @@ def menu_login():
     etiqueta = Label(ventana_1, text="Acceder al juego",
                      bg="#101654",
                      fg="white",
-                     font=fuente_retro_3)
+                     font=fuente_retro_2)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
@@ -257,7 +257,7 @@ def menu_login():
                              relief="raised",
                              borderwidth=10,
                              command=inicio_sesion)
-    boton_inicio.place(relx=0.5, rely=0.5, anchor='center')
+    boton_inicio.place(relx=0.5, rely=0.5 - 0.05, anchor='center')
 
     # Espacio entre botones
     espacio_entre_botones = 30
@@ -275,7 +275,22 @@ def menu_login():
                                   relief="raised",
                                   borderwidth=10,
                                   command=registro)
-    boton_registrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones / 200, anchor='center')
+    boton_registrarse.place(relx=0.5, rely=0.5 - 0.05 + espacio_entre_botones / 200, anchor='center')
+    
+    # Botón de partidas guardadas
+    global boton_partidas_guardadas
+    boton_partidas_guardadas = tk.Button(ventana_1,
+                                  cursor="exchange",
+                                  text="Partidas guardadas",
+                                  height="4",
+                                  background="#0a0c3f",
+                                  fg="white",
+                                  width="30",
+                                  font=fuente_retro_5, 
+                                  relief="raised",
+                                  borderwidth=10,
+                                  command="")
+    boton_partidas_guardadas.place(relx=0.5, rely=0.5 + 0.10 + espacio_entre_botones / 200, anchor='center')
 
     # Botón de Salir
     global boton_salir
@@ -290,7 +305,7 @@ def menu_login():
                             relief="raised",
                             borderwidth=10,
                             command=volver_ventana_inicio)
-    boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones / 100, anchor='center')
+    boton_salir.place(relx=0.5, rely=0.5 + 1.34 * espacio_entre_botones / 100, anchor='center')
 
     global boton_configuración
     boton_configuración = tk.Button(ventana_1,

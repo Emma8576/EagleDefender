@@ -8,7 +8,7 @@ import subprocess
 import os
 from animacion_destruccion import AnimacionDestruccion
 import datetime
-
+import json
 # Colores de bloques
 WHITE = (255, 255, 255)
 BROWN = (165, 42, 42)
@@ -67,6 +67,7 @@ def salir():
     subprocess.run(["python", "Login.py"])
     sys.exit()
  
+
  #/////////////Contenido pantalla de pausa//////////////////////
 
 def message_screen(message, font, color, y_displacement=0):
@@ -238,6 +239,9 @@ class Atacante(Personaje):
                     self.fuego.play()
                 elif self.current_municion == "bomba":
                     self.bomba.play()
+                    
+    def obtener_posicion_A(self):
+        return self.rect.center
 
     def regenerar_municiones(self):
         current_time = datetime.datetime.now().timestamp()
@@ -471,6 +475,8 @@ class Defensor(Personaje):
             bloques_creados[tipo] += 1
             bloques_restantes[tipo] -= 1
 
+    def obtener_posicion_D(self):
+        return self.rect.center
 
 #Clase para los bloques
 WHITE = (255, 255, 255)
@@ -551,6 +557,9 @@ botones = [boton_madera, boton_concreto, boton_acero]
 #OKbjeto que limita los FPS, para asegurar una velocidad equilibrada
 clock = pygame.time.Clock()
 
+global atacante
+global defensor
+
 # Crea una instancia de Atacante y Defensor y pasa una tupla de coordenadas para definir la posición inicial en la pantalla
 atacante = Atacante((screen_width // 2, screen_height // 2))
 defensor = Defensor((screen_width // 3, screen_height // 3))
@@ -568,6 +577,129 @@ banda_alto = 100
 # Obtiene el tamaño de la pantalla del sistema
 ventana_ancho, ventana_alto = pygame.display.Info().current_w, pygame.display.Info().current_h
 
+bloques_colocados = []
+
+# Cuando un bloque se coloque en el juego
+def colocar_bloque(tipo, x, y):
+    nuevo_bloque = Bloque(tipo, x, y, bloques_info[tipo]["resistencia"])
+    bloques.append(nuevo_bloque)
+
+    # Registra la posición del bloque en bloques_colocados
+    bloques_colocados.append((tipo, x, y))
+    
+    
+#///////////////////guardar partida/////////////////////////
+def message_screen_save(message, font, color, y_displacement=0):
+    text = font.render(message, True, color)
+    text_rect = text.get_rect()
+    text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
+    screen.blit(text, text_rect)
+    
+    
+    # función de pantalla de guardar
+def save():
+    white = (255, 255, 255)
+    
+    # Cargar la imagen de fondo
+    fondo = pygame.image.load("loginImages/fondo_reducido.png")
+    
+    #Función de pausar el juego
+    save = True
+    while save:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                save = False
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_v:
+                    save = False
+                elif event.key == pygame.K_q:
+                    save = False
+                    salir()
+                               
+            screen.blit(fondo, (0,0))
+            
+            message_screen_save("Battle City",
+                    fuente_pausa_2,
+                    white,
+                    -300)
+            
+            message_screen_save("Juego Guardado",
+                        fuente_pausa_1,
+                        white,
+                        -100)
+            message_screen_save("Presiona V para reanudar o Q para salir",
+                        fuente_pausa_1,
+                        white,
+                        25)
+            pygame.display.update()
+            clock.tick(5) 
+            
+            
+# Función para guardar partida
+def guardar_partida():
+    datos_partida = {
+        "nombre_atacante": atacante_name,
+        "nonbre_defensor": defensor_name, 
+        "posicion_atacante": atacante.obtener_posicion_A(),
+        "posicion_defensor": defensor.obtener_posicion_D(),
+        "bloques_colocados": bloques_colocados,
+        "bloques_restantes": bloques_restantes,  
+        "municiones_restantes": atacante.municiones_restantes,  
+        "bloques_usados": sum(bloques_creados.values())  
+        # Otros datos de la partida...
+    }
+    
+     # Ruta del archivo donde se guardará la partida
+    archivo_partida = "partida.json"
+
+    # Guardar los datos en el archivo JSON
+    with open(archivo_partida, 'w') as archivo:
+        json.dump(datos_partida, archivo)
+        print("datos guardados")
+
+
+"""
+# Función para cargar partida
+def cargar_partida():
+    archivo_partida = "partida.json"
+    try:
+        with open(archivo_partida, 'r') as archivo:
+            datos_partida = json.load(archivo)
+        return datos_partida
+    except FileNotFoundError:
+        # Manejar la excepción si el archivo no existe
+        return None
+
+# Cuando quieras cargar la partida
+datos_cargados = cargar_partida()
+if datos_cargados:
+    # Procesar los datos para restaurar la partida
+    if "posicion_atacante" in datos_cargados:
+        posicion_atacante = datos_cargados["posicion_atacante"]
+        atacante = Atacante(posicion_atacante)
+
+    if "posicion_defensor" in datos_cargados:
+        posicion_defensor = datos_cargados["posicion_defensor"]
+        defensor = Defensor(posicion_defensor)
+
+    if "bloques_colocados" in datos_cargados:
+        bloques_colocados = datos_cargados["bloques_colocados"]
+
+    # Puedes restaurar otros datos como la munición, etc.
+
+    # Continuar con el juego restaurado
+else:
+    
+    # Manejar el caso en el que no se encuentra una partida guardada
+    # Puedes crear nuevos personajes y configuraciones iniciales aquí si no hay datos guardados
+    atacante = Atacante((screen_width // 2, screen_height // 2))
+    defensor = Defensor((screen_width // 3, screen_height // 3))
+    bloques_colocados = {}  # Inicializar bloques en blanco o con datos iniciales
+    # Resto de la configuración inicial del juego
+"""
+    
 if __name__ == "__main__":
     # Bucle principal del juego
     animacion = None
@@ -586,7 +718,10 @@ if __name__ == "__main__":
                 atacante.cambiar_tipo_munición("hielo")
             elif keys[K_r]:
                 atacante.cambiar_tipo_munición("bomba")
-
+            if keys[K_b]:
+                guardar_partida()
+                save()
+                
             if keys[K_m]:
                 pause()
 
@@ -794,3 +929,6 @@ if __name__ == "__main__":
 
         # velocidad de fotogramas a 60 fps
         clock.tick(60)
+        
+# Cuando quieras guardar la partida
+guardar_partida()
