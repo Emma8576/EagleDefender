@@ -289,7 +289,7 @@ def menu_login():
                                   font=fuente_retro_5, 
                                   relief="raised",
                                   borderwidth=10,
-                                  command="")
+                                  command=partidas_guardadas)
     boton_partidas_guardadas.place(relx=0.5, rely=0.5 + 0.10 + espacio_entre_botones / 200, anchor='center')
 
     # Botón de Salir
@@ -326,7 +326,7 @@ def menu_login():
                                     fg="white",
                                     font=("System 18 bold"),
                                     relief="raised",
-                                    command=ventana_playlist)
+                                    command=ventana_music)
     boton_configuración.pack()
     boton_configuración.place(x=0, y=728, height=40, width=200)
 
@@ -408,7 +408,7 @@ def cargar_idioma():
 
 #####################################
 # Funcion para la ventana de la playlist 
-
+"""
 def ventana_playlist():
     global ventana_playlist, seleccion
     ventana_playlist = tk.Toplevel(ventana_1)
@@ -448,7 +448,7 @@ def ventana_playlist():
 
 
 ###############################
-
+"""
 # Función para abrir configuración
 
 def abrir_configuracion():
@@ -1082,71 +1082,6 @@ def verificar_contraseña():
                 else:
                     messagebox.showerror(title="Aviso", message="El nombre de usuario no puede tener más de 10 caracteres")
 
-def verificar_correo(correo):
-    try:
-        # Conectar a la base de datos
-        bd = pymysql.connect(
-            host="localhost",
-            user="root",
-            password="",
-            db="bd1"
-        )
-        cursor = bd.cursor()
-
-        # Ejecutar una consulta para verificar si el correo ya existe en la tabla "login"
-        query = "SELECT * FROM login WHERE correo = %s"
-        cursor.execute(query, (correo,))
-
-        # Obtener el resultado de la consulta
-        resultado = cursor.fetchone()
-
-        if resultado:
-            # El correo ya existe en la base de datos
-            return True
-        else:
-            # El correo no existe en la base de datos
-            return False
-
-    except Exception as e:
-        print("Error al verificar el correo:", e)
-        return False
-    finally:
-        cursor.close()
-        bd.close()
-
-
-def verificar_usuario(usuario):
-    try:
-        # Conectar a la base de datos
-        bd = pymysql.connect(
-            host="localhost",
-            user="root",
-            password="",
-            db="bd1"
-        )
-        cursor = bd.cursor()
-
-        # Ejecutar una consulta para verificar si el nombre de usuario ya existe en la tabla "login"
-        query = "SELECT * FROM login WHERE Usuario = %s"
-        cursor.execute(query, (usuario,))
-
-        # Obtener el resultado de la consulta
-        resultado = cursor.fetchone()
-
-        if resultado:
-            # El nombre de usuario ya existe en la base de datos
-            return True
-        else:
-            # El nombre de usuario no existe en la base de datos
-            return False
-
-    except Exception as e:
-        print("Error al verificar el nombre de usuario:", e)
-        return False
-    finally:
-        cursor.close()
-        bd.close()
-
     
 # función interfaz para recuperar contraseña
 def recuperar_contrasena():
@@ -1176,6 +1111,7 @@ def recuperar_contrasena():
 
     # Etiqueta de registro del juego
     global etiqueta_4
+
     ancho_pantalla = ventana_4.winfo_screenwidth()
     etiqueta_4 = Label(ventana_4,
                        text="Cambia tu contraseña",
@@ -1352,18 +1288,131 @@ def recuperar_contrasena():
 
     ventana_4.mainloop()
 
-
-# Función para volver atrás
-def volver_atras():
-    global ventana_2
-    if ventana_2:
-        ventana_2.withdraw()
+def partidas_guardadas():
+    # Crear una instancia de la ventana secundaria
+    global ventana_partidas
+    ventana_partidas = Toplevel(ventana_1)
+    ventana_partidas.attributes("-fullscreen", True)
     if ventana_1:
-        ventana_1.deiconify()
+        ventana_1.withdraw()
+        
+    ancho_pantalla_1 = ventana_partidas.winfo_screenwidth()   
+    
+    # Cargar imagen de fondo en la ventana principal
+    cargar_imagen_de_fondo(ventana_partidas, "loginImages/fondo1.png")
+
+     # Etiqueta con el nombre del juego
+    etiqueta_retro = Label(ventana_partidas,
+                           text="Battle City",
+                           bg="#000030",
+                           font=fuente_retro, 
+                           fg="white")
+    etiqueta_retro.place(relx=0.5, rely=0.5 + 0.05, anchor='center')
+    etiqueta_retro.pack()
+    
+    etiqueta_titulo = Label(ventana_partidas,
+                    text="Recuperar partida",
+                    bg="#101654",
+                    fg="white",
+                    font=fuente_retro_1)
+    
+    boton_atras_3 = Button(ventana_partidas,
+                          text="Atrás", 
+                          height="3",
+                          width="30",
+                          background="#0a0c3f",
+                          fg="white",
+                          font=fuente_retro_5, 
+                          relief="raised", 
+                          borderwidth=10, 
+                          command=volver_atras)
+    
+        # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_1 - etiqueta_titulo.winfo_reqwidth()) // 2
+    etiqueta_titulo.place(x=x, y=150)
+    
+            # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_1 - boton_atras_3.winfo_reqwidth()) // 2
+    boton_atras_3.place(x=x, y=550)
+    
+# Crear una Listbox para mostrar las partidas
+    listbox = Listbox(ventana_partidas, width=50, height=3, background="navy", foreground="white", font=("Arial", 25))
+    listbox.pack(pady=200)
+
+    # Obtener la lista de partidas guardadas (reemplaza esto con tus datos reales)
+    partidas_guardadas = ["Partida 1", "Partida 2", "Partida 3"]
+
+    # Agregar las partidas guardadas a la Listbox
+    for partida in partidas_guardadas:
+        listbox.insert(tk.END, partida)
 
 
 "*******************************************************/Conexiones y modificaciones con base de datos************************************************************"
 
+def verificar_correo(correo):
+    try:
+        # Conectar a la base de datos
+        bd = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            db="bd1"
+        )
+        cursor = bd.cursor()
+
+        # Ejecutar una consulta para verificar si el correo ya existe en la tabla "login"
+        query = "SELECT * FROM login WHERE correo = %s"
+        cursor.execute(query, (correo,))
+
+        # Obtener el resultado de la consulta
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # El correo ya existe en la base de datos
+            return True
+        else:
+            # El correo no existe en la base de datos
+            return False
+
+    except Exception as e:
+        print("Error al verificar el correo:", e)
+        return False
+    finally:
+        cursor.close()
+        bd.close()
+
+
+def verificar_usuario(usuario):
+    try:
+        # Conectar a la base de datos
+        bd = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            db="bd1"
+        )
+        cursor = bd.cursor()
+
+        # Ejecutar una consulta para verificar si el nombre de usuario ya existe en la tabla "login"
+        query = "SELECT * FROM login WHERE Usuario = %s"
+        cursor.execute(query, (usuario,))
+
+        # Obtener el resultado de la consulta
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # El nombre de usuario ya existe en la base de datos
+            return True
+        else:
+            # El nombre de usuario no existe en la base de datos
+            return False
+
+    except Exception as e:
+        print("Error al verificar el nombre de usuario:", e)
+        return False
+    finally:
+        cursor.close()
+        bd.close()
 
 def insertar_datos():
     global config
@@ -1483,9 +1532,11 @@ archivo_temporal_siguiente = "musica_temp/temp_cancion_siguiente.mp3"
 reproduccion_pausada = False
 ubicacion_temporal = os.path.expanduser("~")
 
-def ventana_playlist():
+def ventana_music():
     global ventana_playlist
     ventana_playlist = tk.Toplevel(ventana_1)
+    # Obtener el ancho de la pantalla
+    ancho_pantalla_2 = ventana_playlist.winfo_screenwidth()
     ventana_playlist.attributes("-fullscreen", True)
     cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
 
@@ -1665,7 +1716,22 @@ def ventana_playlist():
                 os.remove(archivo_temporal_actual)
             if os.path.exists(archivo_temporal_siguiente):
                 os.remove(archivo_temporal_siguiente)
-
+    
+    # Etiqueta con el nombre del juego
+    etiqueta_P = Label(ventana_playlist,
+                           text="Battle City",
+                           bg="#000030",
+                           font=fuente_retro, 
+                           fg="white")
+    etiqueta_P.place(relx=0.5, rely=0.5 + 0.05, anchor='center')
+    etiqueta_P.pack()
+         
+    etiqueta_playlist = Label(ventana_playlist,
+                        text="Playlist General",
+                        bg="#101654",
+                        fg="white",
+                        font=fuente_retro_1)
+    
     # Crear un botón para seleccionar y guardar la canción
     boton_seleccionar = tk.Button(ventana_playlist,
                                   text="Seleccionar y Guardar Canción",
@@ -1689,19 +1755,56 @@ def ventana_playlist():
     lista_canciones.configure(font=fuente)
     for nombre in nombres_canciones:
         lista_canciones.insert(tk.END, nombre)
-    lista_canciones.pack(padx=20, pady=10)
+    lista_canciones.pack(padx=20, pady=150)
 
     # Asociar la función de selección a la lista
     lista_canciones.bind('<<ListboxSelect>>', seleccionar_cancion)
 
     # Crear un botón para pausar o reanudar la reproducción
     boton_pausar_reanudar = tk.Button(ventana_playlist,
-                                      text="Pausar/Reanudar",
-                                      command=pausar_reanudar,
-                                      font=("Arial", 16),
-                                      bg="blue",
-                                      fg="white")
-    boton_pausar_reanudar.pack(padx=20, pady=10)
+                                    text="Pausa/Reanudar", 
+                                    height="3",
+                                    width="30",
+                                    background="#0a0c3f",
+                                    fg="white",
+                                    font=fuente_retro_5, 
+                                    relief="raised", 
+                                    borderwidth=10,
+                                    command=pausar_reanudar)
+    
+        # Crear un botón para pausar o reanudar la reproducción
+    boton_atras = tk.Button(ventana_playlist,
+                            text="Atrás", 
+                            height="3",
+                            width="30",
+                            background="#0a0c3f",
+                            fg="white",
+                            font=fuente_retro_5, 
+                            relief="raised", 
+                            borderwidth=10,
+                            command=volver_atras)
+    
+    # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_2 - boton_atras.winfo_reqwidth()) // 2
+    boton_atras.place(x=x, y=650)
+    
+        # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_2 - lista_canciones.winfo_reqwidth()) // 2
+    lista_canciones.place(x=x, y=250)
+    
+    # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_2 - boton_pausar_reanudar.winfo_reqwidth()) // 2
+    boton_pausar_reanudar.place(x=x, y=550)
+    
+    # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_2 - boton_seleccionar.winfo_reqwidth()) // 2
+    boton_seleccionar.place(x=x, y=200)
+    
+    # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
+    x = (ancho_pantalla_2 - etiqueta_playlist.winfo_reqwidth()) // 2
+    etiqueta_playlist.place(x=x, y=120)
+    
+    
 ######################################## TERMINA LO DE LA PLAYLIST ######################
 
 ######################################## CALIFICAR ###################################
@@ -1800,6 +1903,21 @@ def actualiza_contraseña():
         boton_configuración.pack()
         boton_configuración.place(x=0, y=0, height=40, width=200)
 
+
+# Función para volver atrás
+def volver_atras():
+    global ventana_2
+    if ventana_2:
+        ventana_2.withdraw()
+        
+    if ventana_playlist:
+        ventana_playlist.destroy()
+    
+        if ventana_partidas:
+            ventana_partidas.destroy()
+    
+    if ventana_1:
+        ventana_1.deiconify()
 
 inicio_partida()
 # LOS MILTONEANOS
