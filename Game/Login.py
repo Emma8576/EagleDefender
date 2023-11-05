@@ -2,12 +2,16 @@ import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from tkinter import filedialog
 import os
 import pymysql
 import json
 import pygame
 import subprocess
 import time
+import random
+from pygame import mixer
+
 # hacer variables de fuentes globales
 global fuente_retro
 global fuente_retro_1
@@ -36,7 +40,7 @@ usuario_2 = ""
 
 # Variable global para control de nivel de volumen
 pygame.init()
-
+mixer.init()
 
 # Esta función leerá el valor del volumen guardado
 def leer_volumen():
@@ -1156,6 +1160,18 @@ def validar_datos():
 
 
 ##################### LA PLAYLIST ############################
+cancion_actual = None
+reproductor = None
+# Variable para mantener un registro del estado de la reproducción
+reproduccion_pausada = False
+posicion_reproduccion = 0 
+# Variables para almacenar los nombres de los archivos temporales
+archivo_temporal_actual = "musica_temp/temp_cancion_actual.mp3"
+archivo_temporal_siguiente = "musica_temp/temp_cancion_siguiente.mp3"
+
+# Variable para mantener un registro del estado de la reproducción
+reproduccion_pausada = False
+ubicacion_temporal = os.path.expanduser("~")
 
 def ventana_playlist():
     global ventana_playlist
@@ -1163,54 +1179,205 @@ def ventana_playlist():
     ventana_playlist.attributes("-fullscreen", True)
     cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
 
-    # Conexión con la base de datos local
-    bd = pymysql.connect(
-        host="localhost",
-        user="root",
-        password="",
-        db="bd1")
+        # Función para guardar una canción en la base de datos y actualizar la lista
+    def guardar_cancion_en_db_y_actualizar_lista(nombre_cancion, file_path):
+        conexion = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="bd1",
+            charset="utf8",
+            connect_timeout=60
+        )
 
-    texto2 = tk.Label(ventana_playlist, text="Por favor ingrese cinco canciones:")  # Botón para ir al menú
-    texto2.place(x=370, y=50)  # Posición
-    texto2.config(width="27", height="1")  # letra
-    texto2.config(font=("System 30 bold"))  #
-    texto2.config(bg="#F4BFAD")  # Color de fondo
-    texto2.config(fg="#000A24")
-    texto2.config(relief="raised", borderwidth=10)
+        try:
+            with conexion.cursor() as cursor:
+                with open(file_path, 'rb') as archivo:
+                    contenido = archivo.read()
+                consulta = "INSERT INTO canciones (nombre_cancion, archivo_cancion) VALUES (%s, %s)"
+                cursor.execute(consulta, (nombre_cancion, contenido))
+                conexion.commit()
+                
+                # Agregar el nombre de la canción a la lista
+                nombres_canciones.append(nombre_cancion)
+                
+                # Actualizar la lista en el Listbox
+                lista_canciones.delete(0, tk.END)
+                for nombre in nombres_canciones:
+                    lista_canciones.insert(tk.END, nombre)
+        finally:
+            conexion.close()
+            
+    def seleccionar_siguiente_cancion_aleatoria():
+        global cancion_actual, reproductor, archivo_temporal_actual, archivo_temporal_siguiente, reproduccion_pausada
 
-    # boton para devolverse al menu
-    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command=salir, fg="snow", bg="SkyBlue3",
-                                        relief="sunken", font=("System 30 bold"), cursor="exchange")
-    boton_devolver_playlist.pack()
-    boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
+        if cancion_actual is not None and reproductor is not None and not reproductor.get_busy():
+            # Selección aleatoria de la siguiente canción
+            siguiente_cancion = random.choice(nombres_canciones)
+            print(f"Siguiente canción aleatoria seleccionada: {siguiente_cancion}")
 
-    # Cuadro de texto para ingresar el nombre de usuario
-    cuadro_usuario = tk.Entry(ventana_playlist)
-    cuadro_usuario.place(x=370, y=350)
+            # Conectar a la base de datos y obtener el archivo de la canción
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1",
+                charset="utf8",
+                connect_timeout=60
+            )
 
-    # Cuadro de texto para ingresar las canciones
-    cuadro_canciones = tk.Text(ventana_playlist, height=5, width=30)
-    cuadro_canciones.place(x=370, y=400)
+            try:
+                with conexion.cursor() as cursor:
+                    consulta = "SELECT archivo_cancion FROM canciones WHERE nombre_cancion = %s"
+                    cursor.execute(consulta, (siguiente_cancion,))
+                    resultado = cursor.fetchone()
+                    if resultado:
+                        # Guardar la nueva canción en el archivo temporal siguiente
+                        with open(archivo_temporal_siguiente, "wb") as archivo_temporal:
+                            archivo_temporal.write(resultado[0])
+                        # Reproducir la nueva canción desde el archivo temporal siguiente
+                        reproductor = mixer.music
+                        reproductor.load(archivo_temporal_siguiente)
+                        reproductor.play()
+                        cancion_actual = siguiente_cancion
+                        archivo_en_reproduccion = archivo_temporal_siguiente  # Actualizar el archivo en reproducción
+                        reproduccion_pausada = False
 
-    # Botón para guardar las canciones y el nombre de usuario en la base de datos
-    boton_guardar = tk.Button(ventana_playlist, text="Guardar",
-                              command=lambda: guardar_canciones(bd, cuadro_usuario, cuadro_canciones))
-    boton_guardar.place(x=370, y=500)
+                        # Intercambiar los nombres de los archivos temporales
+                        archivo_temporal_actual, archivo_temporal_siguiente = archivo_temporal_siguiente, archivo_temporal_actual
+                    else:
+                        print("La canción no se encontró en la base de datos.")
+            finally:
+                conexion.close()
+                
+    # Función para seleccionar y guardar música
+    def seleccionar_y_guardar_musica():
+        file_path = filedialog.askopenfilename(title="Seleccione una canción",
+                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
+        if file_path:
+            nombre_cancion = os.path.basename(file_path)  
+            guardar_cancion_en_db_y_actualizar_lista(nombre_cancion, file_path)
+            print(f"Canción '{nombre_cancion}' guardada en la base de datos y actualizada en la lista.")
 
+    # Función para cargar nombres de canciones desde la base de datos
+    def cargar_nombres_canciones():
+        conexion = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="bd1",
+            charset="utf8",
+            connect_timeout=60
+        )
 
-def guardar_canciones(bd, cuadro_usuario, cuadro_canciones):
-    nombre_usuario = cuadro_usuario.get()  # Obtén el nombre de usuario del cuadro de texto
-    canciones = cuadro_canciones.get("1.0", "end-1c")  # Obtiene el texto del cuadro de texto de canciones
+        try:
+            with conexion.cursor() as cursor:
+                consulta = "SELECT nombre_cancion FROM canciones"
+                cursor.execute(consulta)
+                resultados = cursor.fetchall()
+                nombres = [resultado[0] for resultado in resultados]
+                return nombres
+        finally:
+            conexion.close()
 
-    # Crea una instancia de cursor y ejecuta la inserción en la base de datos
-    cursor = bd.cursor()
-    cursor.execute("INSERT INTO canciones (usuario, canciones) VALUES (%s, %s)", (nombre_usuario, canciones))
-    bd.commit()
+    # Función para pausar o reanudar la reproducción
+    def pausar_reanudar():
+        global reproduccion_pausada
 
-    # Cierra la conexión a la base de datos
-    bd.close()
+        if not reproduccion_pausada:
+            pygame.mixer.music.pause()
+            reproduccion_pausada = True
+        else:
+            pygame.mixer.music.unpause()
+            reproduccion_pausada = False
+                    
 
+    def seleccionar_cancion(event):
+        global cancion_actual, reproductor, archivo_temporal_actual, archivo_temporal_siguiente, reproduccion_pausada
 
+        if cancion_actual is not None and reproductor is not None and reproductor.get_busy():
+            reproductor.stop()
+
+        seleccion = lista_canciones.get(lista_canciones.curselection())
+        print(f"Canción seleccionada: {seleccion}")
+
+        # Conectar a la base de datos y obtener el archivo de la canción
+        conexion = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="bd1",
+            charset="utf8",
+            connect_timeout=60
+        )
+
+        try:
+            with conexion.cursor() as cursor:
+                consulta = "SELECT archivo_cancion FROM canciones WHERE nombre_cancion = %s"
+                cursor.execute(consulta, (seleccion,))
+                resultado = cursor.fetchone()
+                if resultado:
+                    # Guardar la nueva canción en el archivo temporal siguiente
+                    with open(archivo_temporal_siguiente, "wb") as archivo_temporal:
+                        archivo_temporal.write(resultado[0])
+                    # Reproducir la nueva canción desde el archivo temporal siguiente
+                    reproductor = mixer.music
+                    reproductor.load(archivo_temporal_siguiente)
+                    reproductor.play()
+                    cancion_actual = seleccion
+                    archivo_en_reproduccion = archivo_temporal_siguiente  # Actualizar el archivo en reproducción
+                    reproduccion_pausada = False
+
+                    # Intercambiar los nombres de los archivos temporales
+                    archivo_temporal_actual, archivo_temporal_siguiente = archivo_temporal_siguiente, archivo_temporal_actual
+                else:
+                    print("La canción no se encontró en la base de datos.")
+        finally:
+            conexion.close()
+
+        # Llamar a la función para seleccionar la siguiente canción aleatoria cuando la actual termine
+        reproductor.set_endevent(pygame.USEREVENT)
+        pygame.mixer.music.set_endevent(pygame.USEREVENT)
+        pygame.mixer.music.queue(archivo_temporal_siguiente)
+
+    # Configurar el evento de canción terminada
+    pygame.mixer.music.set_endevent(pygame.USEREVENT + 1)
+        
+    # Función para detener la reproducción
+    def detener_reproduccion():
+        global cancion_actual, reproductor, archivo_temporal_actual, archivo_temporal_siguiente
+
+        if cancion_actual is not None and reproductor is not None and reproductor.get_busy():
+            reproductor.stop()
+            cancion_actual = None
+            # Eliminar el archivo temporal actual y siguiente si existen
+            if os.path.exists(archivo_temporal_actual):
+                os.remove(archivo_temporal_actual)
+            if os.path.exists(archivo_temporal_siguiente):
+                os.remove(archivo_temporal_siguiente)
+
+    # Crear un botón para seleccionar y guardar la canción
+    boton_seleccionar = tk.Button(ventana_playlist, text="Seleccionar y Guardar Canción", command=seleccionar_y_guardar_musica, font=("Arial", 16), bg="green", fg="white")
+    boton_seleccionar.pack(padx=20, pady=10)
+
+    # Crear un Listbox para mostrar los nombres de las canciones
+    fuente = ("Arial", 15)  
+    nombres_canciones = cargar_nombres_canciones()
+
+    global lista_canciones
+
+    lista_canciones = tk.Listbox(ventana_playlist, height=10, width=100, bg="navy", fg="white") 
+    lista_canciones.configure(font=fuente)
+    for nombre in nombres_canciones:
+        lista_canciones.insert(tk.END, nombre)
+    lista_canciones.pack(padx=20, pady=10)
+
+    # Asociar la función de selección a la lista
+    lista_canciones.bind('<<ListboxSelect>>', seleccionar_cancion)
+
+    # Crear un botón para pausar o reanudar la reproducción
+    boton_pausar_reanudar = tk.Button(ventana_playlist, text="Pausar/Reanudar", command=pausar_reanudar, font=("Arial", 16), bg="blue", fg="white")
+    boton_pausar_reanudar.pack(padx=20, pady=10)
 ######################################## TERMINA LO DE LA PLAYLIST ######################
 
 ######################################## CALIFICAR ###################################
