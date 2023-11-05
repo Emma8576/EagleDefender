@@ -776,43 +776,139 @@ def registro():
     ventana_3.mainloop()
 
 
-# Función para establecer logitud de 8 caracteres a la contraseña
 def verificar_contraseña():
     global config
     usuario = nombre_usuario_entry.get()
     contrasena = contrasena_usuario_entry.get()
-
-    # se comprueba una longitud adecuada para el nombre de usuario
-    if len(usuario) <= 10:
-        if len(contrasena) >= 8:
-            insertar_datos()
-            # Eliminar el contenido de los campos una vez se haya completado el registro
+    correo = correo_usuario_entry.get()
+    usuario = nombre_usuario_entry.get()
+    
+    if verificar_usuario(usuario):
+        if config["idioma"] == "inglés":
+            messagebox.showerror(title="Aviso", message="Username is already taken")
             nombre_usuario_entry.delete(0, END)
             correo_usuario_entry.delete(0, END)
             contrasena_usuario_entry.delete(0, END)
-
-            # Botón de inicio de sesion de la ventana de registro
-            global boton_inicio_sesion
-            boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181",
-                                         fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
-                                         command=inicio_sesion)
-            boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
         else:
-            global messagebox
-            if config["idioma"] == "inglés":
-                messagebox.showerror(title="Aviso", message="Password must have at least 8 characters")
-            else:
-                messagebox.showerror(title="Aviso", message="La contraseña debe tener almenos 8 caracteres")
+            messagebox.showerror(title="Aviso", message="El nombre de usuario ya ha sido registrado anteriormente")
+            nombre_usuario_entry.delete(0, END)
+            correo_usuario_entry.delete(0, END)
+            contrasena_usuario_entry.delete(0, END)
     else:
-        # Eliminar el contenido de los campos una vez se haya completado el registro
-        nombre_usuario_entry.delete(0, END)
-        correo_usuario_entry.delete(0, END)
-        contrasena_usuario_entry.delete(0, END)
-        if config["idioma"] == "inglés":
-            messagebox.showerror(title="Aviso", message="Username cannot be longer than 10 characters")
+        if verificar_correo(correo):
+            if config["idioma"] == "inglés":
+                messagebox.showerror(title="Aviso", message="Email is already registered")
+                nombre_usuario_entry.delete(0, END)
+                correo_usuario_entry.delete(0, END)
+                contrasena_usuario_entry.delete(0, END)
+            else:
+                messagebox.showerror(title="Aviso", message="El correo ingresado ya ha sido registrado anteriormente")
+                nombre_usuario_entry.delete(0, END)
+                correo_usuario_entry.delete(0, END)
+                contrasena_usuario_entry.delete(0, END)
         else:
-            messagebox.showerror(title="Aviso", message="El nombre de usuario no puede tener más de 10 caracteres")
+            # Continuar con la verificación de la contraseña y el registro
+            if len(usuario) <= 10:
+                if len(contrasena) >= 8:
+                    insertar_datos()
+                    # Eliminar el contenido de los campos una vez se haya completado el registro
+                    nombre_usuario_entry.delete(0, END)
+                    correo_usuario_entry.delete(0, END)
+                    contrasena_usuario_entry.delete(0, END)
 
+                    # Botón de inicio de sesión de la ventana de registro
+                    global boton_inicio_sesion
+                    boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181",
+                                                fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
+                                                command=inicio_sesion)
+                    boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
+                else:
+                    if config["idioma"] == "inglés":
+                        messagebox.showerror(title="Aviso", message="Password must have at least 8 characters")
+                        nombre_usuario_entry.delete(0, END)
+                        correo_usuario_entry.delete(0, END)
+                        contrasena_usuario_entry.delete(0, END)
+                    else:
+                        messagebox.showerror(title="Aviso", message="La contraseña debe tener al menos 8 caracteres")
+                        nombre_usuario_entry.delete(0, END)
+                        correo_usuario_entry.delete(0, END)
+                        contrasena_usuario_entry.delete(0, END)
+            else:
+                # Eliminar el contenido de los campos una vez se haya completado el registro
+                nombre_usuario_entry.delete(0, END)
+                correo_usuario_entry.delete(0, END)
+                contrasena_usuario_entry.delete(0, END)
+                if config["idioma"] == "inglés":
+                    messagebox.showerror(title="Aviso", message="Username cannot be longer than 10 characters")
+                else:
+                    messagebox.showerror(title="Aviso", message="El nombre de usuario no puede tener más de 10 caracteres")
+
+def verificar_correo(correo):
+    try:
+        # Conectar a la base de datos
+        bd = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            db="bd1"
+        )
+        cursor = bd.cursor()
+
+        # Ejecutar una consulta para verificar si el correo ya existe en la tabla "login"
+        query = "SELECT * FROM login WHERE correo = %s"
+        cursor.execute(query, (correo,))
+
+        # Obtener el resultado de la consulta
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # El correo ya existe en la base de datos
+            return True
+        else:
+            # El correo no existe en la base de datos
+            return False
+
+    except Exception as e:
+        print("Error al verificar el correo:", e)
+        return False
+    finally:
+        cursor.close()
+        bd.close()
+
+
+def verificar_usuario(usuario):
+    try:
+        # Conectar a la base de datos
+        bd = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            db="bd1"
+        )
+        cursor = bd.cursor()
+
+        # Ejecutar una consulta para verificar si el nombre de usuario ya existe en la tabla "login"
+        query = "SELECT * FROM login WHERE Usuario = %s"
+        cursor.execute(query, (usuario,))
+
+        # Obtener el resultado de la consulta
+        resultado = cursor.fetchone()
+
+        if resultado:
+            # El nombre de usuario ya existe en la base de datos
+            return True
+        else:
+            # El nombre de usuario no existe en la base de datos
+            return False
+
+    except Exception as e:
+        print("Error al verificar el nombre de usuario:", e)
+        return False
+    finally:
+        cursor.close()
+        bd.close()
+
+    
 # función interfaz para recuperar contraseña
 def recuperar_contrasena():
     global ventana_4, seleccion
