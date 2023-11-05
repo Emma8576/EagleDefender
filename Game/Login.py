@@ -211,25 +211,35 @@ def menu_login():
         # cargar_imagen_de_fondo(ventana_como_Jugar, "loginImages/fondo1.png")
 
         # Etiqueta para mostrar las instrucciones
-        label = tk.Label(ventana_como_Jugar, text=instrucciones, justify="left", font=("Arial", 12))
+        label = tk.Label(ventana_como_Jugar, text=instrucciones,
+                         justify="left",
+                         font=("Arial", 12))
         label.pack(padx=20, pady=20)
 
         # Botón para cerrar la ventana
-        boton_cerrar = tk.Button(ventana_como_Jugar, text="Cerrar", command=cerrar_ventana)
+        boton_cerrar = tk.Button(ventana_como_Jugar,
+                                 text="Cerrar",
+                                 command=cerrar_ventana)
         boton_cerrar.pack(pady=10)
 
         # Iniciar el bucle principal de la ventana
         ventana_como_Jugar.mainloop()
 
     # Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana_1, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_1, text="Battle City",
+                           bg="#000030",
+                           font=fuente_retro,
+                           fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center')
     etiqueta_retro.pack()
 
     # Etiqueta de acceder al juego
     ancho_pantalla = ventana_1.winfo_screenwidth()
     global etiqueta
-    etiqueta = Label(ventana_1, text="Acceder al juego", bg="#101654", fg="white", font=fuente_retro_3)
+    etiqueta = Label(ventana_1, text="Acceder al juego",
+                     bg="#101654",
+                     fg="white",
+                     font=fuente_retro_3)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta.winfo_reqwidth()) // 2
@@ -237,8 +247,15 @@ def menu_login():
 
     # Botón de Iniciar Sesión
     global boton_inicio
-    boton_inicio = tk.Button(ventana_1, cursor="exchange", text="Iniciar Sesión", height="4", width="30",
-                             background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised", borderwidth=10,
+    boton_inicio = tk.Button(ventana_1,
+                             cursor="exchange",
+                             text="Iniciar Sesión",
+                             height="4", width="30",
+                             background="#0a0c3f",
+                             fg="white",
+                             font=fuente_retro_5,
+                             relief="raised",
+                             borderwidth=10,
                              command=inicio_sesion)
     boton_inicio.place(relx=0.5, rely=0.5, anchor='center')
 
@@ -247,32 +264,66 @@ def menu_login():
 
     # Botón de Registrarse
     global boton_registrarse
-    boton_registrarse = tk.Button(ventana_1, cursor="exchange", text="Registrarse", height="4", background="#0a0c3f",
-                                  fg="white", width="30", font=fuente_retro_5, relief="raised", borderwidth=10,
+    boton_registrarse = tk.Button(ventana_1,
+                                  cursor="exchange",
+                                  text="Registrarse",
+                                  height="4",
+                                  background="#0a0c3f",
+                                  fg="white",
+                                  width="30",
+                                  font=fuente_retro_5, 
+                                  relief="raised",
+                                  borderwidth=10,
                                   command=registro)
     boton_registrarse.place(relx=0.5, rely=0.5 + espacio_entre_botones / 200, anchor='center')
 
     # Botón de Salir
     global boton_salir
-    boton_salir = tk.Button(ventana_1, cursor="exchange", text="Salir", height="4", width="30", background="#0a0c3f",
-                            fg="white", font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_ventana_inicio)
+    boton_salir = tk.Button(ventana_1,
+                            cursor="exchange",
+                            text="Salir",
+                            height="4",
+                            width="30",
+                            background="#0a0c3f",
+                            fg="white",
+                            font=fuente_retro_5,
+                            relief="raised",
+                            borderwidth=10,
+                            command=volver_ventana_inicio)
     boton_salir.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones / 100, anchor='center')
 
     global boton_configuración
-    boton_configuración = tk.Button(ventana_1, cursor="exchange", text="Configuración", background="#0a0c3f",
-                                    fg="white", font="System 18 bold", relief="raised", command=abrir_configuracion)
+    boton_configuración = tk.Button(ventana_1,
+                                    cursor="exchange",
+                                    text="Configuración",
+                                    background="#0a0c3f",
+                                    fg="white",
+                                    font="System 18 bold",
+                                    relief="raised", 
+                                    command=abrir_configuracion)
     boton_configuración.pack()
     boton_configuración.place(x=0, y=0, height=40, width=200)
 
     global boton_playlist
-    boton_configuración = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white",
-                                    font=("System 18 bold"), relief="raised", command=ventana_playlist)
+    boton_configuración = tk.Button(ventana_1,
+                                    text="Playlist",
+                                    background="#0a0c3f",
+                                    fg="white",
+                                    font=("System 18 bold"),
+                                    relief="raised",
+                                    command=ventana_playlist)
     boton_configuración.pack()
     boton_configuración.place(x=0, y=728, height=40, width=200)
 
     global boton_comoJugar
-    boton_comoJugar = tk.Button(ventana_1, cursor="exchange", text="Cómo Jugar", background="#0a0c3f",
-                                fg="white", font=("System 18 bold"), relief="raised", command=como_Jugar)
+    boton_comoJugar = tk.Button(ventana_1,
+                                cursor="exchange",
+                                text="Cómo Jugar",
+                                background="#0a0c3f",
+                                fg="white",
+                                font=("System 18 bold"),
+                                relief="raised",
+                                command=como_Jugar)
     boton_comoJugar.pack()
     boton_comoJugar.place(x=0, y=60, height=40, width=200)
 
@@ -351,9 +402,17 @@ def ventana_playlist():
 
     global etiqueta_playlist
     ancho_pantalla = ventana_playlist.winfo_screenwidth()
-    etiqueta_playlist = Label(ventana_playlist, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
+    etiqueta_playlist = Label(ventana_playlist,
+                              text="Configuración",
+                              bg="#101654", 
+                              fg="white",
+                              font=("System 30 bold"))
 
-    etiqueta_retro2 = Label(ventana_playlist, text="Battle City", bg="#000030", font=("System 30 bold"), fg="white")
+    etiqueta_retro2 = Label(ventana_playlist,
+                            text="Battle City",
+                            bg="#000030",
+                            font=("System 30 bold"),
+                            fg="white")
     etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center')
     etiqueta_retro2.pack()
 
@@ -361,8 +420,14 @@ def ventana_playlist():
         ventana_playlist.destroy()
 
     # boton para devolverse al menu
-    boton_devolver_playlist = tk.Button(ventana_playlist, text="Volver", command="salir_playlist", fg="snow",
-                                        bg="SkyBlue3", relief="sunken", font=("System 30 bold"), cursor="exchange")
+    boton_devolver_playlist = tk.Button(ventana_playlist,
+                                        text="Volver",
+                                        command="salir_playlist",
+                                        fg="snow",
+                                        bg="SkyBlue3",
+                                        relief="sunken",
+                                        font=("System 30 bold"),
+                                        cursor="exchange")
     boton_devolver_playlist.pack()
     boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
 
@@ -380,9 +445,16 @@ def abrir_configuracion():
 
     global etiqueta_4
     ancho_pantalla = ventana_configuracion.winfo_screenwidth()
-    etiqueta_4 = Label(ventana_configuracion, text="Configuración", bg="#101654", fg="white", font=("System 30 bold"))
+    etiqueta_4 = Label(ventana_configuracion,
+                       text="Configuración",
+                       bg="#101654", 
+                       fg="white",
+                       font=("System 30 bold"))
 
-    etiqueta_retro2 = Label(ventana_configuracion, text="Battle City", bg="#000030", font=("System 70 bold"),
+    etiqueta_retro2 = Label(ventana_configuracion,
+                            text="Battle City",
+                            bg="#000030",
+                            font=("System 70 bold"),
                             fg="white")
     etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center')
     etiqueta_retro2.pack()
@@ -392,12 +464,18 @@ def abrir_configuracion():
     etiqueta_4.place(x=x, y=120)
 
     global label_configuracion
-    label_configuracion = tk.Label(ventana_configuracion, text="Selecciona el idioma:", bg="#101654", fg="white",
+    label_configuracion = tk.Label(ventana_configuracion,
+                                   text="Selecciona el idioma:",
+                                   bg="#101654",
+                                   fg="white",
                                    font=("System 30 bold"))
     label_configuracion.place(x=700, y=240)
 
     global label_configuracion_volume
-    label_configuracion_volume = tk.Label(ventana_configuracion, text="Nivel de volumen:", bg="#101654", fg="white",
+    label_configuracion_volume = tk.Label(ventana_configuracion,
+                                          text="Nivel de volumen:",
+                                          bg="#101654",
+                                          fg="white",
                                           font=("System 30 bold"))
     label_configuracion_volume.place(x=250, y=240)
 
@@ -405,20 +483,35 @@ def abrir_configuracion():
     opciones_idioma = [("Español", "español"), ("Inglés", "inglés")]
 
     global opcion_español
-    opcion_español = tk.Radiobutton(ventana_configuracion, text="Español", variable=seleccion, value="español",
-                                    bg="#101654", fg="white", font=("System 30 bold"))
+    opcion_español = tk.Radiobutton(ventana_configuracion,
+                                    text="Español",
+                                    variable=seleccion,
+                                    value="español",
+                                    bg="#101654",
+                                    fg="white",
+                                    font=("System 30 bold"))
     opcion_español.pack(anchor="w")
     opcion_español.place(x=750, y=300)
 
     global opcion_ingles
-    opcion_ingles = tk.Radiobutton(ventana_configuracion, text="Inglés", variable=seleccion, value="inglés",
-                                   bg="#101654", fg="white", font=("System 30 bold"))
+    opcion_ingles = tk.Radiobutton(ventana_configuracion,
+                                   text="Inglés",
+                                   variable=seleccion,
+                                   value="inglés",
+                                   bg="#101654",
+                                   fg="white",
+                                   font=("System 30 bold"))
     opcion_ingles.pack(anchor="w")
     opcion_ingles.place(x=750, y=370)
 
     global boton_aceptar
-    boton_aceptar = tk.Button(ventana_configuracion, cursor="exchange", text="Aceptar", command=cargar_idioma,
-                              bg="#101654", fg="white", font=("System 20 bold"))
+    boton_aceptar = tk.Button(ventana_configuracion,
+                              cursor="exchange",
+                              text="Aceptar",
+                              command=cargar_idioma,
+                              bg="#101654",
+                              fg="white",
+                              font=("System 20 bold"))
     boton_aceptar.pack()
     boton_aceptar.place(x=750, y=450)
 
@@ -450,7 +543,8 @@ def abrir_configuracion():
 
     # Definicion de Botones para la ventana de configuración
     global boton1
-    boton1 = tk.Button(ventana_configuracion, text="Volver",  # Se configura el botón "Volver" de "Acerca de"
+    boton1 = tk.Button(ventana_configuracion,
+                       text="Volver",  # Se configura el botón "Volver" de "Acerca de"
                        command=salir,
                        fg="snow",
                        bg="#0e083e",
@@ -461,7 +555,8 @@ def abrir_configuracion():
     boton1.place(x=550, y=550, height=50, width=210)
 
     global boton2
-    boton2 = tk.Button(ventana_configuracion, text="Subir Volumen ⬆",  # Se configura el botón "Volver" de "Acerca de"
+    boton2 = tk.Button(ventana_configuracion,
+                       text="Subir Volumen ⬆",  # Se configura el botón "Volver" de "Acerca de"
                        command=subir_volumen,
                        fg="snow",
                        bg="#101654",
@@ -472,7 +567,8 @@ def abrir_configuracion():
     boton2.place(x=250, y=300, height=50, width=350)
 
     global boton3
-    boton3 = tk.Button(ventana_configuracion, text="Bajar Volumen ⬇",  # Se configura el botón "Volver" de "Acerca de"
+    boton3 = tk.Button(ventana_configuracion, 
+                       text="Bajar Volumen ⬇",  # Se configura el botón "Volver" de "Acerca de"
                        command=bajar_volumen,
                        fg="snow",
                        bg="#101654",
@@ -556,26 +652,42 @@ def inicio_sesion():
     seleccion.set(config["idioma"])
 
     # Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana_2, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_2,
+                           text="Battle City",
+                           bg="#000030", 
+                           font=fuente_retro,
+                           fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center')
     etiqueta_retro.pack()
 
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace
-    etiqueta_enlace = tk.Label(ventana_2, text="¿Olvidaste tu contraseña?", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace = tk.Label(ventana_2,
+                               text="¿Olvidaste tu contraseña?",
+                               cursor="hand2",
+                               bg="#000232",
+                               fg="white")
     etiqueta_enlace.place(relx=0.6, rely=0.6)
     etiqueta_enlace.bind("<Button-1>", lambda event: recuperar_contrasena())
 
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace2
-    etiqueta_enlace2 = tk.Label(ventana_2, text="Crea tu cuenta", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace2 = tk.Label(ventana_2,
+                                text="Crea tu cuenta",
+                                cursor="hand2",
+                                bg="#000232",
+                                fg="white")
     etiqueta_enlace2.place(relx=0.3 + 0.23, rely=0.6)
     etiqueta_enlace2.bind("<Button-1>", lambda event: registro())
 
     # Etiqueta de acceder al juego
     global etiqueta_1
     ancho_pantalla = ventana_2.winfo_screenwidth()
-    etiqueta_1 = Label(ventana_2, text="Inicio de Sesión", bg="#101654", fg="white", font=fuente_retro_2)
+    etiqueta_1 = Label(ventana_2,
+                       text="Inicio de Sesión",
+                       bg="#101654",
+                       fg="white",
+                       font=fuente_retro_2)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta_1.winfo_reqwidth()) // 2
@@ -589,13 +701,25 @@ def inicio_sesion():
 
     # Se agrega la etiqueta de usuario
     global etiqueta_usuario
-    etiqueta_usuario = Label(ventana_2, text="Usuario 1", bg="#1b0945", height="1", relief="ridge", fg="white",
-                             borderwidth=5, font=fuente_retro_4)
+    etiqueta_usuario = Label(ventana_2,
+                             text="Usuario 1",
+                             bg="#1b0945",
+                             height="1",
+                             relief="ridge",
+                             fg="white",
+                             borderwidth=5,
+                             font=fuente_retro_4)
 
     # Se agrega la etiqueta de contraseña
     global etiquetaContrasena
-    etiquetaContrasena = Label(ventana_2, text="Contraseña", bg="#1b0945", height="1", relief="ridge", fg="white",
-                               borderwidth=5, font=fuente_retro_4)
+    etiquetaContrasena = Label(ventana_2,
+                               text="Contraseña",
+                               bg="#1b0945",
+                               height="1",
+                               relief="ridge",
+                               fg="white",
+                               borderwidth=5,
+                               font=fuente_retro_4)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta_usuario.winfo_reqwidth()) // 2
@@ -614,15 +738,26 @@ def inicio_sesion():
     global nombre_usuario_entry1
     # Espacio para llenar usuari3
     nombre_usuario_verif = tk.StringVar()
-    nombre_usuario_entry1 = tk.Entry(ventana_2, textvariable=nombre_usuario_verif, bg="#9e2254", fg="white",
-                                     font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_entry1 = tk.Entry(ventana_2,
+                                     textvariable=nombre_usuario_verif,
+                                     bg="#9e2254",
+                                     fg="white",
+                                     font=fuente_retro_3, 
+                                     relief="groove", 
+                                     borderwidth=10, width=22)
     nombre_usuario_entry1.place(x=x_entry, y=300)
 
     global contrasena_usuario_entry1
     # Espacio para llenar contraseña
     contrasena_usuario_verif = tk.StringVar()
-    contrasena_usuario_entry1 = tk.Entry(ventana_2, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white",
-                                         show="*", font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
+    contrasena_usuario_entry1 = tk.Entry(ventana_2,
+                                         textvariable=contrasena_usuario_verif,
+                                         bg="#9e2254", 
+                                         fg="white",
+                                         show="*", 
+                                         font=fuente_retro_3,
+                                         relief="groove",
+                                         borderwidth=10, width=22)
     contrasena_usuario_entry1.place(x=x_entry, y=420)
 
     # Espacio entre botones
@@ -630,15 +765,29 @@ def inicio_sesion():
 
     # Botón de Iniciar sesión de la ventana inicio de sesión
     global boton_inicio_sesion
-    boton_inicio_sesion = Button(ventana_2, text="Iniciar Sesión", height="4", width="30", background="#0a0c3f",
-                                 fg="white", font=fuente_retro_5, relief="raised", borderwidth=10,
+    boton_inicio_sesion = Button(ventana_2,
+                                 text="Iniciar Sesión",
+                                 height="4",
+                                 width="30",
+                                 background="#0a0c3f",
+                                 fg="white",
+                                 font=fuente_retro_5,
+                                 relief="raised",
+                                 borderwidth=10,
                                  command=validar_datos)
     boton_inicio_sesion.place(relx=0.5, rely=0.7, anchor='center')
 
     # Botón de Atrás de la ventana inicio de sesión
     global botonAtras
-    botonAtras = Button(ventana_2, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white",
-                        font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras = Button(ventana_2,
+                        text="Atrás",
+                        height="4", 
+                        width="30", background="#0a0c3f",
+                        fg="white",
+                        font=fuente_retro_5,
+                        relief="raised", 
+                        borderwidth=10,
+                        command=volver_atras)
     botonAtras.place(relx=0.5, rely=0.5 + 1 * espacio_entre_botones / 90, anchor='center')
 
     ventana_2.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
@@ -672,19 +821,31 @@ def registro():
     seleccion.set(config["idioma"])
     # Etiqueta para llamar a la ventana de recuperación de contraseña
     global etiqueta_enlace
-    etiqueta_enlace = tk.Label(ventana_3, text="¿Iniciar Sesión?", cursor="hand2", bg="#000232", fg="white")
+    etiqueta_enlace = tk.Label(ventana_3,
+                               text="¿Iniciar Sesión?",
+                               cursor="hand2",
+                               bg="#000232",
+                               fg="white")
     etiqueta_enlace.place(relx=0.6 + 0.04, rely=0.3 + 0.09)
     etiqueta_enlace.bind("<Button-1>", lambda event: inicio_sesion())
 
     # Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana_3, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_3, 
+                           text="Battle City",
+                           bg="#000030",
+                           font=fuente_retro,
+                           fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.7, anchor='center')
     etiqueta_retro.pack()
 
     # Etiqueta de registro del juego
     global etiqueta3
     ancho_pantalla = ventana_3.winfo_screenwidth()
-    etiqueta3 = Label(ventana_3, text="Registrarse", bg="#101654", fg="white", font=fuente_retro_2)
+    etiqueta3 = Label(ventana_3,
+                      text="Registrarse",
+                      bg="#101654", 
+                      fg="white",
+                      font=fuente_retro_2)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta3.winfo_reqwidth()) // 2
@@ -697,18 +858,36 @@ def registro():
 
     # Se agrega la etiqueta de usuario
     global etiquetaUsuario
-    etiquetaUsuario = Label(ventana_3, text="Usuario", bg="#1b0945", height="1",
-                            relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
+    etiquetaUsuario = Label(ventana_3,
+                            text="Usuario",
+                            bg="#1b0945",
+                            height="1",
+                            relief="ridge",
+                            fg="white",
+                            borderwidth=5,
+                            font=fuente_retro_3)
 
     # Se agrega la etiqueta de contraseña
     global etiquetaContrasena
-    etiquetaContrasena = Label(ventana_3, text="Contraseña", bg="#1b0945", height="1",
-                               relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
+    etiquetaContrasena = Label(ventana_3,
+                               text="Contraseña",
+                               bg="#1b0945",
+                               height="1",
+                               relief="ridge",
+                               fg="white",
+                               borderwidth=5, 
+                               font=fuente_retro_3)
 
     # Se agrega la etiqueta del correo
     global etiquetaCorreo
-    etiquetaCorreo = Label(ventana_3, text="Correo", bg="#1b0945", height="1",
-                           relief="ridge", fg="white", borderwidth=5, font=fuente_retro_3)
+    etiquetaCorreo = Label(ventana_3,
+                           text="Correo",
+                           bg="#1b0945",
+                           height="1",
+                           relief="ridge",
+                           fg="white",
+                           borderwidth=5,
+                           font=fuente_retro_3)
 
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
     x = (ancho_pantalla - etiquetaUsuario.winfo_reqwidth()) // 2
@@ -734,21 +913,39 @@ def registro():
 
     # Espacio para llenar usuario
     nombre_usuario_verif1 = tk.StringVar()
-    nombre_usuario_entry = tk.Entry(ventana_3, textvariable=nombre_usuario_verif1, bg="#9e2254", fg="white",
-                                    font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
+    nombre_usuario_entry = tk.Entry(ventana_3,
+                                    textvariable=nombre_usuario_verif1,
+                                    bg="#9e2254",
+                                    fg="white",
+                                    font=fuente_retro_3,
+                                    relief="groove", 
+                                    borderwidth=10,
+                                    width=22)
     nombre_usuario_entry.place(x=x_entry, y=250)
 
     # Espacio para llenar contraseña
     contrasena_usuario_verif = tk.StringVar()
-    contrasena_usuario_entry = tk.Entry(ventana_3, textvariable=contrasena_usuario_verif, bg="#9e2254", fg="white",
+    contrasena_usuario_entry = tk.Entry(ventana_3,
+                                        textvariable=contrasena_usuario_verif,
+                                        bg="#9e2254", 
+                                        fg="white",
                                         show="*",
-                                        font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
+                                        font=fuente_retro_3,
+                                        relief="groove",
+                                        borderwidth=10,
+                                        width=22)
     contrasena_usuario_entry.place(x=x_entry, y=360)
 
     # Espacio para llenar contraseña
     correoUsuario_verif = tk.StringVar()
-    correo_usuario_entry = tk.Entry(ventana_3, textvariable=correoUsuario_verif, bg="#9e2254", fg="white",
-                                    font=fuente_retro_3, relief="groove", borderwidth=10, width=22)
+    correo_usuario_entry = tk.Entry(ventana_3,
+                                    textvariable=correoUsuario_verif,
+                                    bg="#9e2254",
+                                    fg="white",
+                                    font=fuente_retro_3,
+                                    relief="groove",
+                                    borderwidth=10,
+                                    width=22)
     correo_usuario_entry.place(x=x_entry, y=470)
 
     # Espacio entre botones
@@ -756,14 +953,30 @@ def registro():
 
     # Botón de registrarse de la ventana de registro
     global boton_registro
-    boton_registro = Button(ventana_3, text="Registrar", height="4", width="30", background="#0a0c3f", fg="white",
-                            font=fuente_retro_5, relief="raised", borderwidth=10, command=verificar_contraseña)
+    boton_registro = Button(ventana_3,
+                            text="Registrar",
+                            height="4",
+                            width="30",
+                            background="#0a0c3f",
+                            fg="white",
+                            font=fuente_retro_5,
+                            relief="raised",
+                            borderwidth=10,
+                            command=verificar_contraseña)
     boton_registro.place(relx=0.5, rely=0.8, anchor='center')
 
     # Botón de Atrás de la ventana inicio de sesión
     global botonAtras
-    botonAtras = Button(ventana_3, text="Atrás", height="4", width="30", background="#0a0c3f", fg="white",
-                        font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_atras)
+    botonAtras = Button(ventana_3,
+                        text="Atrás",
+                        height="4",
+                        width="30",
+                        background="#0a0c3f",
+                        fg="white",
+                        font=fuente_retro_5,
+                        relief="raised",
+                        borderwidth=10,
+                        command=volver_atras)
     botonAtras.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones / 90, anchor='center')
 
     ventana_3.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
@@ -822,8 +1035,15 @@ def verificar_contraseña():
 
                     # Botón de inicio de sesión de la ventana de registro
                     global boton_inicio_sesion
-                    boton_inicio_sesion = Button(ventana_3, text="Iniciar sesión", height="3", width="15", background="#ffa181",
-                                                fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
+                    boton_inicio_sesion = Button(ventana_3,
+                                                 text="Iniciar sesión",
+                                                 height="3",
+                                                 width="15",
+                                                 background="#ffa181",
+                                                fg="black",
+                                                font=fuente_retro_5,
+                                                relief="raised",
+                                                borderwidth=10,
                                                 command=inicio_sesion)
                     boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
                 else:
@@ -931,14 +1151,22 @@ def recuperar_contrasena():
 
     seleccion.set(config["idioma"])
     # Etiqueta con el nombre del juego
-    etiqueta_retro = Label(ventana_4, text="Battle City", bg="#000030", font=fuente_retro, fg="white")
+    etiqueta_retro = Label(ventana_4,
+                           text="Battle City",
+                           bg="#000030",
+                           font=fuente_retro, 
+                           fg="white")
     etiqueta_retro.place(relx=0.5, rely=0.5 + 0.05, anchor='center')
     etiqueta_retro.pack()
 
     # Etiqueta de registro del juego
     global etiqueta_4
     ancho_pantalla = ventana_4.winfo_screenwidth()
-    etiqueta_4 = Label(ventana_4, text="Cambia tu contraseña", bg="#101654", fg="white", font=fuente_retro_1)
+    etiqueta_4 = Label(ventana_4,
+                       text="Cambia tu contraseña",
+                       bg="#101654",
+                       fg="white",
+                       font=fuente_retro_1)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla - etiqueta_4.winfo_reqwidth()) // 2
@@ -949,23 +1177,47 @@ def recuperar_contrasena():
 
     # Se agrega la etiqueta de usuario
     global etiqueta_usuario2
-    etiqueta_usuario2 = Label(ventana_4, text="Usuario", bg="#1b0945", height="1", relief="ridge", fg="white",
-                              borderwidth=5, font=fuente_retro_3)
+    etiqueta_usuario2 = Label(ventana_4,
+                              text="Usuario",
+                              bg="#1b0945",
+                              height="1",
+                              relief="ridge", 
+                              fg="white",
+                              borderwidth=5,
+                              font=fuente_retro_3)
 
     # Se agrega la etiqueta del correo
     global etiqueta_correo2
-    etiqueta_correo2 = Label(ventana_4, text="Correo", bg="#1b0945", height="1", relief="ridge", fg="white",
-                             borderwidth=5, font=fuente_retro_3)
+    etiqueta_correo2 = Label(ventana_4,
+                             text="Correo",
+                             bg="#1b0945",
+                             height="1",
+                             relief="ridge",
+                             fg="white",
+                             borderwidth=5, 
+                             font=fuente_retro_3)
 
     # Se agrega la etiqueta de contraseña
     global etiqueta_contrasena2
-    etiqueta_contrasena2 = Label(ventana_4, text="Nueva Contraseña", bg="#1b0945", height="1", relief="ridge",
-                                 fg="white", borderwidth=5, font=fuente_retro_3)
+    etiqueta_contrasena2 = Label(ventana_4,
+                                 text="Nueva Contraseña",
+                                 bg="#1b0945",
+                                 height="1",
+                                 relief="ridge",
+                                 fg="white",
+                                 borderwidth=5,
+                                 font=fuente_retro_3)
 
     # Se agrega la etiqueta de confirmar contraseña
     global etiqueta_contrasena_re
-    etiqueta_contrasena_re = Label(ventana_4, text="Confirmar Contraseña", bg="#1b0945", height="1", relief="ridge",
-                                   fg="white", borderwidth=5, font=fuente_retro_3)
+    etiqueta_contrasena_re = Label(ventana_4,
+                                   text="Confirmar Contraseña",
+                                   bg="#1b0945",
+                                   height="1", 
+                                   relief="ridge",
+                                   fg="white", 
+                                   borderwidth=5,
+                                   font=fuente_retro_3)
 
     # Calcula la posición x para que la etiqueta usuario esté en el centro horizontal
     x = (ancho_pantalla - etiqueta_usuario2.winfo_reqwidth()) // 2
@@ -996,26 +1248,49 @@ def recuperar_contrasena():
 
     # Espacio para llenar usuario
     nombre_usuario_verif2 = tk.StringVar()
-    nombre_usuario2_entry = tk.Entry(ventana_4, textvariable=nombre_usuario_verif2, bg="#9e2254", fg="white",
-                                     font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
+    nombre_usuario2_entry = tk.Entry(ventana_4,
+                                     textvariable=nombre_usuario_verif2,
+                                     bg="#9e2254",
+                                     fg="white",
+                                     font=fuente_retro_3,
+                                     relief="groove",
+                                     borderwidth=10,
+                                     width=23)
     nombre_usuario2_entry.place(x=x_entry, y=235)
 
     # Espacio para llenar correo
     correo_verif2 = tk.StringVar()
-    correo_entry = tk.Entry(ventana_4, textvariable=correo_verif2, bg="#9e2254", fg="white", font=fuente_retro_3,
-                            relief="groove", borderwidth=10, width=23)
+    correo_entry = tk.Entry(ventana_4,
+                            textvariable=correo_verif2,
+                            bg="#9e2254",
+                            fg="white",
+                            font=fuente_retro_3,
+                            relief="groove",
+                            borderwidth=10,
+                            width=23)
     correo_entry.place(x=x_entry, y=335)
 
     # Espacio para llenar contraseña
     contrasena_verif2 = tk.StringVar()
-    contrasena_entry = tk.Entry(ventana_4, textvariable=contrasena_verif2, bg="#9e2254", fg="white",
-                                font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
+    contrasena_entry = tk.Entry(ventana_4, 
+                                textvariable=contrasena_verif2,
+                                bg="#9e2254",
+                                fg="white",
+                                font=fuente_retro_3,
+                                relief="groove",
+                                borderwidth=10,
+                                width=23)
     contrasena_entry.place(x=x_entry, y=435)
 
     # Espacio para llenar contraseña repetida
     contrasena_Re_verif2 = tk.StringVar()
-    contrasena_Re_entry = tk.Entry(ventana_4, textvariable=contrasena_Re_verif2, bg="#9e2254", fg="white",
-                                   font=fuente_retro_3, relief="groove", borderwidth=10, width=23)
+    contrasena_Re_entry = tk.Entry(ventana_4, 
+                                   textvariable=contrasena_Re_verif2,
+                                   bg="#9e2254",
+                                   fg="white",
+                                   font=fuente_retro_3, 
+                                   relief="groove", 
+                                   borderwidth=10, width=23)
     contrasena_Re_entry.place(x=x_entry, y=535)
 
     # Espacio entre botones
@@ -1023,15 +1298,30 @@ def recuperar_contrasena():
 
     # Botón de registrarse de la ventana de registro
     global boton_registro2
-    boton_registro2 = Button(ventana_4, text="Guardar cambios", height="3", width="30", background="#0a0c3f",
-                             fg="white", font=fuente_retro_5, relief="raised", borderwidth=10,
+    boton_registro2 = Button(ventana_4,
+                             text="Guardar cambios", 
+                             height="3", 
+                             width="30",
+                             background="#0a0c3f",
+                             fg="white",
+                             font=fuente_retro_5,
+                             relief="raised",
+                             borderwidth=10,
                              command=actualiza_contraseña)
     boton_registro2.place(relx=0.5, rely=0.8 + 0.03, anchor='center')
 
     # Botón de Atrás de la ventana inicio de sesión
     global boton_atras2
-    boton_atras2 = Button(ventana_4, text="Atrás", height="3", width="30", background="#0a0c3f", fg="white",
-                          font=fuente_retro_5, relief="raised", borderwidth=10, command=volver_atras)
+    boton_atras2 = Button(ventana_4,
+                          text="Atrás", 
+                          height="3",
+                          width="30",
+                          background="#0a0c3f",
+                          fg="white",
+                          font=fuente_retro_5, 
+                          relief="raised", 
+                          borderwidth=10, 
+                          command=volver_atras)
     boton_atras2.place(relx=0.5, rely=0.6 + 1 * espacio_entre_botones / 90, anchor='center')
 
     ventana_4.protocol("WM_DELETE_WINDOW", volver_atras)  # Manejar cierre de ventana
@@ -1115,8 +1405,13 @@ def validar_datos():
 
         # boton de playlist
         global boton_playlist
-        boton_playlist = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white",
-                                   font=("System 18 bold"), relief="raised", command=ventana_playlist)
+        boton_playlist = tk.Button(ventana_1,
+                                   text="Playlist",
+                                   background="#0a0c3f",
+                                   fg="white",
+                                   font=("System 18 bold"),
+                                   relief="raised",
+                                   command=ventana_playlist)
         boton_playlist.pack()
         boton_playlist.place(x=0, y=729, height=40, width=200)
 
@@ -1357,7 +1652,12 @@ def ventana_playlist():
                 os.remove(archivo_temporal_siguiente)
 
     # Crear un botón para seleccionar y guardar la canción
-    boton_seleccionar = tk.Button(ventana_playlist, text="Seleccionar y Guardar Canción", command=seleccionar_y_guardar_musica, font=("Arial", 16), bg="green", fg="white")
+    boton_seleccionar = tk.Button(ventana_playlist,
+                                  text="Seleccionar y Guardar Canción",
+                                  command=seleccionar_y_guardar_musica,
+                                  font=("Arial", 16),
+                                  bg="green", 
+                                  fg="white")
     boton_seleccionar.pack(padx=20, pady=10)
 
     # Crear un Listbox para mostrar los nombres de las canciones
@@ -1366,7 +1666,11 @@ def ventana_playlist():
 
     global lista_canciones
 
-    lista_canciones = tk.Listbox(ventana_playlist, height=10, width=100, bg="navy", fg="white") 
+    lista_canciones = tk.Listbox(ventana_playlist, 
+                                 height=10, 
+                                 width=100,
+                                 bg="navy",
+                                 fg="white") 
     lista_canciones.configure(font=fuente)
     for nombre in nombres_canciones:
         lista_canciones.insert(tk.END, nombre)
@@ -1376,7 +1680,12 @@ def ventana_playlist():
     lista_canciones.bind('<<ListboxSelect>>', seleccionar_cancion)
 
     # Crear un botón para pausar o reanudar la reproducción
-    boton_pausar_reanudar = tk.Button(ventana_playlist, text="Pausar/Reanudar", command=pausar_reanudar, font=("Arial", 16), bg="blue", fg="white")
+    boton_pausar_reanudar = tk.Button(ventana_playlist,
+                                      text="Pausar/Reanudar",
+                                      command=pausar_reanudar,
+                                      font=("Arial", 16),
+                                      bg="blue",
+                                      fg="white")
     boton_pausar_reanudar.pack(padx=20, pady=10)
 ######################################## TERMINA LO DE LA PLAYLIST ######################
 
@@ -1452,16 +1761,27 @@ def actualiza_contraseña():
             contrasena_Re_entry.delete(0, END)
 
             # Botón de registrarse de la ventana de registro
-            boton_inicio_sesion = Button(ventana_4, text="Iniciar sesión", height="3", width="15", background="#ffa181",
-                                         fg="black", font=fuente_retro_5, relief="raised", borderwidth=10,
+            boton_inicio_sesion = Button(ventana_4, 
+                                         text="Iniciar sesión",
+                                         height="3", width="15",
+                                         background="#ffa181",
+                                         fg="black",
+                                         font=fuente_retro_5,
+                                         relief="raised",
+                                         borderwidth=10,
                                          command=inicio_sesion)
             boton_inicio_sesion.place(relx=0.9 + 0.02, rely=0.1 - 0.03, anchor='center')
 
     def ventana_ingreso_cancion():
         # boton para entrar a ingresar las canciones
         global boton_configuración
-        boton_configuración = tk.Button(ventana_1, text="Playlist", background="#0a0c3f", fg="white",
-                                        font=("System 18 bold"), relief="raised", command=abrir_configuracion)
+        boton_configuración = tk.Button(ventana_1,
+                                        text="Playlist",
+                                        background="#0a0c3f",
+                                        fg="white",
+                                        font=("System 18 bold"), 
+                                        relief="raised", 
+                                        command=abrir_configuracion)
         boton_configuración.pack()
         boton_configuración.place(x=0, y=0, height=40, width=200)
 
