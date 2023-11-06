@@ -1475,7 +1475,7 @@ def validar_datos():
                                    fg="white",
                                    font=("System 18 bold"),
                                    relief="raised",
-                                   command=ventana_playlist)
+                                   command=ventana_music)
         boton_playlist.pack()
         boton_playlist.place(x=0, y=729, height=40, width=200)
 
@@ -1909,15 +1909,15 @@ def volver_atras():
     global ventana_2
     if ventana_2:
         ventana_2.withdraw()
-        
-    if ventana_playlist:
-        ventana_playlist.destroy()
+    if ventana_1:
+        ventana_1.deiconify()
     
-        if ventana_partidas:
-            ventana_partidas.destroy()
+    if ventana_partidas:
+        ventana_partidas.destroy()
     
     if ventana_1:
         ventana_1.deiconify()
-
+    if ventana_playlist:
+        ventana_playlist.destroy()
 inicio_partida()
 # LOS MILTONEANOS

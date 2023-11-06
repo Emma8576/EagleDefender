@@ -158,7 +158,7 @@ class Personaje:
             "ur": [pygame.image.load(image_path) for image_path in image_paths["ur"]],
             "dl": [pygame.image.load(image_path) for image_path in image_paths["dl"]],
             "dr": [pygame.image.load(image_path) for image_path in image_paths["dr"]],
-        },0.9)
+        },0.7)
 
         self.current_frame = 0
         self.rect = self.images["up"][0].get_rect() #Rectángulo para detectar posicionamiento y colisiones
@@ -569,7 +569,7 @@ atacante.rol = "Atacante"
 defensor.rol = "Defensor"
 
 # Color de la banda superior
-banda_color = (0, 0, 139)
+banda_color = (26, 101, 156)
 
 # Altura de la banda superior
 banda_alto = 100
