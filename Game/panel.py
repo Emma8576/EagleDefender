@@ -6,7 +6,6 @@ import time
 from pygame import *
 import subprocess
 import os
-from animacion_destruccion import AnimacionDestruccion
 import datetime
 import json
 # Colores de bloques
@@ -307,10 +306,7 @@ class proyectilFuego:
 
         self.distancia_recorrida += abs(dx) + abs(dy)  # Actualiza la distancia recorrida
         
-        if self.distancia_recorrida >= 2500:
-            # Crea una instancia de AnimacionDestruccion en el lugar actual
-            animacion = AnimacionDestruccion(self.rect.topleft)
-            self.distancia_recorrida = 0
+
 
 
 
@@ -910,7 +906,6 @@ if __name__ == "__main__":
                 posicion_bala = bullet.rect.topleft  # Guarda la posición antes de eliminar la bala
                 atacante.bullets.remove(bullet)
 
-                animacion = AnimacionDestruccion(posicion_bala)  # Crea la animación con la posición guardada
 
         if animacion:
             if animacion.actualizar():
