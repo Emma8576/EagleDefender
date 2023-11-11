@@ -320,15 +320,27 @@ def menu_login():
     boton_configuración.place(x=0, y=0, height=40, width=200)
 
     global boton_playlist
-    boton_configuración = tk.Button(ventana_1,
+    boton_playlist = tk.Button(ventana_1,
                                     text="Playlist",
                                     background="#0a0c3f",
                                     fg="white",
                                     font=("System 18 bold"),
                                     relief="raised",
                                     command=ventana_music)
-    boton_configuración.pack()
-    boton_configuración.place(x=0, y=728, height=40, width=200)
+    boton_playlist.pack()
+    boton_playlist.place(x=0, y=728, height=40, width=200)
+
+    global boton_salon_fama
+    boton_salon_fama = tk.Button(ventana_1,
+                                    text="Salón de la fama",
+                                    background="#0a0c3f",
+                                    fg="white",
+                                    font=("System 18 bold"),
+                                    relief="raised",
+                                    command = salon_de_fama
+                                    )
+    boton_salon_fama.pack()
+    boton_salon_fama.place(x=0, y=120, height=40, width=250)
 
     global boton_comoJugar
     boton_comoJugar = tk.Button(ventana_1,
@@ -449,8 +461,34 @@ def ventana_playlist():
 
 ###############################
 """
-# Función para abrir configuración
+#Función para abir el salón de la fama
+def salon_de_fama():
+    ventana_salon_fama = tk.Toplevel(ventana_1)
+    ventana_salon_fama.attributes("-fullscreen", True)
+    cargar_imagen_de_fondo(ventana_salon_fama,"loginImages/fondo1.png")
+    ventana_salon_fama.configure(cursor="star")
 
+    def salir():
+        ventana_salon_fama.destroy()
+
+    boton_atras3 = Button(ventana_salon_fama,
+                          text="Atrás",
+                          height="3",
+                          width="30",
+                          background="#0a0c3f",
+                          fg="white",
+                          font=fuente_retro_5,
+                          relief="raised",
+                          borderwidth=10,
+                          command=salir)
+    boton_atras3.pack()
+    boton_atras3.place(x=10, y=10, height=60, width=200)
+
+
+
+    ventana_salon_fama.mainloop()
+
+# Función para abrir configuración
 def abrir_configuracion():
     global ventana_configuracion, seleccion
     ventana_configuracion = tk.Toplevel(ventana_1)
@@ -1919,5 +1957,6 @@ def volver_atras():
         ventana_1.deiconify()
     if ventana_playlist:
         ventana_playlist.destroy()
+
 inicio_partida()
 # LOS MILTONEANOS
