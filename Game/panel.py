@@ -174,7 +174,8 @@ class Personaje:
 
     #Dibuja al personaje en la direccion actual
     def dibujar(self):
-        screen.blit(self.images[self.direction][self.current_frame], self.rect)
+        if self.images:
+            screen.blit(self.images[self.direction][self.current_frame], self.rect)
     #Cambiar la direccion del personaje
     def cambiar_direccion(self, new_direction):
         self.direction = new_direction
@@ -262,14 +263,14 @@ class proyectilFuego:
     """
     def __init__(self, start_pos, direction):
         self.images = escalar_imagenes ({ #diccionario que contiene las direcciones del proyectil
-            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-{i}.gif") for i in range(1,16)],
-            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-{i}.gif") for i in range(1,16)],
-            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_left/frame-{i}.gif") for i in range(1,16)],
-            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_right/frame-{i}.gif") for i in range(1,16)],
-            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
-            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
-            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
-            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-{i}.gif") for i in range(2,16)],
+            "up":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_up/frame-1.gif")],
+            "down":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_down/frame-1.gif")],
+            "left":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_left/frame-1.gif")],
+            "right":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_right/frame-1.gif")],
+            "ul":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-2.gif") ],
+            "ur":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-2.gif") ],
+            "dl":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-2.gif")],
+            "dr":[pygame.image.load(f"panel_elements/atacante_elementos/atacante_municion/fuego/atacante_munición_ul/frame-2.gif")],
         }, 0.5)
 
 
@@ -443,7 +444,7 @@ class Defensor(Personaje):
 
 
     def desaparecer(self):
-        self.images = []
+        self.vida = 0 
 
 
     def colocar_bloque(self, bloques):
@@ -451,13 +452,13 @@ class Defensor(Personaje):
         direccion = self.direction
 
         if direccion == "up":
-            y -= 0
+            y -= 50
         elif direccion == "down":
-            y += 0
+            y += 50
         elif direccion == "left":
-            x -= 0
+            x -= 50
         elif direccion == "right":
-            x += 0
+            x += 50
 
 
         if bloques_restantes[self.bloque_seleccionado] > 0:
@@ -473,6 +474,10 @@ class Defensor(Personaje):
 
     def obtener_posicion_D(self):
         return self.rect.center
+
+    def dibujar(self):
+        if self.vida > 0 and self.images:
+            screen.blit(self.images[self.direction][self.current_frame], self.rect)
 
 #Clase para los bloques
 WHITE = (255, 255, 255)
@@ -495,6 +500,7 @@ class Bloque:
         self.rect = pygame.Rect(x, y, 50, 50)
         self.selected = False
         self.resistencia = resistencia
+        self.vida = 3
 
         self.madera = madera
         self.concreto = concreto
@@ -506,6 +512,14 @@ class Bloque:
             self.concreto.play()
         elif self.tipo == "acero":
             self.acero.play()
+
+    def recibir_impacto(self, tipo_proyectil):
+        if tipo_proyectil == "hielo":
+            self.vida -= 1
+        elif tipo_proyectil == "fuego":
+            self.vida -= 1.5
+        elif tipo_proyectil == "bomba":
+            self.vida -= 3
 
 bloques = []
 
@@ -576,12 +590,7 @@ ventana_ancho, ventana_alto = pygame.display.Info().current_w, pygame.display.In
 bloques_colocados = []
 
 # Cuando un bloque se coloque en el juego
-def colocar_bloque(tipo, x, y):
-    nuevo_bloque = Bloque(tipo, x, y, bloques_info[tipo]["resistencia"])
-    bloques.append(nuevo_bloque)
 
-    # Registra la posición del bloque en bloques_colocados
-    bloques_colocados.append((tipo, x, y))
     
     
 #///////////////////guardar partida/////////////////////////
@@ -739,24 +748,6 @@ if __name__ == "__main__":
                 pause()
 
 
-
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
-
-                for bloque in bloques:
-
-                    if bloque.rect.collidepoint(event.pos):
-                        bloque.selected = not bloque.selected
-
-            if event.type == pygame.MOUSEMOTION:
-
-                for bloque in bloques:
-
-                    if bloque.selected:
-                        mouse_x, mouse_y = event.pos
-
-                        bloque.rect.topleft = (mouse_x - 25, mouse_y - 25)
-
-
             keys = pygame.key.get_pressed()
             if keys[K_p]:
                 defensor.bloque_seleccionado = "madera"
@@ -903,17 +894,20 @@ if __name__ == "__main__":
             atacante.disparar()
 
         # Mover y actualizar las balas
-        for bullet in atacante.bullets:
+        for bullet in atacante.bullets[:]:
             if bullet.esta_en_pantalla():
                 bullet.mover()
                 bullet.rect.topleft = (bullet.rect.topleft[0], bullet.rect.topleft[1])
                 screen.blit(bullet.image, bullet.rect)
 
-                for bloque in bloques:
+                for bloque in bloques[:]:
                     if bullet.rect.colliderect(bloque.rect):
+                        tipo_proyectil = bullet.__class__.__name__
+                        bloque.recibir_impacto(tipo_proyectil)
                         atacante.bullets.remove(bullet)
-                        bloques.remove(bloque)
-                        continue
+
+                        if bloque.vida <= 0:
+                            bloques.remove(bloque)
 
                 if defensor.rect.colliderect(bullet.rect):
                     defensor.impacto(atacante.current_municion)
