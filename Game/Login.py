@@ -1970,6 +1970,7 @@ def volver_atras():
     
     if ventana_1:
         ventana_1.deiconify()
+        
     if ventana_playlist:
         ventana_playlist.destroy()
 

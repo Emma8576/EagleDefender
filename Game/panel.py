@@ -704,11 +704,28 @@ else:
     bloques_colocados = {}  # Inicializar bloques en blanco o con datos iniciales
     # Resto de la configuración inicial del juego
 """
-    
+##########################################################
+   
+start_time = pygame.time.get_ticks()
+   
+########################################################## 
 if __name__ == "__main__":
     # Bucle principal del juego
     animacion = None
     while True:
+        current_time = pygame.time.get_ticks()
+        elapsed_time = (current_time - start_time) // 1000
+        
+        minutes = elapsed_time // 60
+        seconds = elapsed_time % 60
+        
+        #display timer on the game screen
+        timer_text = f"Cronómetro: {minutes:02d}:{seconds:02d}"
+        time_surface = font.render(timer_text, True, WHITE)
+        timer_rect = time_surface. get_rect()
+        timer_rect.topleft = (10, screen_height - 60)
+        screen.blit(time_surface, timer_rect)
+        
         pygame.mouse.set_visible(False)
         for event in pygame.event.get():
             if event.type == QUIT:
