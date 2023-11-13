@@ -484,6 +484,21 @@ def salon_de_fama():
     boton_atras3.pack()
     boton_atras3.place(x=10, y=10, height=60, width=200)
 
+    etiqueta_retro = Label(ventana_salon_fama,
+                           text="Battle City",
+                           bg="#000030",
+                           font=fuente_retro,
+                           fg="white")
+    etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center')
+    etiqueta_retro.pack()
+
+    etiqueta_1 = Label(ventana_salon_fama,
+                       text="Salón de la fama",
+                       bg="#101654",
+                       fg="white",
+                       font=fuente_retro_2)
+    etiqueta_1.place(relx=0.5, rely=0.2, anchor='center')
+
 
 
     ventana_salon_fama.mainloop()
