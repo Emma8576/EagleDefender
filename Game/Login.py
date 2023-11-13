@@ -468,6 +468,8 @@ def salon_de_fama():
     cargar_imagen_de_fondo(ventana_salon_fama,"loginImages/fondo1.png")
     ventana_salon_fama.configure(cursor="star")
 
+    print("Salónd de fama ingresada")
+
     def salir():
         ventana_salon_fama.destroy()
 
@@ -498,6 +500,15 @@ def salon_de_fama():
                        fg="white",
                        font=fuente_retro_2)
     etiqueta_1.place(relx=0.5, rely=0.2, anchor='center')
+
+
+
+    with open("salon_de_fama.txt", "r") as file:
+      mejores_tiempos = sorted([line.strip() for line in file.readlines()], key=lambda x:float(x.split("-")[1]))[:5]
+
+    for i, tiempo in enumerate(mejores_tiempos):
+      etiqueta_tiempo = Label(ventana_salon_fama, text=f"{i+1}.  {tiempo} s", bg="#101654", fg="white", font=("System 35 bold"))
+      etiqueta_tiempo.place(relx=0.5, rely=0.3 + 0.1 * i, anchor='center')
 
 
 

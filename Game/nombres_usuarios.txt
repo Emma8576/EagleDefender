@@ -1,2 +1,2 @@
-Defensor: popo
-Atacante: popi
+Defensor: popu
+Atacante: popo

@@ -3,7 +3,9 @@
 import pygame
 import sys
 import time
+import pygame.time
 from pygame import *
+from pygame import time as pygame_time
 import subprocess
 import os
 import datetime
@@ -411,6 +413,10 @@ class proyectilBomba:
 
 
 # Clase que representa al personaje Defensor. Hereda de la clase Personake
+def agregar_al_salon_de_fama(tiempo_transcurrido):
+    pass
+
+
 class Defensor(Personaje):
     def __init__(self, start_pos):
         image_paths = {
@@ -431,20 +437,35 @@ class Defensor(Personaje):
 
         self.bloque_seleccionado = "madera"  
 
+        self.tiempo_destruccion = None
+
     def impacto(self, tipo_proyectil):
-        if tipo_proyectil == "fuego":
+        if tipo_proyectil == "fuego" or tipo_proyectil == "hielo" or tipo_proyectil == "bomba":
             self.vida -= 1
-        elif tipo_proyectil == "hielo":
-            self.vida -= 1
-        elif tipo_proyectil == "bomba":
-            self.vida = 0
+            
+
 
         if self.vida <= 0 or self.vida == 0:
             self.desaparecer()
 
 
+
     def desaparecer(self):
-        self.vida = 0 
+        self.vida = 0
+        tiempo_transcurrido =   pygame.time.get_ticks() / 1000 - (start_time/1000)
+        self.agregar_al_salon_de_fama(tiempo_transcurrido)
+
+    def agregar_al_salon_de_fama(self, tiempo_transcurrido):
+        global screen
+        with open("nombres_usuarios.txt", "r") as file:
+            lineas = file.readlines()
+            atacante = lineas[1].split(":")[1].strip()
+
+        with open("salon_de_fama.txt", "a") as file:
+            file.write(f"{atacante} - {tiempo_transcurrido:.3f}\n")
+
+
+
 
 
     def colocar_bloque(self, bloques):
