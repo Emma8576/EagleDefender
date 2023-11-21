@@ -6,7 +6,8 @@ from PIL import Image, ImageTk
 import subprocess
 import sys
 import time
-
+import pymysql
+from tkinter import simpledialog
 pygame.init() 
 
 # hacer variables de fuentes globales
@@ -114,15 +115,6 @@ def configurar_partida():
     etiqueta_retro.place(relx=0.5, rely=0.5, anchor='center')
     etiqueta_retro.pack()
 
-    # Función para mostrar el menú del defensor en la posición del botón
-    def mostrar_menu(event):
-        menu_principal.post(event.x_root, event.y_root)
-        sys.stdout.flush()
-
-    # Función para mostrar el menú del atacante en la posición del botón
-    def mostrar_menu_2(event):
-        menu_principal_2.post(event.x_root, event.y_root)
-        sys.stdout.flush()
 
     # Función para mostrar el menú de los roles en la posición del botón
     def mostrar_menu_3(event):
@@ -145,60 +137,69 @@ def configurar_partida():
     boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
                            activebackground="blue", relief="groove", border=5)
     boton_menu.place(relx=0.5 - 0.38, rely=0.7 - 0.20)
-
-#######
-
-    # Add a list to store selected songs
-    selected_songs = [None, None, None, None, None]
-
-    # Create radio buttons to mark favorite songs
-    favorite_song = tk.IntVar()
     
-#######seleccionar canciones
+    
+    def guardar_cancion_en_db(nombre_cancion, archivo_cancion, popularidad, bailabilidad):
+        try:
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1",
+                charset="utf8",
+                connect_timeout=60
+            )
 
-    # Crear un Listbox para mostrar las canciones seleccionadas
-    lista_canciones = tk.Listbox(ventana_1, selectmode=tk.SINGLE, width=30, height=6, font=fuente_retro_9, foreground="black",
-                               background="SkyBlue3")
-    lista_canciones.place(x=200, y=450)  # Ajusta la posición según tu diseño
+            with open(archivo_cancion, 'rb') as archivo_mp3:
+                contenido_mp3 = archivo_mp3.read()
 
-    def actualizar_lista_canciones():
-        # Borrar cualquier elemento existente en el Listbox
-        lista_canciones.delete(0, tk.END)
+                with conexion.cursor() as cursor:
+                    # Sentencia SQL para insertar la canción en la tabla canciones
+                    sql = "INSERT INTO canciones (nombre_cancion, archivo_cancion, popularidad, bailabilidad) VALUES (%s, %s, %s, %s)"
+                    cursor.execute(sql, (nombre_cancion, contenido_mp3, popularidad, bailabilidad))
 
-        # Agregar las canciones seleccionadas al Listbox
-        for cancion in canciones_seleccionadas:
-            lista_canciones.insert(tk.END, cancion)
+                conexion.commit()
+                print("Canción agregada correctamente a la base de datos.")
 
-    # Luego de que se seleccionen canciones en la función `añadir`, llama a la función `actualizar_lista_canciones`
-    # para mostrar las canciones en el Listbox
-    def añadir():
-        canciones = filedialog.askopenfilenames(initialdir="/", title="Adjunte las canciones", filetypes=(("Archivos MP3", "*.mp3"), ("Todos los archivos", "*.*")))
+        except pymysql.Error as e:
+            print(f"Error al insertar la canción en la base de datos: {str(e)}")
+        finally:
+            if conexion:
+                conexion.close()
 
-        # Agregar las rutas de las canciones seleccionadas a la lista
+
+    def abrir_ventana_seleccion():
+        canciones = filedialog.askopenfilenames(initialdir="/", title="Elegir música de Victoria", filetypes=(("Archivos MP3", "*.mp3"), ("Todos los archivos", "*.*")))
+        
+        # Obtener la ventana raíz actual o la ventana principal
+        root = tk.Tk()
+        root.withdraw()  # Ocultar la ventana raíz
+        
         for cancion in canciones:
-            nombre_cancion = cancion.split("/")[-1]  # Opcional: eliminar parte de la ruta
-            canciones_seleccionadas.append(nombre_cancion)
+            nombre_cancion = cancion.split("/")[-1]
+            
+            # Pedir al usuario la popularidad de la canción en una escala de 0 a 100
+            popularidad = simpledialog.askinteger("Popularidad", f"Ingrese la popularidad de '{nombre_cancion}' (0-100):", minvalue=0, maxvalue=100, parent=root)
+            if popularidad is None:
+                # Si el usuario cancela la entrada, continuar con la siguiente canción
+                continue
+                
+            # Pedir al usuario la bailabilidad de la canción en una escala de 0 a 100
+            bailabilidad = simpledialog.askinteger("Bailabilidad", f"Ingrese la bailabilidad de '{nombre_cancion}' (0-100):", minvalue=0, maxvalue=100, parent=root)
+            if bailabilidad is None:
+                # Si el usuario cancela la entrada, continuar con la siguiente canción
+                continue
+                
+            guardar_cancion_en_db(nombre_cancion, cancion, popularidad, bailabilidad)
+            print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
 
-        # Actualizar la lista de canciones en el Listbox
-        actualizar_lista_canciones()
- 
-    # Crear una lista para almacenar las rutas de las canciones
-    canciones_seleccionadas = []
-
-    # Crear un menú desplegable
-    menu_principal = Menu(ventana_1, tearoff=0)
-    menu_principal.add_command(label="Insertar canciones", font=fuente_retro_9, foreground="white",
-                               background="#101654", command=añadir)
-    
-    
-   
-
-    # Asociar la función mostrar_menu al evento de clic en el botón
-    boton_menu.bind("<Button-1>", mostrar_menu)
-
+        root.destroy()  # Cerrar la ventana raíz después de completar el proceso
+                
+            
+        
     # Crear el botón y menú desplegable del atacante
     boton_menu_2 = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
-                             activebackground="blue", relief="groove", border=5)
+                             activebackground="blue", relief="groove", border=5, command=abrir_ventana_seleccion)
     boton_menu_2.place(relx=0.5 + 0.15, rely=0.7 - 0.20)
 
     menu_principal_2 = Menu(ventana_1, tearoff=0)
@@ -207,7 +208,7 @@ def configurar_partida():
     menu_principal_2.add_command(label="Insertar canción 2", font=fuente_retro_9, foreground="white",
                                  background="#101654", command=lambda: print("Cancion 2"))
 
-    boton_menu_2.bind("<Button-1>", mostrar_menu_2)
+    
 
     # Crear el botón y menú desplegable de los roles
     boton_menu_3 = tk.Button(ventana_1, text="Usuarios ⬇", font=fuente_retro_5, bg="#101654", fg="white",
