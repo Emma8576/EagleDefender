@@ -14,6 +14,7 @@ import io
 import random
 import pymysql.cursors
 import threading
+import mutagen.mp3
 
 # Colores de bloques
 WHITE = (255, 255, 255)
@@ -31,6 +32,7 @@ screen = pygame.display.set_mode((screen_width, screen_height), FULLSCREEN)
 ruta_fuente = "Fuentes/8bitOperatorPlus8-Bold.ttf"
 tamaño_fuente_texto = 50
 tamaño_fuente_titulo = 90
+tiempo_restante = 0
 # Cargar la fuente texto
 fuente_pausa_1 = pygame.font.Font(ruta_fuente, tamaño_fuente_texto)
 # Cargar la fuente titulo
@@ -57,12 +59,21 @@ import random
 import threading
 import time
 
+def mostrar_temporizador(screen):
+    font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
+    text = font.render(f'Tiempo restante: {tiempo_restante // 60:02}:{tiempo_restante % 60:02}', True, (255, 255, 255))  # Renderizar el texto
+    screen.blit(text, (10, 10))
 
 # Función para mostrar texto en la pantalla
 def mostrar_texto(texto, posicion, tamano=30, color=(255, 255, 255)):
     font = pygame.font.SysFont(None, tamano)
     texto_renderizado = font.render(texto, True, color)
     screen.blit(texto_renderizado, posicion)
+
+def obtener_duracion_cancion(archivo):
+    audio = mutagen.mp3.MP3(archivo)
+    return int(audio.info.length)
+
 
 def reproducir_musica():
     try:
@@ -110,13 +121,44 @@ def reproducir_musica():
         if 'conexion' in locals():
             conexion.close()
         pygame.mixer.music.stop()
-
 # Crear un evento para controlar la reproducción de la música
 stop_music_event = threading.Event()
 
 # Iniciar la reproducción de música en un hilo separado
 thread_musica = threading.Thread(target=reproducir_musica)
 thread_musica.start()
+
+# Ruta del archivo de música
+archivo_musica = 'musica_temp/temp_song.mp3'
+
+# Obtener la duración de la canción
+duracion = obtener_duracion_cancion(archivo_musica)
+
+# Convertir la duración a minutos y segundos
+minutos = duracion // 60
+segundos = duracion % 60
+
+# Imprimir la duración en la terminal
+print(f'Duración de la canción: {minutos} minutos y {segundos} segundos')
+
+# Mostrar cuenta regresiva en la terminal en tiempo real
+def cuenta_regresiva():
+    global tiempo_restante
+    tiempo_restante = duracion
+    while tiempo_restante > 0:
+        pygame.display.flip()
+        minutos = tiempo_restante // 60
+        segundos = tiempo_restante % 60
+        sys.stdout.write(f'\rTiempo restante: {minutos:02}:{segundos:02}')  # Actualizar la misma línea en la terminal
+        sys.stdout.flush()
+        time.sleep(1)  # Esperar 1 segundo
+        tiempo_restante -= 1
+
+    print("\n¡La canción ha terminado!")
+
+# Iniciar el hilo para la cuenta regresiva
+thread_cuenta_regresiva = threading.Thread(target=cuenta_regresiva)
+thread_cuenta_regresiva.start()
 
 
 def escalar_imagenes(imagenes, factor):
@@ -242,7 +284,7 @@ atacante_name = roles.get('Atacante', 'Atacante no identificado')
 defensor_name = roles.get('Defensor', 'Defensor no identificado')
 
 # Imprimir los nombres de usuario
-print('Nombre del Atacante:', atacante_name)
+print('\nNombre del Atacante:', atacante_name)
 print('Nombre del Defensor:', defensor_name)
               
 #/////////////////////Fin pantalla de pausa////////////////////////
@@ -796,10 +838,7 @@ ventana_ancho, ventana_alto = pygame.display.Info().current_w, pygame.display.In
 
 bloques_colocados = []
 
-# Cuando un bloque se coloque en el juego
 
-    
-    
 #///////////////////guardar partida/////////////////////////
 def message_screen_save(message, font, color, y_displacement=0):
     text = font.render(message, True, color)
@@ -911,6 +950,7 @@ else:
     bloques_colocados = {}  # Inicializar bloques en blanco o con datos iniciales
     # Resto de la configuración inicial del juego
 """
+
 ##########################################################
    
 start_time = pygame.time.get_ticks()
@@ -920,19 +960,6 @@ if __name__ == "__main__":
     # Bucle principal del juego
     animacion = None
     while True:
-        current_time = pygame.time.get_ticks()
-        elapsed_time = (current_time - start_time) // 1000
-
-        minutes = elapsed_time // 60
-        seconds = elapsed_time % 60
-
-        #display timer on the game screen
-        timer_text = f"Cronómetro: {minutes:02d}:{seconds:02d}"
-        time_surface = font.render(timer_text, True, WHITE)
-        timer_rect = time_surface. get_rect()
-        timer_rect.topleft = (10, screen_height - 60)
-        screen.blit(time_surface, timer_rect)
-
         pygame.mouse.set_visible(False)
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -966,10 +993,8 @@ if __name__ == "__main__":
             elif keys[K_h]:
                 if not defensor.alcanzado_limite_bloques():
                     defensor.colocar_bloque()
-                
-        # Dibuja la banda superior
-        pygame.draw.rect(bg, banda_color, (0, 0, ventana_ancho, banda_alto))
-           
+
+
         # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
         bg = pygame.transform.scale(bg, (screen_width, screen_height))
         screen.blit(bg, (0, 0))
@@ -978,6 +1003,7 @@ if __name__ == "__main__":
 
 
         atacante.regenerar_municiones()
+        mostrar_temporizador(screen)
 
         font = pygame.font.Font(None, 25)
         x = screen.get_width() - 10 - font.size("Texto muy largo")[0]  # Ajusta el espacio de margen deseado
