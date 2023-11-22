@@ -48,7 +48,21 @@ concreto = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonid
 acero = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonido\\acero.mp3")
 
 # Cargar background
-bg = pygame.image.load("panel_elements/bg/bag.jpg") 
+bg = pygame.image.load("panel_elements/bg/bag.jpg")
+
+import pygame
+import pymysql
+import io
+import random
+import threading
+import time
+
+
+# Función para mostrar texto en la pantalla
+def mostrar_texto(texto, posicion, tamano=30, color=(255, 255, 255)):
+    font = pygame.font.SysFont(None, tamano)
+    texto_renderizado = font.render(texto, True, color)
+    screen.blit(texto_renderizado, posicion)
 
 def reproducir_musica():
     try:
@@ -75,9 +89,13 @@ def reproducir_musica():
         # Mezclar las canciones para reproducir una aleatoria
         cancion_aleatoria = random.choice(archivos_canciones)
 
-        # Cargar la canción en Pygame
-        pygame.mixer.music.load(cancion_aleatoria)
-        
+        # Guardar el archivo de canción temporalmente en el sistema de archivos local
+        with open('musica_temp/temp_song.mp3', 'wb') as temp_file:
+            temp_file.write(cancion_aleatoria.read())
+
+        # Cargar la canción desde el archivo temporal con Pygame
+        pygame.mixer.music.load('musica_temp/temp_song.mp3')
+
         # Reproducir la canción de fondo en bucle
         pygame.mixer.music.play(-1)
 
@@ -904,17 +922,17 @@ if __name__ == "__main__":
     while True:
         current_time = pygame.time.get_ticks()
         elapsed_time = (current_time - start_time) // 1000
-        
+
         minutes = elapsed_time // 60
         seconds = elapsed_time % 60
-        
+
         #display timer on the game screen
         timer_text = f"Cronómetro: {minutes:02d}:{seconds:02d}"
         time_surface = font.render(timer_text, True, WHITE)
         timer_rect = time_surface. get_rect()
         timer_rect.topleft = (10, screen_height - 60)
         screen.blit(time_surface, timer_rect)
-        
+
         pygame.mouse.set_visible(False)
         for event in pygame.event.get():
             if event.type == QUIT:
