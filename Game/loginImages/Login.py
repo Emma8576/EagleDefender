@@ -419,49 +419,6 @@ def cargar_idioma():
         json.dump(config, f)
 
 
-#####################################
-# Funcion para la ventana de la playlist 
-"""
-def ventana_playlist():
-    global ventana_playlist, seleccion
-    ventana_playlist = tk.Toplevel(ventana_1)
-    ventana_playlist.attributes("-fullscreen", True)
-    cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
-
-    global etiqueta_playlist
-    ancho_pantalla = ventana_playlist.winfo_screenwidth()
-    etiqueta_playlist = Label(ventana_playlist,
-                              text="Configuración",
-                              bg="#101654", 
-                              fg="white",
-                              font=("System 30 bold"))
-
-    etiqueta_retro2 = Label(ventana_playlist,
-                            text="Battle City",
-                            bg="#000030",
-                            font=("System 30 bold"),
-                            fg="white")
-    etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center')
-    etiqueta_retro2.pack()
-
-    def salir():
-        ventana_playlist.destroy()
-
-    # boton para devolverse al menu
-    boton_devolver_playlist = tk.Button(ventana_playlist,
-                                        text="Volver",
-                                        command="salir_playlist",
-                                        fg="snow",
-                                        bg="SkyBlue3",
-                                        relief="sunken",
-                                        font=("System 30 bold"),
-                                        cursor="exchange")
-    boton_devolver_playlist.pack()
-    boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
-
-
-###############################
-"""
 #Función para abir el salón de la fama
 def salon_de_fama():
     ventana_salon_fama = tk.Toplevel(ventana_1)
@@ -1604,80 +1561,7 @@ def ventana_music():
     ancho_pantalla_2 = ventana_playlist.winfo_screenwidth()
     ventana_playlist.attributes("-fullscreen", True)
     cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
-    
-    def guardar_cancion_en_db(nombre_cancion, archivo_cancion, popularidad, bailabilidad):
-            try:
-                conexion = pymysql.connect(
-                    host="localhost",
-                    user="root",
-                    password="",
-                    database="bd1",
-                    charset="utf8",
-                    connect_timeout=60
-                )
 
-                with open(archivo_cancion, 'rb') as archivo_mp3:
-                    contenido_mp3 = archivo_mp3.read()
-
-                    with conexion.cursor() as cursor:
-                        # Sentencia SQL para insertar la canción en la tabla canciones
-                        sql = "INSERT INTO canciones (nombre_cancion, archivo_cancion, popularidad, bailabilidad) VALUES (%s, %s, %s, %s)"
-                        cursor.execute(sql, (nombre_cancion, contenido_mp3, popularidad, bailabilidad))
-
-                    conexion.commit()
-                    
-                    # Agregar el nombre de la canción a la lista
-                    nombres_canciones.append(nombre_cancion)
-                    
-                    # Actualizar la lista en el Listbox
-                    lista_canciones.delete(0, tk.END)
-                    for nombre in nombres_canciones:
-                        lista_canciones.insert(tk.END, nombre)
-                        
-                    print("Canción agregada correctamente a la base de datos.")
-
-            except pymysql.Error as e:
-                print(f"Error al insertar la canción en la base de datos: {str(e)}")
-            finally:
-                if conexion:
-                    conexion.close()
-
-
-    def abrir_ventana_seleccion():
-        canciones = filedialog.askopenfilenames(initialdir="/", title="Elegir música de Victoria", filetypes=(("Archivos MP3", "*.mp3"), ("Todos los archivos", "*.*")))
-        
-        # Obtener la ventana raíz actual o la ventana principal
-        root = tk.Tk()
-        root.withdraw()  # Ocultar la ventana raíz
-        
-        for cancion in canciones:
-            nombre_cancion = cancion.split("/")[-1]
-            
-            # Pedir al usuario la popularidad de la canción en una escala de 0 a 100
-            popularidad = simpledialog.askinteger("Popularidad", f"Ingrese la popularidad de '{nombre_cancion}' (0-100):", minvalue=0, maxvalue=100, parent=root)
-            if popularidad is None:
-                # Si el usuario cancela la entrada, continuar con la siguiente canción
-                continue
-                
-            # Pedir al usuario la bailabilidad de la canción en una escala de 0 a 100
-            bailabilidad = simpledialog.askinteger("Bailabilidad", f"Ingrese la bailabilidad de '{nombre_cancion}' (0-100):", minvalue=0, maxvalue=100, parent=root)
-            if bailabilidad is None:
-                # Si el usuario cancela la entrada, continuar con la siguiente canción
-                continue
-                
-            guardar_cancion_en_db(nombre_cancion, cancion, popularidad, bailabilidad)
-            print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
-
-        root.destroy()  # Cerrar la ventana raíz después de completar el proceso
-                
-    # Función para seleccionar y guardar música
-    def seleccionar_y_guardar_musica():
-        file_path = filedialog.askopenfilename(title="Seleccione una canción",
-                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
-        if file_path:
-            nombre_cancion = os.path.basename(file_path)  
-            guardar_cancion_en_db_y_actualizar_lista(nombre_cancion, file_path)
-            print(f"Canción '{nombre_cancion}' guardada en la base de datos y actualizada en la lista.")
             
     def seleccionar_siguiente_cancion_aleatoria():
         global cancion_actual, reproductor, archivo_temporal_actual, archivo_temporal_siguiente, reproduccion_pausada
@@ -1720,6 +1604,72 @@ def ventana_music():
                         print("La canción no se encontró en la base de datos.")
             finally:
                 conexion.close()
+                
+                
+    def guardar_cancion_en_db(nombre_cancion, archivo_cancion, popularidad, bailabilidad):
+        try:
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1",
+                charset="utf8",
+                connect_timeout=60
+            )
+
+            with open(archivo_cancion, 'rb') as archivo_mp3:
+                contenido_mp3 = archivo_mp3.read()
+
+                with conexion.cursor() as cursor:
+                    # Sentencia SQL para insertar la canción en la tabla canciones
+                    sql = "INSERT INTO canciones (nombre_cancion, archivo_cancion, popularidad, bailabilidad) VALUES (%s, %s, %s, %s)"
+                    cursor.execute(sql, (nombre_cancion, contenido_mp3, popularidad, bailabilidad))
+
+                conexion.commit()
+                
+                # Agregar el nombre de la canción a la lista
+                nombres_canciones.append(nombre_cancion)
+                
+                # Actualizar la lista en el Listbox
+                lista_canciones.delete(0, tk.END)
+                for nombre in nombres_canciones:
+                    lista_canciones.insert(tk.END, nombre)
+                    
+                print("Canción agregada correctamente a la base de datos.")
+
+        except pymysql.Error as e:
+            print(f"Error al insertar la canción en la base de datos: {str(e)}")
+        finally:
+            if conexion:
+                conexion.close()
+
+
+    def abrir_ventana_seleccion():
+        canciones = filedialog.askopenfilenames(initialdir="/", title="Elegir música de Victoria", filetypes=(("Archivos MP3", "*.mp3"), ("Todos los archivos", "*.*")))
+        
+        # Obtener la ventana raíz actual o la ventana principal
+        root = tk.Tk()
+        root.withdraw()  # Ocultar la ventana raíz
+        
+        for cancion in canciones:
+            nombre_cancion = cancion.split("/")[-1]
+            
+            # Pedir al usuario la popularidad de la canción en una escala de 0 a 100
+            popularidad = simpledialog.askinteger("Popularidad", f"Ingrese la popularidad de '{nombre_cancion}' (0-100):", minvalue=0, maxvalue=100, parent=root)
+            if popularidad is None:
+                # Si el usuario cancela la entrada, continuar con la siguiente canción
+                continue
+                
+            # Pedir al usuario la bailabilidad de la canción en una escala de 0 a 100
+            bailabilidad = simpledialog.askinteger("Bailabilidad", f"Ingrese la bailabilidad de '{nombre_cancion}' (0-100):", minvalue=0, maxvalue=100, parent=root)
+            if bailabilidad is None:
+                # Si el usuario cancela la entrada, continuar con la siguiente canción
+                continue
+                
+            guardar_cancion_en_db(nombre_cancion, cancion, popularidad, bailabilidad)
+            print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
+
+        root.destroy()  # Cerrar la ventana raíz después de completar el proceso
                 
     # Función para seleccionar y guardar música
     def seleccionar_y_guardar_musica():

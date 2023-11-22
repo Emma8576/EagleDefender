@@ -10,6 +10,11 @@ import subprocess
 import os
 import datetime
 import json
+import io
+import random
+import pymysql.cursors
+import threading
+
 # Colores de bloques
 WHITE = (255, 255, 255)
 BROWN = (165, 42, 42)
@@ -44,6 +49,48 @@ acero = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonido\\
 
 # Cargar background
 bg = pygame.image.load("panel_elements/bg/bag.jpg") 
+
+def reproducir_musica():
+    try:
+        # Conectar a la base de datos
+        conexion = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="bd1",
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        # Inicializar Pygame y mezclar las canciones para reproducir una aleatoria
+        pygame.init()
+        pygame.mixer.init()
+
+        # Obtener los archivos de canciones de la base de datos
+        cursor = conexion.cursor()
+        cursor.execute("SELECT archivo_cancion FROM canciones")
+        canciones = cursor.fetchall()
+        archivos_canciones = [io.BytesIO(cancion['archivo_cancion']) for cancion in canciones]
+
+        # Mezclar las canciones para reproducir una aleatoria
+        cancion_aleatoria = random.choice(archivos_canciones)
+
+        # Cargar la canción en Pygame
+        pygame.mixer.music.load(cancion_aleatoria)
+        
+        # Reproducir la canción de fondo en bucle
+        pygame.mixer.music.play(-1)
+
+        # Mantener la reproducción mientras la conexión está abierta
+        while True:
+            continue
+
+    except Exception as e:
+        print("Error:", e)
+
+# Iniciar la reproducción de música en un hilo separado
+thread_musica = threading.Thread(target=reproducir_musica)
+thread_musica.start()
 
 def escalar_imagenes(imagenes, factor):
     """
@@ -542,6 +589,10 @@ class Defensor(Personaje):
         self.vida = 0
         tiempo_transcurrido =   pygame.time.get_ticks() / 1000 - (start_time/1000)
         self.agregar_al_salon_de_fama(tiempo_transcurrido)
+        from pantalla_victoria import pantalla_victoria
+        pantalla_victoria(atacante_name)
+        time.sleep(3)
+        os._exit(0)
 
     def agregar_al_salon_de_fama(self, tiempo_transcurrido):
         global screen
