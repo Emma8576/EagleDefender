@@ -2,7 +2,6 @@
 
 import pygame
 import sys
-import time
 import pygame.time
 from pygame import *
 from pygame import time as pygame_time
@@ -15,6 +14,7 @@ import random
 import pymysql.cursors
 import threading
 import mutagen.mp3
+import time
 
 # Colores de bloques
 WHITE = (255, 255, 255)
@@ -33,6 +33,9 @@ ruta_fuente = "Fuentes/8bitOperatorPlus8-Bold.ttf"
 tamaño_fuente_texto = 50
 tamaño_fuente_titulo = 90
 tiempo_restante = 0
+mostrar_mensaje = False
+tiempo_mensaje = 0
+duracion_mensaje = 1000
 # Cargar la fuente texto
 fuente_pausa_1 = pygame.font.Font(ruta_fuente, tamaño_fuente_texto)
 # Cargar la fuente titulo
@@ -52,12 +55,24 @@ acero = pygame.mixer.Sound("panel_elements\\defensor_elementos\\bloques_sonido\\
 # Cargar background
 bg = pygame.image.load("panel_elements/bg/bag.jpg")
 
-import pygame
-import pymysql
-import io
-import random
-import threading
-import time
+# Función para dibujar el mensaje de fin de tiempo en la pantalla
+def mostrar_mensaje_fin_tiempo(screen):
+    global mostrar_mensaje, tiempo_inicio_mensaje  # Declarar como variables globales para modificarlas dentro de la función
+    font = pygame.font.Font(None, 78)
+    text = font.render("Fin del tiempo", True, (255, 0, 0))  # Mensaje en rojo
+    text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))  # Centrar el mensaje en la pantalla
+
+    if tiempo_restante <= 0:
+        if not mostrar_mensaje:  # Mostrar el mensaje solo una vez al llegar a cero el tiempo
+            mostrar_mensaje = True
+            tiempo_inicio_mensaje = pygame.time.get_ticks()  # Guardar el tiempo actual
+
+    if mostrar_mensaje:
+        tiempo_actual = pygame.time.get_ticks()
+        screen.blit(text, text_rect)  # Mostrar el mensaje
+
+        if tiempo_actual - tiempo_inicio_mensaje >= 1000:  # Ocultar el mensaje después de 1 segundo (1000 milisegundos)
+            mostrar_mensaje = False  # Desactivar la bandera para ocultar el mensaje
 
 def mostrar_temporizador(screen):
     font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
@@ -1004,6 +1019,9 @@ if __name__ == "__main__":
 
         atacante.regenerar_municiones()
         mostrar_temporizador(screen)
+
+        if tiempo_restante <= 0:
+            mostrar_mensaje_fin_tiempo(screen)
 
         font = pygame.font.Font(None, 25)
         x = screen.get_width() - 10 - font.size("Texto muy largo")[0]  # Ajusta el espacio de margen deseado
