@@ -70,6 +70,7 @@ def seleccionar_atacante(usuario):
 # Función del botón de iniciar la partida
 def iniciar_partida():
     archivo_partida = 'panel.py'
+    
     # obtener los nombres de usuario y roles seleccionados
     usuario_defensor = etiqueta_jugador_1.cget("text").split(": ")[1]
     usuario_atacante = etiqueta_jugador_2.cget("text").split(": ")[1]
@@ -132,13 +133,9 @@ def configurar_partida():
             seleccionar_atacante(otros_usuarios[0])
         # Imprimir el usuario en la terminal
         print(f"El usuario defensor es: {usuario}")
-
-    # Crear un botón que actúa como un menú desplegable del defensor
-    boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
-                           activebackground="blue", relief="groove", border=5)
-    boton_menu.place(relx=0.5 - 0.38, rely=0.7 - 0.20)
     
-    
+ ###########################iNICIO BASE DE DATOS##################################################################   
+ 
     def guardar_cancion_en_db(nombre_cancion, archivo_cancion, popularidad, bailabilidad):
         try:
             conexion = pymysql.connect(
@@ -194,8 +191,96 @@ def configurar_partida():
             print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
 
         root.destroy()  # Cerrar la ventana raíz después de completar el proceso
+          
+    def obtener_id_usuario_por_nombre(nombre_usuario):
+        try:
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1",
+                charset="utf8",
+                connect_timeout=60
+            )
+
+            with conexion.cursor() as cursor:
+                # Consulta SQL para obtener el id del usuario por su nombre
+                sql = "SELECT ID FROM login WHERE nombre = %s"
+                cursor.execute(sql, (nombre_usuario,))
+                result = cursor.fetchone()
+
+                if result:
+                    return result[0]  
+                else:
+                    return None 
+        except pymysql.Error as e:
+            print(f"Error al obtener el id del usuario por su nombre: {str(e)}")
+        finally:
+            if conexion:
+                conexion.close()
                 
-            
+    
+    def obtener_id_cancion_por_nombre(nombre_cancion):
+        try:
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1",
+                charset="utf8",
+                connect_timeout=60
+            )
+
+            with conexion.cursor() as cursor:
+                # Consulta SQL para obtener el id de la canción por su nombre
+                sql = "SELECT ID FROM canciones WHERE nombre_cancion = %s"
+                cursor.execute(sql, (nombre_cancion,))
+                result = cursor.fetchone()
+
+                if result:
+                    return result[0]  # Devuelve el id de la canción
+                else:
+                    return None  # Si no se encuentra la canción
+        except pymysql.Error as e:
+            print(f"Error al obtener el id de la canción por su nombre: {str(e)}")
+        finally:
+            if conexion:
+                conexion.close() 
+                
+    
+    def guardar_seleccion_usuario_cancion(id_usuario, id_cancion):
+        try:
+            # Conectar a la base de datos
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1", 
+                charset="utf8",
+                connect_timeout=60
+            )
+
+            with conexion.cursor() as cursor:
+                # Sentencia SQL para insertar la selección de usuario y canción en la tabla usuarios_canciones
+                sql = "INSERT INTO usuarios_canciones (id_usuario, id_cancion) VALUES (%s, %s)"
+                cursor.execute(sql, (id_usuario, id_cancion))
+
+            # Confirmar la operación de inserción y cerrar la conexión
+            conexion.commit()
+            print("Selección de canción asociada al usuario guardada correctamente en la base de datos.")
+
+        except pymysql.Error as e:
+            print(f"Error al insertar la selección de canción asociada al usuario en la base de datos: {str(e)}")
+        finally:
+            if conexion:
+                conexion.close()
+###########################FIN BASE DE DATOS##################################################################
+
+         
+    # Crear un botón que actúa como un menú desplegable del defensor
+    boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
+                           activebackground="blue", relief="groove", border=5, command=abrir_ventana_seleccion)
+    boton_menu.place(relx=0.5 - 0.38, rely=0.7 - 0.20)        
         
     # Crear el botón y menú desplegable del atacante
     boton_menu_2 = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
