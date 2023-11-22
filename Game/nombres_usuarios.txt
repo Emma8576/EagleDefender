@@ -1,2 +1,2 @@
-Defensor: popu
-Atacante: popo
+Usuario 1: JordiENP
+Usuario 2: JordiENP2

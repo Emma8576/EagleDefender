@@ -76,6 +76,30 @@ def message_screen(message, font, color, y_displacement=0):
     text_rect = text.get_rect()
     text_rect.center = (screen_width / 2, screen_height / 2 + y_displacement)
     screen.blit(text, text_rect)
+
+
+def ventana_ayuda():
+    white = (255,255,255)
+
+    fondo = pygame.image.load("loginImages/fondo_reducido.png")
+
+    ventana_mensaje_aparece = True
+    while ventana_mensaje_aparece:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                ventana_mensaje_aparece = False
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_z:
+                    ventana_mensaje_aparece = False
+
+
+            screen.blit(fondo, (0,0))
+
+            message_screen("Aquí va todo lo de como jugar", fuente_pausa_1, white, 25)
+            pygame.display.update()
+            clock.tick(5)
           
     # función de pausa
 def pause():
@@ -83,6 +107,8 @@ def pause():
     
     # Cargar la imagen de fondo
     fondo = pygame.image.load("loginImages/fondo_reducido.png")
+
+    
     
     #Función de pausar el juego
     pausa = True
@@ -98,6 +124,7 @@ def pause():
                 elif event.key == pygame.K_q:
                     pausa = False
                     salir()
+
                                
             screen.blit(fondo, (0,0))
             
@@ -114,8 +141,15 @@ def pause():
                         fuente_pausa_1,
                         white,
                         25)
+
+            message_screen("Presiona X para obtener ayuda sobre cómo jugar",
+                        fuente_pausa_1,
+                        white,
+                        100)
             pygame.display.update()
-            clock.tick(5) 
+            clock.tick(5)
+
+
             
 def leer_roles(archivo):
     roles = {}
@@ -310,12 +344,17 @@ class proyectilFuego:
         self.distancia_recorrida += abs(dx) + abs(dy)  # Actualiza la distancia recorrida
         
 
-
-
+        for bloque in defensor.bloques:
+            if self.rect.colliderect(bloque.rect):
+                tipo_proyectil = self.__class__.__name__
+                bloque.impacto(tipo_proyectil)
+                self.rect.topleft = (-100, -100)
 
         current_images = self.images.get(self.direction, [])
         if current_images:
             self.image = current_images[0] 
+
+        
 
     #Verifica si el proyectil está dentro de la pantalla, sino, este es destruido
     def esta_en_pantalla(self):
@@ -363,8 +402,16 @@ class proyectilHielo:
         if current_time - self.start_time >= 2500:
             self.rect.topleft = (-100, -100)
 
+        for bloque in defensor.bloques:
+            if self.rect.colliderect(bloque.rect):
+                tipo_proyectil = self.__class__.__name__
+                bloque.impacto(tipo_proyectil)
+                self.rect.topleft = (-100, -100)
+
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
+
+
 
 class proyectilBomba:
     def __init__(self, start_pos, direction):
@@ -408,8 +455,17 @@ class proyectilBomba:
         if current_time - self.start_time >= 2500:
             self.rect.topleft = (-100, -100)
 
+        for bloque in defensor.bloques:
+            if self.rect.colliderect(bloque.rect):
+                tipo_proyectil = self.__class__.__name__
+                bloque.impacto(tipo_proyectil)
+                self.rect.topleft = (-100, -100)
+
+
     def esta_en_pantalla(self):
         return screen.get_rect().colliderect(self.rect)
+
+    
 
 
 # Clase que representa al personaje Defensor. Hereda de la clase Personake
@@ -439,6 +495,38 @@ class Defensor(Personaje):
 
         self.tiempo_destruccion = None
 
+        self.bloques = []
+
+        self.bloque_seleccionado = Bloque_madera
+
+        self.bloques_maximos = {"madera": 10, "concreto": 10, "hierro": 10}
+
+        self.bloques_colocados = {"madera": 0, "concreto": 0, "hierro": 0}
+
+
+
+    def colocar_bloque(self):
+        x, y = self.rect.center
+        tipo_bloque = self.bloque_seleccionado.__name__.split("_")[1]
+        
+        if self.bloques_colocados[tipo_bloque] < self.bloques_maximos[tipo_bloque]:
+            bloque = self.bloque_seleccionado(x, y)
+            self.bloques.append(bloque)
+            self.bloques_colocados[tipo_bloque] += 1
+
+    def alcanzado_limite_bloques(self):
+        tipo_bloque = self.bloque_seleccionado.__name__.split("_")[1]
+        return self.bloques_colocados[tipo_bloque] >= self.bloques_maximos[tipo_bloque]
+
+
+    def cambiar_tipo_bloque(self, tipo_bloque):
+        if tipo_bloque == "p":
+            self.bloque_seleccionado = Bloque_madera
+        elif tipo_bloque == "o":
+            self.bloque_seleccionado = Bloque_concreto
+        elif tipo_bloque == "u":
+            self.bloque_seleccionado = Bloque_hierro
+
     def impacto(self, tipo_proyectil):
         if tipo_proyectil == "fuego" or tipo_proyectil == "hielo" or tipo_proyectil == "bomba":
             self.vida -= 1
@@ -465,40 +553,88 @@ class Defensor(Personaje):
             file.write(f"{atacante} - {tiempo_transcurrido:.3f}\n")
 
 
-
-
-
-    def colocar_bloque(self, bloques):
-        x, y = self.rect.center
-        direccion = self.direction
-
-        if direccion == "up":
-            y -= 50
-        elif direccion == "down":
-            y += 50
-        elif direccion == "left":
-            x -= 50
-        elif direccion == "right":
-            x += 50
-
-
-        if bloques_restantes[self.bloque_seleccionado] > 0:
-            tipo = self.bloque_seleccionado
-            info_bloque = bloques_info[tipo]
-
-            nuevo_bloque = Bloque(tipo, x, y, info_bloque["resistencia"])
-
-            bloques.append(nuevo_bloque)
-
-            bloques_creados[tipo] += 1
-            bloques_restantes[tipo] -= 1
-
     def obtener_posicion_D(self):
         return self.rect.center
 
     def dibujar(self):
         if self.vida > 0 and self.images:
             screen.blit(self.images[self.direction][self.current_frame], self.rect)
+
+class Bloque_madera:
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load("panel_elements\\defensor_elementos\\bloques_animacion\\madera\\1.png").convert_alpha()
+        self.rect = self.image.get_rect(center=(x,y))
+        self.vida = 3
+
+    def impacto(self, tipo_proyectil):
+        if tipo_proyectil == "bomba" or tipo_proyectil == "fuego" or tipo_proyectil == "hielo":
+            self.vida -= 1
+
+        if self.vida <= 0:
+            self.rect.topleft = (-100,-100)
+
+
+    def dibujar(self, screen):
+        if self.vida > 0:
+            screen.blit(self.image, self.rect)
+
+class Bloque_hierro:
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load("panel_elements\\defensor_elementos\\bloques_animacion\\hierro\\1.png").convert_alpha()
+        self.rect = self.image.get_rect(center=(x,y))
+        self.vida = 3
+
+    def impacto(self, tipo_proyectil):
+        print(f"Vida antes del impacto: {self.vida}")
+
+        if tipo_proyectil == "bomba" or tipo_proyectil == "fuego":
+            self.vida -=2
+        elif tipo_proyectil == "hielo":
+            self.vida -= 1
+
+        if self.vida <= 0:
+            self.desaparecer()
+
+        print(f"Vida después del impacto: {self.vida}")
+        
+
+    def desaparecer(self):
+        self.vida = 0
+
+
+
+    def dibujar(self, screen):
+        if self.vida > 0:
+            screen.blit(self.image, self.rect)
+
+
+
+class Bloque_concreto:
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load("panel_elements\\defensor_elementos\\bloques_animacion\\concreto\\1.png").convert_alpha()
+        self.rect = self.image.get_rect(center=(x,y))
+        self.vida = 3
+
+    def impacto(self, tipo_proyectil):
+        # Ajustar la reducción de vida para el tipo de proyectil "fuego"
+        if tipo_proyectil == "bomba":
+            self.vida -= 3
+        elif tipo_proyectil == "fuego":
+            self.vida -= 1.5
+        elif tipo_proyectil == "hielo":
+            self.vida -= 1
+
+        if self.vida <= 0:
+            self.rect.topleft = (-100, -100)
+
+    def dibujar(self, screen):
+        if self.vida > 0:
+            screen.blit(self.image, self.rect)
+
+
 
 #Clase para los bloques
 WHITE = (255, 255, 255)
@@ -508,49 +644,21 @@ bloques_creados = {
     "concreto": 0,
     "acero": 0
 }
-
+#
 bloques_restantes = {
     "madera": 10,
     "concreto": 10,
     "acero": 10
 }
 
-class Bloque:
-    def __init__(self, tipo, x, y, resistencia):
-        self.tipo = tipo
-        self.rect = pygame.Rect(x, y, 50, 50)
-        self.selected = False
-        self.resistencia = resistencia
-        self.vida = 3
-
-        self.madera = madera
-        self.concreto = concreto
-        self.acero = acero
-
-        if self.tipo == "madera":
-            self.madera.play()
-        elif self.tipo == "concreto":
-            self.concreto.play()
-        elif self.tipo == "acero":
-            self.acero.play()
-
-    def recibir_impacto(self, tipo_proyectil):
-        if tipo_proyectil == "hielo":
-            self.vida -= 1
-        elif tipo_proyectil == "fuego":
-            self.vida -= 1.5
-        elif tipo_proyectil == "bomba":
-            self.vida -= 3
-
-bloques = []
 
 # Diccionarios para contar cuántos bloques de cada tipo se han creado
 
 
 # Cargar imágenes
-imagen_madera = pygame.image.load("panel_elements\defensor_elementos\madera.png")
-imagen_concreto = pygame.image.load("panel_elements\defensor_elementos\concreto.png")
-imagen_acero = pygame.image.load("panel_elements\defensor_elementos\Iron.png") 
+imagen_madera = pygame.image.load("panel_elements\\defensor_elementos\\madera.png")
+imagen_concreto = pygame.image.load("panel_elements\\defensor_elementos\\concreto.png")
+imagen_acero = pygame.image.load("panel_elements\\defensor_elementos\\Iron.png") 
 
 # Escalar imágenes (si es necesario)
 imagen_madera = pygame.transform.scale(imagen_madera, (50, 50))
@@ -768,17 +876,18 @@ if __name__ == "__main__":
             if keys[K_m]:
                 pause()
 
+            if keys[K_x]:
+                ventana_ayuda()
 
-            keys = pygame.key.get_pressed()
             if keys[K_p]:
-                defensor.bloque_seleccionado = "madera"
+                defensor.cambiar_tipo_bloque("p")
             elif keys[K_o]:
-                defensor.bloque_seleccionado = "concreto"
+                defensor.cambiar_tipo_bloque("o")
             elif keys[K_u]:
-                defensor.bloque_seleccionado = "acero"
-
-            if keys[K_h]:
-                defensor.colocar_bloque(bloques)
+                defensor.cambiar_tipo_bloque("u")
+            elif keys[K_h]:
+                if not defensor.alcanzado_limite_bloques():
+                    defensor.colocar_bloque()
                 
         # Dibuja la banda superior
         pygame.draw.rect(bg, banda_color, (0, 0, ventana_ancho, banda_alto))
@@ -788,6 +897,7 @@ if __name__ == "__main__":
         screen.blit(bg, (0, 0))
         atacante.dibujar()
         defensor.dibujar()
+
 
         atacante.regenerar_municiones()
 
@@ -803,9 +913,7 @@ if __name__ == "__main__":
 
         # Dibujar los bloques y botones
 
-        for bloque in bloques:
-            imagen = bloques_info[bloque.tipo]["imagen"]
-            screen.blit(imagen, bloque.rect)
+       
 
 
         # Utiliza la misma fuente que se usa para las etiquetas
@@ -817,16 +925,8 @@ if __name__ == "__main__":
 
         font = pygame.font.Font(None, 25)
         screen_width, screen_height = screen.get_size()  # Obtiene el ancho y alto de la pantalla
-        x_bloques_usados = (screen_width - font.size("Bloques Usados: 999")[0]) / 2  # Centra el texto en el eje X
-        y_bloques_usados = 80  # Ajusta 90 píxeles hacia abajo desde la parte superior
 
-        texto_bloques_restantes = [font.render(f"{tipo.capitalize()}: {restantes}", True, SILVER)
-                                    for tipo, restantes in bloques_restantes.items()]
-        texto_bloques_usados = font.render(f"Bloques Usados: {sum(bloques_creados.values())}", True, SILVER)
 
-        for i, texto in enumerate(texto_bloques_restantes):
-            screen.blit(texto, (10, 10 + 25 * i))  # Ajusta el valor 25 para el espaciado que desees
-        screen.blit(texto_bloques_usados, (x_bloques_usados, y_bloques_usados))
 
  
         # Dibujar los nombres de usuario
@@ -921,18 +1021,18 @@ if __name__ == "__main__":
                 bullet.rect.topleft = (bullet.rect.topleft[0], bullet.rect.topleft[1])
                 screen.blit(bullet.image, bullet.rect)
 
-                for bloque in bloques[:]:
-                    if bullet.rect.colliderect(bloque.rect):
-                        tipo_proyectil = bullet.__class__.__name__
-                        bloque.recibir_impacto(tipo_proyectil)
-                        atacante.bullets.remove(bullet)
 
-                        if bloque.vida <= 0:
-                            bloques.remove(bloque)
 
                 if defensor.rect.colliderect(bullet.rect):
                     defensor.impacto(atacante.current_municion)
                     atacante.bullets.remove(bullet)
+
+                for bloque in defensor.bloques:
+                    if bloque.rect.colliderect(bullet.rect):
+                        tipo_proyectil = bullet.__class__.__name__
+                        bloque.impacto(tipo_proyectil)
+                        atacante.bullets.remove(bullet)
+
 
             if not bullet.esta_en_pantalla():
                 posicion_bala = bullet.rect.topleft  # Guarda la posición antes de eliminar la bala
@@ -951,6 +1051,12 @@ if __name__ == "__main__":
                 tipo_proyectil = bala.__class__.__name__  # Obtener el tipo de proyectil
                 defensor.impacto(tipo_proyectil)  # Aplicar impacto al Defensor
                 atacante.bullets.remove(bala) 
+
+        for bloque in defensor.bloques[:]:
+            bloque.dibujar(screen)
+            if bloque.vida <= 0:
+                defensor.bloques.remove(bloque)
+
         # actualizar pantalla completa
         pygame.display.flip()
 
