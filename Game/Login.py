@@ -1671,13 +1671,6 @@ def ventana_music():
         root.destroy()  # Cerrar la ventana raíz después de completar el proceso
                 
     # Función para seleccionar y guardar música
-    def seleccionar_y_guardar_musica():
-        file_path = filedialog.askopenfilename(title="Seleccione una canción",
-                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
-        if file_path:
-            nombre_cancion = os.path.basename(file_path)  
-            guardar_cancion_en_db_y_actualizar_lista(nombre_cancion, file_path)
-            print(f"Canción '{nombre_cancion}' guardada en la base de datos y actualizada en la lista.")
             
     def seleccionar_siguiente_cancion_aleatoria():
         global cancion_actual, reproductor, archivo_temporal_actual, archivo_temporal_siguiente, reproduccion_pausada
@@ -1720,15 +1713,7 @@ def ventana_music():
                         print("La canción no se encontró en la base de datos.")
             finally:
                 conexion.close()
-                
-    # Función para seleccionar y guardar música
-    def seleccionar_y_guardar_musica():
-        file_path = filedialog.askopenfilename(title="Seleccione una canción",
-                                            filetypes=[("Audio files", "*.mp3 *.wav *.ogg")])
-        if file_path:
-            nombre_cancion = os.path.basename(file_path)  
-            guardar_cancion_en_db_y_actualizar_lista(nombre_cancion, file_path)
-            print(f"Canción '{nombre_cancion}' guardada en la base de datos y actualizada en la lista.")
+
 
     # Función para cargar nombres de canciones desde la base de datos
     def cargar_nombres_canciones():

@@ -81,16 +81,25 @@ def reproducir_musica():
         # Reproducir la canción de fondo en bucle
         pygame.mixer.music.play(-1)
 
-        # Mantener la reproducción mientras la conexión está abierta
-        while True:
-            continue
+        # Mantener la reproducción hasta que se indique lo contrario
+        while not stop_music_event.is_set():
+            time.sleep(1)  # Utiliza la función sleep del módulo time
 
     except Exception as e:
         print("Error:", e)
+    finally:
+        # Cerrar la conexión y detener la música al finalizar
+        if 'conexion' in locals():
+            conexion.close()
+        pygame.mixer.music.stop()
+
+# Crear un evento para controlar la reproducción de la música
+stop_music_event = threading.Event()
 
 # Iniciar la reproducción de música en un hilo separado
 thread_musica = threading.Thread(target=reproducir_musica)
 thread_musica.start()
+
 
 def escalar_imagenes(imagenes, factor):
     """
