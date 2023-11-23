@@ -93,4 +93,3 @@ def pantalla_victoria(ganador):
 
     ventana_victoria.mainloop()
 
-pantalla_victoria("Hola")

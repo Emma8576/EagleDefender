@@ -15,6 +15,7 @@ import pymysql.cursors
 import threading
 import mutagen.mp3
 import time
+from pantalla_victoria import pantalla_victoria
 
 # Colores de bloques
 WHITE = (255, 255, 255)
@@ -33,6 +34,7 @@ ruta_fuente = "Fuentes/8bitOperatorPlus8-Bold.ttf"
 tamaño_fuente_texto = 50
 tamaño_fuente_titulo = 90
 tiempo_restante = 0
+tiempo_restante2 = 0
 mostrar_mensaje = False
 tiempo_mensaje = 0
 duracion_mensaje = 1000
@@ -76,9 +78,10 @@ def mostrar_mensaje_fin_tiempo(screen):
 
 
 def mostrar_temporizador(screen):
-    font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
-    text = font.render(f'Tiempo restante: {tiempo_restante // 60:02}:{tiempo_restante % 60:02}', True, (255, 255, 255))  # Renderizar el texto
-    screen.blit(text, (10, 10))
+    if tiempo_restante > 0:
+        font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
+        text = font.render(f'Tiempo restante: {tiempo_restante // 60:02}:{tiempo_restante % 60:02}', True, (255, 255, 255))  # Renderizar el texto
+        screen.blit(text, (10, 10))
 
 # Función para mostrar texto en la pantalla
 def mostrar_texto(texto, posicion, tamano=30, color=(255, 255, 255)):
@@ -159,6 +162,11 @@ segundos = duracion % 60
 # Imprimir la duración en la terminal
 print(f'Duración de la canción: {minutos} minutos y {segundos} segundos')
 
+def mostrar_temporizador2(screen):
+    font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
+    text2 = font.render(f'Tiempo restante: {tiempo_restante2 // 60:02}:{tiempo_restante2 % 60:02}', True, (255, 255, 255))  # Renderizar el texto
+    screen.blit(text2, (10, 10))
+
 # Mostrar cuenta regresiva en la terminal en tiempo real
 def cuenta_regresiva():
     global tiempo_restante
@@ -228,6 +236,35 @@ def reproducir_nueva_cancion():
         if 'conexion' in locals():
             conexion.close()
 
+archivo_musica2 = 'musica_temp/temp_cancion.mp3'
+
+duracion2 = obtener_duracion_cancion('musica_temp/temp_cancion.mp3')
+
+minutos2 = duracion2 // 60
+segundos2 = duracion2 % 60
+
+def cuenta_regresiva2():
+    global tiempo_restante2
+    tiempo_restante2 = duracion2
+    while tiempo_restante2 > 0:
+        pygame.display.flip()
+        minutos2 = tiempo_restante2 // 60
+        segundos2 = tiempo_restante2 % 60
+        sys.stdout.write(f'\rTiempo restante: {minutos2:02}:{segundos2:02}')  # Actualizar la misma línea en la terminal
+        sys.stdout.flush()
+        time.sleep(1)  # Esperar 1 segundo
+        tiempo_restante2 -= 1
+
+    print("\n¡La canción ha terminado!")
+
+    stop_music_event.set()
+
+
+thread_cuenta_regresiva2 = threading.Thread(target=cuenta_regresiva2)
+thread_cuenta_regresiva2.start()
+
+if tiempo_restante2 == 0:
+    pygame.mixer.music.stop()
 
 def escalar_imagenes(imagenes, factor):
     """
@@ -723,6 +760,8 @@ class Defensor(Personaje):
 
         if self.vida <= 0 or self.vida == 0:
             self.desaparecer()
+        elif tiempo_restante2 == 1:
+            pantalla_victoria(defensor_name)
 
 
 
@@ -731,9 +770,14 @@ class Defensor(Personaje):
         tiempo_transcurrido =   pygame.time.get_ticks() / 1000 - (start_time/1000)
         self.agregar_al_salon_de_fama(tiempo_transcurrido)
         from pantalla_victoria import pantalla_victoria
+        pygame.mixer.music.stop()
         pantalla_victoria(atacante_name)
         time.sleep(3)
         os._exit(0)
+
+
+    
+    
 
     def agregar_al_salon_de_fama(self, tiempo_transcurrido):
         global screen
@@ -1083,6 +1127,7 @@ if __name__ == "__main__":
         if tiempo_restante <= 0:
             mostrar_mensaje_fin_tiempo(screen)
             reproducir_nueva_cancion()
+            mostrar_temporizador2(screen)
 
 
 
@@ -1202,6 +1247,9 @@ if __name__ == "__main__":
         if tiempo_restante == 0:
             if keys[K_SPACE]:
                 atacante.disparar()
+
+        if tiempo_restante2 == 1:
+            pantalla_victoria(defensor_name)
 
 
         # Mover y actualizar las balas
