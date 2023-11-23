@@ -57,7 +57,7 @@ bg = pygame.image.load("panel_elements/bg/bag.jpg")
 
 # Función para dibujar el mensaje de fin de tiempo en la pantalla
 def mostrar_mensaje_fin_tiempo(screen):
-    global mostrar_mensaje, tiempo_inicio_mensaje  # Declarar como variables globales para modificarlas dentro de la función
+    global mostrar_mensaje, tiempo_inicio_mensaje, tiempo_restante  # Declarar como variables globales para modificarlas dentro de la función
     font = pygame.font.Font(None, 78)
     text = font.render("Fin del tiempo", True, (255, 0, 0))  # Mensaje en rojo
     text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))  # Centrar el mensaje en la pantalla
@@ -73,6 +73,7 @@ def mostrar_mensaje_fin_tiempo(screen):
 
         if tiempo_actual - tiempo_inicio_mensaje >= 1000:  # Ocultar el mensaje después de 1 segundo (1000 milisegundos)
             mostrar_mensaje = False  # Desactivar la bandera para ocultar el mensaje
+
 
 def mostrar_temporizador(screen):
     font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
@@ -136,6 +137,8 @@ def reproducir_musica():
         if 'conexion' in locals():
             conexion.close()
         pygame.mixer.music.stop()
+
+
 # Crear un evento para controlar la reproducción de la música
 stop_music_event = threading.Event()
 
@@ -171,9 +174,61 @@ def cuenta_regresiva():
 
     print("\n¡La canción ha terminado!")
 
+    stop_music_event.set()
+
+    # Reproducir una nueva canción aleatoria
+    reproducir_nueva_cancion()
+
 # Iniciar el hilo para la cuenta regresiva
 thread_cuenta_regresiva = threading.Thread(target=cuenta_regresiva)
 thread_cuenta_regresiva.start()
+
+
+def reproducir_nueva_cancion():
+    try:
+        # Conectar a la base de datos
+        conexion = pymysql.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="bd1",
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        # Obtener los archivos de canciones de la base de datos
+        cursor = conexion.cursor()
+        cursor.execute("SELECT archivo_cancion FROM canciones")
+        canciones = cursor.fetchall()
+        archivos_canciones = [io.BytesIO(cancion['archivo_cancion']) for cancion in canciones]
+
+        # Mezclar las canciones para reproducir una aleatoria
+        cancion_aleatoria = random.choice(archivos_canciones)
+
+        # Guardar el archivo de canción temporalmente en el sistema de archivos local
+        with open('musica_temp/temp_song.mp3', 'wb') as temp_file:
+            temp_file.write(cancion_aleatoria.read())
+
+        # Cargar la nueva canción desde el archivo temporal con Pygame
+        pygame.mixer.music.load('musica_temp/temp_song.mp3')
+
+        # Reproducir la nueva canción de fondo en bucle
+        pygame.mixer.music.play(-1)
+
+        # Restablecer el evento para la reproducción de música
+        stop_music_event.clear()
+
+        # Reiniciar el temporizador
+        tiempo_restante = obtener_duracion_cancion('musica_temp/temp_song.mp3')
+        thread_cuenta_regresiva = threading.Thread(target=cuenta_regresiva)
+        thread_cuenta_regresiva.start()
+
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        # Cerrar la conexión al finalizar
+        if 'conexion' in locals():
+            conexion.close()
 
 
 def escalar_imagenes(imagenes, factor):
@@ -415,6 +470,10 @@ class Atacante(Personaje):
         if current_time - self.last_regeneration_time.get(self.current_municion, 0) >= 30:
             self.last_regeneration_time[self.current_municion] = current_time
             self.municiones_restantes[self.current_municion] = min(self.municiones_restantes[self.current_municion] +1,5)
+
+    def dibujar(self):#
+        if tiempo_restante == 0 and self.images:
+            screen.blit(self.images[self.direction][self.current_frame], self.rect)
 
 municion_restante = {
     "hielo": 5,
@@ -691,7 +750,7 @@ class Defensor(Personaje):
     def obtener_posicion_D(self):
         return self.rect.center
 
-    def dibujar(self):
+    def dibujar(self):#
         if self.vida > 0 and self.images:
             screen.blit(self.images[self.direction][self.current_frame], self.rect)
 
@@ -835,7 +894,7 @@ global atacante
 global defensor
 
 # Crea una instancia de Atacante y Defensor y pasa una tupla de coordenadas para definir la posición inicial en la pantalla
-atacante = Atacante((screen_width // 2, screen_height // 2))
+atacante = Atacante((screen_width // 20, screen_height // 11))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
 # Asigna el rol a cada personaje
@@ -969,7 +1028,7 @@ else:
 ##########################################################
    
 start_time = pygame.time.get_ticks()
-   
+
 ########################################################## 
 if __name__ == "__main__":
     # Bucle principal del juego
@@ -1009,6 +1068,9 @@ if __name__ == "__main__":
                 if not defensor.alcanzado_limite_bloques():
                     defensor.colocar_bloque()
 
+            if keys[K_g]:
+                tiempo_restante = 1
+
 
         # Dibujar fondo, e imágenes de defensor, atacante, y botón de pausa.
         bg = pygame.transform.scale(bg, (screen_width, screen_height))
@@ -1022,6 +1084,11 @@ if __name__ == "__main__":
 
         if tiempo_restante <= 0:
             mostrar_mensaje_fin_tiempo(screen)
+            if not stop_music_event.is_set():
+                reproducir_nueva_cancion()
+
+
+
 
         font = pygame.font.Font(None, 25)
         x = screen.get_width() - 10 - font.size("Texto muy largo")[0]  # Ajusta el espacio de margen deseado
@@ -1056,10 +1123,11 @@ if __name__ == "__main__":
         color = (255, 255, 255) 
 
         # colocar el nombre de usuario del atacante sobre el tanque
-        text = font.render(atacante_name, True, color) 
-        text_rect = text.get_rect()
-        text_rect.midtop = (atacante.rect.centerx + 10, atacante.rect.top - 30)
-        screen.blit(text, text_rect)
+        if tiempo_restante == 0:
+            text = font.render(atacante_name, True, color) 
+            text_rect = text.get_rect()
+            text_rect.midtop = (atacante.rect.centerx + 10, atacante.rect.top - 30)
+            screen.blit(text, text_rect)
         
         # Colocar el nombre de usuario del defensor sobre el águila
         text = font.render(defensor_name, True, color) 
@@ -1070,34 +1138,35 @@ if __name__ == "__main__":
         dx, dy = 0, 0 #Inicializa la dirección del Atacante en 0 para "x" y "y"
 
         # Mover Atacante 3px en eje "x/y"
-        if keys[K_a]:
-            dx = -3
-            atacante.cambiar_direccion("left")
-        if keys[K_d]:
-            dx = 3
-            atacante.cambiar_direccion("right")
-        if keys[K_w]:
-            dy = -3
-            atacante.cambiar_direccion("up")
-        if keys[K_s]:
-            dy = 3
-            atacante.cambiar_direccion("down")
-        if keys[K_w] and keys[K_a]:
-            dx, dy = -3, -3
-            atacante.cambiar_direccion("ul")
-        if keys[K_w] and keys[K_d]:
-            dx, dy = 3, -3
-            atacante.cambiar_direccion("ur")
-        if keys[K_s] and keys[K_a]:
-            dx, dy = -3, 3
-            atacante.cambiar_direccion("dl")
-        if keys[K_s] and keys[K_d]:
-            dx, dy = 3, 3
-            atacante.cambiar_direccion("dr")
+        if tiempo_restante == 0:
+            if keys[K_a]:
+                dx = -3
+                atacante.cambiar_direccion("left")
+            if keys[K_d]:
+                dx = 3
+                atacante.cambiar_direccion("right")
+            if keys[K_w]:
+                dy = -3
+                atacante.cambiar_direccion("up")
+            if keys[K_s]:
+                dy = 3
+                atacante.cambiar_direccion("down")
+            if keys[K_w] and keys[K_a]:
+                dx, dy = -3, -3
+                atacante.cambiar_direccion("ul")
+            if keys[K_w] and keys[K_d]:
+                dx, dy = 3, -3
+                atacante.cambiar_direccion("ur")
+            if keys[K_s] and keys[K_a]:
+                dx, dy = -3, 3
+                atacante.cambiar_direccion("dl")
+            if keys[K_s] and keys[K_d]:
+                dx, dy = 3, 3
+                atacante.cambiar_direccion("dr")
 
-        if dx != 0 or dy != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
-            atacante.mover(dx, dy)
-            atacante.actualizar_frame()
+            if dx != 0 or dy != 0: #Si la posición actual es diferente a la nueva instruccion, entonces se mueve el personaje
+                atacante.mover(dx, dy)
+                atacante.actualizar_frame()
 
         dr, dz = 0, 0 #Inicializa la dirección del Defensor en 0 para "x" y "y"
 
@@ -1133,8 +1202,10 @@ if __name__ == "__main__":
             if defensor.vida <= 0:
                 defensor.desaparecer()
         # Disparar
-        if keys[K_SPACE]:
-            atacante.disparar()
+        if tiempo_restante == 0:
+            if keys[K_SPACE]:
+                atacante.disparar()
+
 
         # Mover y actualizar las balas
         for bullet in atacante.bullets[:]:
@@ -1184,6 +1255,8 @@ if __name__ == "__main__":
 
         # velocidad de fotogramas a 60 fps
         clock.tick(60)
+
+
         
 # Cuando quieras guardar la partida
 guardar_partida()
