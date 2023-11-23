@@ -205,6 +205,7 @@ def configurar_partida():
                 
             guardar_cancion_en_db(nombre_cancion, cancion, popularidad, bailabilidad)
             asociar_usuario_cancion(nombre_usuario, nombre_cancion)
+            actualizar_canciones_defensor()
             print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
 
         root.destroy()  # Cerrar la ventana raíz después de completar el proceso
@@ -309,18 +310,75 @@ def configurar_partida():
         else:
             print("El usuario o la canción no se encontraron en la base de datos.")
 
-###########################FIN BASE DE DATOS##################################################################
 
+    def obtener_canciones_por_nombre_usuario_defensor(nombre_usuario_defensor):
+        canciones_defensor = []
+        try:
+            conexion = pymysql.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="bd1",
+                charset="utf8",
+                connect_timeout=60
+            )
+
+            with conexion.cursor() as cursor:
+                # Consulta SQL para obtener el ID del usuario defensor por su nombre
+                sql_usuario = "SELECT ID FROM login WHERE Usuario = %s"
+                cursor.execute(sql_usuario, (nombre_usuario_defensor,))
+                id_usuario_defensor = cursor.fetchone()
+
+                if id_usuario_defensor:
+                    # Consulta SQL para obtener las canciones asociadas al ID del usuario defensor
+                    sql_canciones = """
+                        SELECT c.nombre_cancion 
+                        FROM usuarios_canciones uc
+                        JOIN canciones c ON uc.id_cancion = c.ID
+                        WHERE uc.id_usuario = %s
+                    """
+                    cursor.execute(sql_canciones, (id_usuario_defensor[0],))
+                    result = cursor.fetchall()
+
+                    if result:
+                        canciones_defensor = [cancion[0] for cancion in result]
+
+        except pymysql.Error as e:
+            print(f"Error al obtener las canciones asociadas al usuario defensor por nombre: {str(e)}")
+        finally:
+            if conexion:
+                conexion.close()
+
+        return canciones_defensor
+
+    def actualizar_canciones_defensor():
+        # Obtener las canciones asociadas al usuario defensor actual por su nombre
+        canciones_defensor_actual = obtener_canciones_por_nombre_usuario_defensor(nombre_defensor)
+
+        # Usar un conjunto (set) para almacenar canciones únicas
+        canciones_unicas = set(canciones_defensor_actual)
+
+        # Crear la Listbox y agregar las canciones únicas
+        listbox_canciones_defensor = tk.Listbox(ventana_1, width=60, height=10, bg="navy", fg="white")
+        listbox_canciones_defensor.place(relx=0.40, rely=0.5 - 0.07)
+
+        # Insertar las canciones únicas en la Listbox
+        for cancion in canciones_unicas:
+            listbox_canciones_defensor.insert(tk.END, cancion)
+    # Llamar a la función para actualizar las canciones por primera vez
+    actualizar_canciones_defensor()
+
+    ###########################FIN BASE DE DATOS##################################################################
 
     # Crear botón y asociar con abrir_ventana_seleccion usando el nombre del defensor
     boton_menu = tk.Button(ventana_1, text=f"Elegir música de {nombre_defensor}", font=fuente_retro_5, bg="#101654", fg="white",
                            activebackground="blue", relief="groove", border=5, width=25, height=3, command=lambda: abrir_ventana_seleccion(nombre_defensor))
-    boton_menu.place(relx=0.4, rely=0.7 - 0.20)
+    boton_menu.place(relx=0.4, rely=0.5 - 0.16)
 
     # Crear botón y asociar con abrir_ventana_seleccion usando el nombre del atacante
     boton_menu_2 = tk.Button(ventana_1, text=f"Elegir música de {nombre_atacante}", font=fuente_retro_5, bg="#101654", fg="white",
                              activebackground="blue", relief="groove", border=5, width=25, height=3, command=lambda: abrir_ventana_seleccion(nombre_atacante))
-    boton_menu_2.place(relx=0.4, rely=0.6)
+    boton_menu_2.place(relx=0.4, rely=0.6 + 0.06)
 
     menu_principal_2 = Menu(ventana_1, tearoff=0)
     menu_principal_2.add_command(label="Insertar canción 1", font=fuente_retro_9, foreground="white",
@@ -355,8 +413,8 @@ def configurar_partida():
                                font=fuente_retro_3, height=2, width=20)
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
-    x = (ancho_pantalla_1 - etiqueta.winfo_reqwidth()) // 7
-    etiqueta_jugador_1.place(x=x, y=300)
+    #x = (ancho_pantalla_1 - etiqueta.winfo_reqwidth()) * 1
+    etiqueta_jugador_1.place(relx= 0.1 - 0.05, rely=0.2 + 0.05)
 
     # Etiqueta de jugador 2
     ancho_pantalla_2 = ventana_1.winfo_screenwidth()
@@ -366,7 +424,7 @@ def configurar_partida():
 
     # Calcula la posición x para que la etiqueta esté en el centro horizontal
     x = (ancho_pantalla_2 - etiqueta.winfo_reqwidth()) * 1
-    etiqueta_jugador_2.place(x=x, y=300)
+    etiqueta_jugador_2.place(relx=0.65, rely=0.2 + 0.05)
 
     # Etiqueta de jugador rol
     ancho_pantalla_1 = ventana_1.winfo_screenwidth()
@@ -380,27 +438,20 @@ def configurar_partida():
 
     # Botón de Iniciar Partida
     global boton_inicio
-    boton_inicio = tk.Button(ventana_1, cursor="exchange", text="Iniciar partida", height="4", width="30",
+    boton_inicio = tk.Button(ventana_1, cursor="exchange", text="Iniciar partida", height="4", width="20",
                              background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised",
                              borderwidth=10, command=iniciar_partida)
-    boton_inicio.place(relx=0.5 + 0.25, rely=0.5 + 0.35, anchor='center')
+    boton_inicio.place(relx=0.5 + 0.35, rely=0.5 + 0.30, anchor='center')
 
     # Espacio entre botones
     espacio_entre_botones = 30
 
     # Botón de Salir
     global boton_salir
-    boton_salir = tk.Button(ventana_1, cursor="exchange", text="Regresar", height="4", width="30",
+    boton_salir = tk.Button(ventana_1, cursor="exchange", text="Regresar", height="4", width="20",
                             background="#0a0c3f", fg="white", font=fuente_retro_5, relief="raised",
                             borderwidth=10, command=volver_inicio_sesion)
-    boton_salir.place(relx=0.5 - 0.25, rely=0.5 + 0.35, anchor='center')
-
-    global boton_configuración
-    boton_configuración = tk.Button(ventana_1, cursor="exchange", text="Configuración",
-                                    background="#0a0c3f", fg="white", font=("System 18 bold"),
-                                    relief="raised", command="")
-    boton_configuración.pack()
-    boton_configuración.place(x=0, y=0, height=40, width=200)
+    boton_salir.place(relx=0.5 - 0.35, rely=0.5 + 0.30, anchor='center')
 
     # Mostrar la ventana principal
     ventana_1.mainloop()
