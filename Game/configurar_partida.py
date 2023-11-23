@@ -204,6 +204,7 @@ def configurar_partida():
                 continue
                 
             guardar_cancion_en_db(nombre_cancion, cancion, popularidad, bailabilidad)
+            asociar_usuario_cancion(nombre_usuario, nombre_cancion)
             print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
 
         root.destroy()  # Cerrar la ventana raíz después de completar el proceso
@@ -222,7 +223,7 @@ def configurar_partida():
 
             with conexion.cursor() as cursor:
                 # Consulta SQL para obtener el id del usuario por su nombre
-                sql = "SELECT ID FROM login WHERE nombre = %s"
+                sql = "SELECT ID FROM login WHERE Usuario = %s"
                 cursor.execute(sql, (nombre_usuario,))
                 result = cursor.fetchone()
 
@@ -291,6 +292,23 @@ def configurar_partida():
         finally:
             if conexion:
                 conexion.close()
+
+    # Funciones para obtener el ID del usuario y el ID de la canción
+    nombre_defensor, nombre_atacante = obtener_nombres_roles()
+    id_defensor = obtener_id_usuario_por_nombre(nombre_defensor)
+    id_atacante = obtener_id_usuario_por_nombre(nombre_atacante)
+
+    def asociar_usuario_cancion(nombre_usuario, nombre_cancion):
+        # Obtener el ID del usuario y de la canción
+        id_usuario = obtener_id_usuario_por_nombre(nombre_usuario)
+        id_cancion = obtener_id_cancion_por_nombre(nombre_cancion)
+
+        if id_usuario and id_cancion:
+            # Guardar la selección de usuario y canción en la base de datos
+            guardar_seleccion_usuario_cancion(id_usuario, id_cancion)
+        else:
+            print("El usuario o la canción no se encontraron en la base de datos.")
+
 ###########################FIN BASE DE DATOS##################################################################
 
 
