@@ -70,7 +70,7 @@ def seleccionar_atacante(usuario):
 # Función del botón de iniciar la partida
 def iniciar_partida():
     archivo_partida = 'panel.py'
-    
+
     # obtener los nombres de usuario y roles seleccionados
     usuario_defensor = etiqueta_jugador_1.cget("text").split(": ")[1]
     usuario_atacante = etiqueta_jugador_2.cget("text").split(": ")[1]
@@ -79,14 +79,14 @@ def iniciar_partida():
     with open('nombres_usuarios.txt', 'w') as file:
         file.write(f"Defensor: {usuario_defensor}\n")
         file.write(f"Atacante: {usuario_atacante}\n")
-        
+
     try:
         subprocess.Popen(['python', archivo_partida])
         time.sleep(1)
         sys.exit()
     except FileNotFoundError:
         print(f'El archivo "{archivo_partida}" no se encontró o no se pudo ejecutar.')
-        
+
 # Función ventana configurar partida
 def configurar_partida():
     global is_playing  # Declarar is_playing como una variable global
@@ -133,6 +133,23 @@ def configurar_partida():
             seleccionar_atacante(otros_usuarios[0])
         # Imprimir el usuario en la terminal
         print(f"El usuario defensor es: {usuario}")
+
+    # Función para obtener los nombres de usuario de los roles
+    def obtener_nombres_roles():
+        try:
+            with open('nombres_usuarios.txt', 'r') as file:
+                lineas = file.readlines()
+                usuario_defensor = lineas[0].strip().split(": ")[1]
+                usuario_atacante = lineas[1].strip().split(": ")[1]
+                return usuario_defensor, usuario_atacante
+        except FileNotFoundError:
+            print("El archivo nombres_usuarios.txt no fue encontrado.")
+
+    # Ejemplo de uso
+    nombre_defensor, nombre_atacante = obtener_nombres_roles()
+    print(f"El defensor es: {nombre_defensor}")
+    print(f"El atacante es: {nombre_atacante}")
+
     
  ###########################iNICIO BASE DE DATOS##################################################################   
  
@@ -165,9 +182,8 @@ def configurar_partida():
                 conexion.close()
 
 
-    def abrir_ventana_seleccion():
-        canciones = filedialog.askopenfilenames(initialdir="/", title="Elegir música de Victoria", filetypes=(("Archivos MP3", "*.mp3"), ("Todos los archivos", "*.*")))
-        
+    def abrir_ventana_seleccion(nombre_usuario):
+        canciones = filedialog.askopenfilenames(initialdir="/", title=f"Elegir música de {nombre_usuario}", filetypes=(("Archivos MP3", "*.mp3"), ("Todos los archivos", "*.*")))
         # Obtener la ventana raíz actual o la ventana principal
         root = tk.Tk()
         root.withdraw()  # Ocultar la ventana raíz
@@ -191,7 +207,8 @@ def configurar_partida():
             print(f"Canción '{nombre_cancion}' guardada en la base de datos con popularidad: {popularidad}, bailabilidad: {bailabilidad}")
 
         root.destroy()  # Cerrar la ventana raíz después de completar el proceso
-          
+
+    nombre_defensor, nombre_atacante = obtener_nombres_roles()
     def obtener_id_usuario_por_nombre(nombre_usuario):
         try:
             conexion = pymysql.connect(
@@ -276,16 +293,16 @@ def configurar_partida():
                 conexion.close()
 ###########################FIN BASE DE DATOS##################################################################
 
-         
-    # Crear un botón que actúa como un menú desplegable del defensor
-    boton_menu = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
-                           activebackground="blue", relief="groove", border=5, command=abrir_ventana_seleccion)
-    boton_menu.place(relx=0.5 - 0.38, rely=0.7 - 0.20)        
-        
-    # Crear el botón y menú desplegable del atacante
-    boton_menu_2 = tk.Button(ventana_1, text="Elegir música de Victoria", font=fuente_retro_5, bg="#101654", fg="white",
-                             activebackground="blue", relief="groove", border=5, command=abrir_ventana_seleccion)
-    boton_menu_2.place(relx=0.5 + 0.15, rely=0.7 - 0.20)
+
+    # Crear botón y asociar con abrir_ventana_seleccion usando el nombre del defensor
+    boton_menu = tk.Button(ventana_1, text=f"Elegir música de {nombre_defensor}", font=fuente_retro_5, bg="#101654", fg="white",
+                           activebackground="blue", relief="groove", border=5, width=25, height=3, command=lambda: abrir_ventana_seleccion(nombre_defensor))
+    boton_menu.place(relx=0.4, rely=0.7 - 0.20)
+
+    # Crear botón y asociar con abrir_ventana_seleccion usando el nombre del atacante
+    boton_menu_2 = tk.Button(ventana_1, text=f"Elegir música de {nombre_atacante}", font=fuente_retro_5, bg="#101654", fg="white",
+                             activebackground="blue", relief="groove", border=5, width=25, height=3, command=lambda: abrir_ventana_seleccion(nombre_atacante))
+    boton_menu_2.place(relx=0.4, rely=0.6)
 
     menu_principal_2 = Menu(ventana_1, tearoff=0)
     menu_principal_2.add_command(label="Insertar canción 1", font=fuente_retro_9, foreground="white",
