@@ -59,7 +59,7 @@ bg = pygame.image.load("panel_elements/bg/bag.jpg")
 def mostrar_mensaje_fin_tiempo(screen):
     global mostrar_mensaje, tiempo_inicio_mensaje, tiempo_restante  # Declarar como variables globales para modificarlas dentro de la función
     font = pygame.font.Font(None, 78)
-    text = font.render("Fin del tiempo", True, (255, 0, 0))  # Mensaje en rojo
+    text = font.render(" ", True, (255, 0, 0))  # Mensaje en rojo
     text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))  # Centrar el mensaje en la pantalla
 
     if tiempo_restante <= 0:
@@ -206,11 +206,11 @@ def reproducir_nueva_cancion():
         cancion_aleatoria = random.choice(archivos_canciones)
 
         # Guardar el archivo de canción temporalmente en el sistema de archivos local
-        with open('musica_temp/temp_song.mp3', 'wb') as temp_file:
+        with open('musica_temp/temp_cancion.mp3', 'wb') as temp_file:
             temp_file.write(cancion_aleatoria.read())
 
         # Cargar la nueva canción desde el archivo temporal con Pygame
-        pygame.mixer.music.load('musica_temp/temp_song.mp3')
+        pygame.mixer.music.load('musica_temp/temp_cancion.mp3')
 
         # Reproducir la nueva canción de fondo en bucle
         pygame.mixer.music.play(-1)
@@ -219,9 +219,7 @@ def reproducir_nueva_cancion():
         stop_music_event.clear()
 
         # Reiniciar el temporizador
-        tiempo_restante = obtener_duracion_cancion('musica_temp/temp_song.mp3')
-        thread_cuenta_regresiva = threading.Thread(target=cuenta_regresiva)
-        thread_cuenta_regresiva.start()
+
 
     except Exception as e:
         print("Error:", e)
@@ -1084,8 +1082,7 @@ if __name__ == "__main__":
 
         if tiempo_restante <= 0:
             mostrar_mensaje_fin_tiempo(screen)
-            if not stop_music_event.is_set():
-                reproducir_nueva_cancion()
+            reproducir_nueva_cancion()
 
 
 
