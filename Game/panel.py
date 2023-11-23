@@ -892,7 +892,7 @@ global atacante
 global defensor
 
 # Crea una instancia de Atacante y Defensor y pasa una tupla de coordenadas para definir la posición inicial en la pantalla
-atacante = Atacante((screen_width // 20, screen_height // 11))
+atacante = Atacante((screen_width // 15, screen_height // 7))
 defensor = Defensor((screen_width // 3, screen_height // 3))
 
 # Asigna el rol a cada personaje
