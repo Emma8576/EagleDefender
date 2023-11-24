@@ -183,7 +183,6 @@ def cuenta_regresiva():
     stop_music_event.set()
 
     # Reproducir una nueva canción aleatoria
-    reproducir_nueva_cancion()
 
 # Iniciar el hilo para la cuenta regresiva
 thread_cuenta_regresiva = threading.Thread(target=cuenta_regresiva)
@@ -762,10 +761,7 @@ class Defensor(Personaje):
 
         if self.vida <= 0 or self.vida == 0:
             self.desaparecer()
-        elif tiempo_restante2 == 1:
-            pantalla_victoria(defensor_name)
-            from pantalla_victoria import obtener_canciones_defensor
-            obtener_canciones_defensor(defensor_name)
+        
 
 
 
@@ -1128,12 +1124,11 @@ if __name__ == "__main__":
         atacante.regenerar_municiones()
         mostrar_temporizador(screen)
 
-        """
+        
         if tiempo_restante <= 0:
-            mostrar_mensaje_fin_tiempo(screen)
             reproducir_nueva_cancion()
             mostrar_temporizador2(screen)
-        """
+        
 
 
 
@@ -1254,6 +1249,7 @@ if __name__ == "__main__":
                 atacante.disparar()
 
         if tiempo_restante2 == 1:
+            pygame.mixer.music.stop()
             from pantalla_victoria import obtener_canciones_defensor
             pantalla_victoria(defensor_name)
             obtener_canciones_defensor(defensor_name)
