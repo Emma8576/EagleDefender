@@ -764,6 +764,8 @@ class Defensor(Personaje):
             self.desaparecer()
         elif tiempo_restante2 == 1:
             pantalla_victoria(defensor_name)
+            from pantalla_victoria import obtener_canciones_defensor
+            obtener_canciones_defensor(defensor_name)
 
 
 
@@ -771,14 +773,14 @@ class Defensor(Personaje):
         self.vida = 0
         tiempo_transcurrido =   pygame.time.get_ticks() / 1000 - (start_time/1000)
         self.agregar_al_salon_de_fama(tiempo_transcurrido)
-        from pantalla_victoria import pantalla_victoria
-        pygame.mixer.music.stop()
+        from pantalla_victoria import pantalla_victoria 
+        from pantalla_victoria import obtener_canciones_atacante
+        obtener_canciones_atacante(atacante_name)
         pantalla_victoria(atacante_name)
         time.sleep(3)
         os._exit(0)
 
 
-    
     
 
     def agregar_al_salon_de_fama(self, tiempo_transcurrido):
@@ -1126,11 +1128,12 @@ if __name__ == "__main__":
         atacante.regenerar_municiones()
         mostrar_temporizador(screen)
 
+        """
         if tiempo_restante <= 0:
             mostrar_mensaje_fin_tiempo(screen)
             reproducir_nueva_cancion()
             mostrar_temporizador2(screen)
-
+        """
 
 
 
@@ -1251,8 +1254,9 @@ if __name__ == "__main__":
                 atacante.disparar()
 
         if tiempo_restante2 == 1:
+            from pantalla_victoria import obtener_canciones_defensor
             pantalla_victoria(defensor_name)
-
+            obtener_canciones_defensor(defensor_name)
 
         # Mover y actualizar las balas
         for bullet in atacante.bullets[:]:
