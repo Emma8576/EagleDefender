@@ -129,6 +129,10 @@ def inicio_partida():
         boton_abrir.config(text="Start Game")
         etiqueta_bienvenida.config(text="Welcome")
         
+    # Establecer la ventana como siempre arriba (topmost)
+    inicio.attributes("-topmost", True)
+    inicio.attributes("-fullscreen", True)
+    
     if __name__ == "__main__":
         inicio.mainloop()
 
@@ -419,49 +423,6 @@ def cargar_idioma():
         json.dump(config, f)
 
 
-#####################################
-# Funcion para la ventana de la playlist 
-"""
-def ventana_playlist():
-    global ventana_playlist, seleccion
-    ventana_playlist = tk.Toplevel(ventana_1)
-    ventana_playlist.attributes("-fullscreen", True)
-    cargar_imagen_de_fondo(ventana_playlist, "loginImages/fondo1.png")
-
-    global etiqueta_playlist
-    ancho_pantalla = ventana_playlist.winfo_screenwidth()
-    etiqueta_playlist = Label(ventana_playlist,
-                              text="Configuración",
-                              bg="#101654", 
-                              fg="white",
-                              font=("System 30 bold"))
-
-    etiqueta_retro2 = Label(ventana_playlist,
-                            text="Battle City",
-                            bg="#000030",
-                            font=("System 30 bold"),
-                            fg="white")
-    etiqueta_retro2.place(relx=0.5, rely=0.5, anchor='center')
-    etiqueta_retro2.pack()
-
-    def salir():
-        ventana_playlist.destroy()
-
-    # boton para devolverse al menu
-    boton_devolver_playlist = tk.Button(ventana_playlist,
-                                        text="Volver",
-                                        command="salir_playlist",
-                                        fg="snow",
-                                        bg="SkyBlue3",
-                                        relief="sunken",
-                                        font=("System 30 bold"),
-                                        cursor="exchange")
-    boton_devolver_playlist.pack()
-    boton_devolver_playlist.place(x=0, y=0, height=50, width=150)
-
-
-###############################
-"""
 #Función para abir el salón de la fama
 def salon_de_fama():
     ventana_salon_fama = tk.Toplevel(ventana_1)
@@ -1390,7 +1351,7 @@ def partidas_guardadas():
                           font=fuente_retro_5, 
                           relief="raised", 
                           borderwidth=10, 
-                          command=volver_atras)
+                          command=salir_ventana_partidas)
     
         # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
     x = (ancho_pantalla_1 - etiqueta_titulo.winfo_reqwidth()) // 2
@@ -1569,6 +1530,8 @@ def validar_datos():
                     file.write(f'Usuario 2: {usuario_2}\n')
 
                 # Se abre la ventana de configurar partida una vez que se inicia sesión correctamente.
+                inicio.destroy()
+                pygame.mixer.music.stop()
                 archivo_python = 'configurar_partida.py'
                 print("El usuario #1 es: " + usuario_1 + " y el usuario 2 es: " + usuario_2)
     
@@ -1877,7 +1840,7 @@ def ventana_music():
                             font=fuente_retro_5, 
                             relief="raised", 
                             borderwidth=10,
-                            command=volver_atras)
+                            command=salir_ventana_playlist)
     
     # Calcula la posición x para que la etiqueta recuperar partida esté en el centro horizontal
     x = (ancho_pantalla_2 - boton_atras.winfo_reqwidth()) // 2
@@ -2006,15 +1969,18 @@ def volver_atras():
         ventana_2.withdraw()
     if ventana_1:
         ventana_1.deiconify()
-    
-    if ventana_partidas:
-        ventana_partidas.destroy()
-    
+        
     if ventana_1:
         ventana_1.deiconify()
         
+def salir_ventana_partidas():
+    if ventana_partidas:
+        ventana_1.deiconify()
+        ventana_partidas.destroy()
+
+def salir_ventana_playlist():
     if ventana_playlist:
         ventana_playlist.destroy()
-
+    
 inicio_partida()
 # LOS MILTONEANOS
