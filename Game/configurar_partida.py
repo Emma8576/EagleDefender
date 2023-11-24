@@ -8,7 +8,7 @@ import sys
 import time
 import pymysql
 from tkinter import simpledialog
-
+import os
 pygame.init() 
 
 # hacer variables de fuentes globales
@@ -33,6 +33,9 @@ fuente_retro_9 = ("8-Bit Operator+ 8", 12)
 fuente = ("Arial", 12)
 
 
+def detener_musica():
+    pygame.mixer.music.stop()
+    
 # Se agrega imagen de fondo
 def cargar_imagen_de_fondo(ventana_1, ruta_imagen):
     # Cargar la imagen de fondo
@@ -82,9 +85,8 @@ def iniciar_partida():
         file.write(f"Atacante: {usuario_atacante}\n")
 
     try:
-        subprocess.Popen(['python', archivo_partida])
-        time.sleep(1)
-        sys.exit()
+        detener_musica()
+        os.execl(sys.executable, sys.executable, archivo_partida)
     except FileNotFoundError:
         print(f'El archivo "{archivo_partida}" no se encontró o no se pudo ejecutar.')
 
