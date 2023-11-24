@@ -149,6 +149,7 @@ stop_music_event = threading.Event()
 thread_musica = threading.Thread(target=reproducir_musica)
 thread_musica.start()
 
+time.sleep(1)
 # Ruta del archivo de música
 archivo_musica = 'musica_temp/temp_song.mp3'
 
@@ -159,18 +160,15 @@ duracion = obtener_duracion_cancion(archivo_musica)
 minutos = duracion // 60
 segundos = duracion % 60
 
+tiempo_restante = duracion
+
 # Imprimir la duración en la terminal
 print(f'Duración de la canción: {minutos} minutos y {segundos} segundos')
 
-def mostrar_temporizador2(screen):
-    font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
-    text2 = font.render(f'Tiempo restante: {tiempo_restante2 // 60:02}:{tiempo_restante2 % 60:02}', True, (255, 255, 255))  # Renderizar el texto
-    screen.blit(text2, (10, 10))
 
 # Mostrar cuenta regresiva en la terminal en tiempo real
 def cuenta_regresiva():
     global tiempo_restante
-    tiempo_restante = duracion
     while tiempo_restante > 0:
         pygame.display.flip()
         minutos = tiempo_restante // 60
@@ -191,7 +189,11 @@ def cuenta_regresiva():
 thread_cuenta_regresiva = threading.Thread(target=cuenta_regresiva)
 thread_cuenta_regresiva.start()
 
-
+def mostrar_temporizador2(screen):
+    font = pygame.font.Font(None, 36)  # Fuente y tamaño del texto
+    text2 = font.render(f'Tiempo restante: {tiempo_restante2 // 60:02}:{tiempo_restante2 % 60:02}', True, (255, 255, 255))  # Renderizar el texto
+    screen.blit(text2, (10, 10))
+    
 def reproducir_nueva_cancion():
     try:
         # Conectar a la base de datos
